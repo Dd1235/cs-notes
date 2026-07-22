@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Memory Layout, Alignment &amp; Padding · OOP &amp; C++</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#8A4E5E">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link is-active" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">OOP & C++</a><div class="side-group"><div class="side-label">Lecture Notes</div><ul><li><a class="side-link" href="volatile-macros-inline.html">volatile, Macros &amp; inline</a></li><li><a class="side-link" href="references-and-const.html">References &amp; const</a></li><li><a class="side-link" href="function-overloading.html">Function Overloading</a></li><li><a class="side-link" href="dynamic-memory.html">Dynamic Memory Management</a></li><li><a class="side-link" href="classes-and-objects.html">Classes &amp; Objects</a></li><li><a class="side-link" href="constructors.html">Constructors &amp; Information Hiding</a></li><li><a class="side-link" href="copy-semantics.html">Copy Constructor &amp; Copy Assignment</a></li><li><a class="side-link" href="constness-and-static.html">Const-ness &amp; Static Members</a></li><li><a class="side-link" href="friend-functions.html">Friend Functions &amp; Friend Classes</a></li><li><a class="side-link" href="operator-overloading.html">Operator Overloading</a></li><li><a class="side-link" href="inheritance.html">Inheritance &amp; Overriding</a></li><li><a class="side-link" href="multiple-private-inheritance.html">Multiple &amp; Private Inheritance</a></li><li><a class="side-link" href="virtual-functions.html">Virtual Functions &amp; Dynamic Binding</a></li><li><a class="side-link" href="vtables-and-const-cast.html">Virtual Pointer Tables &amp; const_cast</a></li><li><a class="side-link" href="cpp-casts.html">C++ Casts</a></li><li><a class="side-link" href="exceptions.html">Exceptions &amp; Error Handling</a></li><li><a class="side-link" href="try-catch-and-templates.html">try/catch &amp; Function Templates</a></li><li><a class="side-link" href="class-templates-functors.html">Class Templates &amp; Functors</a></li></ul></div><div class="side-group"><div class="side-label">Extras</div><ul><li><a class="side-link" href="compilation-model.html">The C++ Compilation Model</a></li><li><a class="side-link" href="template-metaprogramming.html">Template Metaprogramming</a></li><li><a class="side-link" href="build-your-own-vector.html">Exercise — Build Your Own Vector</a></li><li><a class="side-link" href="miscellany.html">Miscellany</a></li><li><a class="side-link" href="resources.html">Resources</a></li></ul></div><div class="side-group"><div class="side-label">Topic Notes</div><ul><li><a class="side-link" href="notes-cpp-core.html">C++ Core</a></li><li><a class="side-link" href="notes-cpp-oop.html">C++ OOP</a></li><li><a class="side-link" href="notes-cpp-advanced.html">C++ Advanced</a></li><li><a class="side-link" href="notes-ooad-uml.html">OOAD &amp; UML</a></li><li><a class="side-link" href="notes-design-patterns.html">Design Patterns</a></li><li><a class="side-link" href="notes-testing-sdlc.html">Testing, SDLC &amp; SE</a></li><li><a class="side-link" href="notes-interview-questions.html">Interview Questions</a></li></ul></div><div class="side-group"><div class="side-label">Flashcards</div><ul><li><a class="side-link" href="cards-cpp-core.html">C++ Core Flashcards</a></li><li><a class="side-link" href="cards-oop-lifetime.html">OOP, Lifetime &amp; Memory Flashcards</a></li><li><a class="side-link" href="cards-polymorphism-stl.html">Polymorphism, Casts, Templates &amp; STL Flashcards</a></li><li><a class="side-link" href="cards-ooad-uml.html">OOAD &amp; UML Flashcards</a></li><li><a class="side-link" href="cards-design-patterns.html">Design Patterns Flashcards</a></li><li><a class="side-link" href="cards-testing-sdlc.html">Testing, SDLC &amp; SE Flashcards</a></li><li><a class="side-link" href="cards-interview-drills.html">Interview &amp; Code-Reading Drills</a></li></ul></div><div class="side-group"><div class="side-label">Under the Hood</div><ul><li><a class="side-link is-active" href="memory-layout.html">Memory Layout, Alignment &amp; Padding</a></li></ul></div><div class="side-group"><div class="side-label">Revision</div><ul><li><a class="side-link" href="refresher.html">Rapid Refresher<span class="badge">&#9733;</span></a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">OOP & C++</a></div>
+  <div class="page-head">
+    <div class="page-kicker">OOP & C++</div>
+    <h1 class="page-title">Memory Layout, Alignment &amp; Padding</h1>
+    <div class="page-meta">2 min read &middot; source: <code>oops_cpp/self_notes/memory_layout.md</code></div>
+  </div>
+  <article class="prose"><blockquote>
+<p>Systems companies ask <code>sizeof</code> questions not for trivia but to check you can see memory. Two pictures to hold: the process layout, and the inside of a struct.</p>
+</blockquote>
+<h3 id="picture-1-the-process">Picture 1 — the process</h3>
+<p>From low to high addresses: <strong>text</strong> (code, read-only) → <strong>data</strong> (initialized globals) → <strong>bss</strong> (zero-initialized globals — costs nothing in the binary) → <strong>heap</strong> (grows up, <code>new</code>/<code>malloc</code>) → shared library mappings → <strong>stack</strong> (grows down, frames with locals + return addresses).</p>
+<ul>
+<li>Stack allocation is a pointer bump — effectively free; heap allocation is a data structure search (<a href="dynamic-memory.html">dynamic memory notes</a>). This asymmetry is half of C++ performance folklore.</li>
+<li>Stack overflow = recursing past the guard page. Dangling stack pointer = returning <code>&amp;local</code> — the frame is gone.</li>
+<li>Where does <code>static int x</code> inside a function live? <strong>data/bss</strong>, not the stack — one instance, program lifetime.</li>
+</ul>
+<h3 id="picture-2-inside-a-struct">Picture 2 — inside a struct</h3>
+<p>Hardware fetches a <code>T</code> fastest at addresses divisible by <code>alignof(T)</code> (int → 4, double → 8). The compiler inserts <strong>padding</strong> so every member is aligned, and the struct&#39;s total size is a multiple of its strictest member&#39;s alignment (so arrays stay aligned).</p>
+<pre class="hljs"><code><span class="hljs-keyword">struct</span> <span class="hljs-title class_">Bad</span>  { <span class="hljs-type">char</span> a;  <span class="hljs-comment">// 1 byte + 3 padding</span>
+              <span class="hljs-type">int</span>  b;  <span class="hljs-comment">// 4</span>
+              <span class="hljs-type">char</span> c;  <span class="hljs-comment">// 1 + 3 tail padding</span>
+            };         <span class="hljs-comment">// sizeof = 12</span>
+
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">Good</span> { <span class="hljs-type">int</span>  b;  <span class="hljs-comment">// 4</span>
+              <span class="hljs-type">char</span> a, c; <span class="hljs-comment">// 2 + 2 tail padding</span>
+            };         <span class="hljs-comment">// sizeof = 8</span></code></pre>
+<p>Rule: <strong>order members largest-first</strong> (or group same-size) to minimize holes. <code>sizeof(Bad) = 12, sizeof(Good) = 8</code> — same data, 33% smaller, and that ratio survives into arrays of millions.</p>
+<p>Extras that score: empty struct has <code>sizeof == 1</code> (distinct addresses guarantee); adding a virtual function adds a <strong>vptr</strong> (+8 on 64-bit, and alignment jumps to 8 — <a href="vtables-and-const-cast.html">vtable notes</a>); <code>#pragma pack(1)</code> kills padding but slows access (some rare unaligned accesses can crash on non-x86, e.g. older ARM); <code>alignas(64)</code> pins to cache lines.</p>
+<h3 id="why-quantnetworking-firms-care">Why quant/networking firms care</h3>
+<ul>
+<li><strong>Cache lines are 64 bytes</strong> — a 12-byte struct fits 5 per line, an 8-byte one 8 per line: fewer misses in hot loops, and misses are ~100× register math.</li>
+<li><strong>False sharing</strong>: two threads writing different variables in the <em>same</em> line ping-pong it between cores — <code>alignas(64)</code> on per-thread counters is the fix (<a href="../companies/citadel.html">Citadel</a> loves this).</li>
+<li>Packets and wire formats are packed structs — <a href="../companies/arista.html">Arista</a> asks struct-of-headers questions naturally.</li>
+</ul>
+<h3 id="drill">Drill</h3>
+<ol>
+<li><code>struct { char a; double d; int i; }</code> — sizeof? Reorder for minimum. <em>(24 → 16.)</em></li>
+<li>Why does <code>sizeof</code> of a class gain 8 (not 1) when you add its first virtual function on x86-64?</li>
+<li>Two atomics on one cache line, two threads hammering them — what happens and what&#39;s the one-word name? <em>(False sharing.)</em></li>
+</ol>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="cards-interview-drills.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">Interview &amp; Code-Reading Drills</span></a><a class="pn-card pn-next" href="refresher.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">Rapid Refresher</span></a></nav>
+</main>
+<aside class="toc"><div class="toc-title">On this page</div><ul><li class="toc-d2"><a href="#picture-1-the-process">Picture 1 — the process</a></li><li class="toc-d2"><a href="#picture-2-inside-a-struct">Picture 2 — inside a struct</a></li><li class="toc-d2"><a href="#why-quantnetworking-firms-care">Why quant/networking firms care</a></li><li class="toc-d2"><a href="#drill">Drill</a></li></ul></aside>
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

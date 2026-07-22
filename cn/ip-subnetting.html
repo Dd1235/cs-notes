@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IP Addressing &amp; Subnetting · Computer Networks</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#3E6B63">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link is-active" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">Computer Networks</a><div class="side-group"><div class="side-label">Notes</div><ul><li><a class="side-link" href="url-to-page.html">What Happens When You Type a URL</a></li><li><a class="side-link" href="tcp-vs-udp.html">TCP vs UDP — The Deep Dive</a></li><li><a class="side-link" href="sockets-and-zero-copy.html">Sockets, Kernel Structures &amp; Zero-Copy</a></li><li><a class="side-link" href="io-multiplexing.html">I/O Multiplexing — select, poll, epoll</a></li><li><a class="side-link" href="flow-vs-congestion.html">Flow Control vs Congestion Control</a></li></ul></div><div class="side-group"><div class="side-label">Addressing & Routing</div><ul><li><a class="side-link is-active" href="ip-subnetting.html">IP Addressing &amp; Subnetting</a></li><li><a class="side-link" href="l2-switching.html">Layer 2 — Switching, VLANs, STP</a></li><li><a class="side-link" href="routing.html">Routing — Longest Prefix, OSPF, BGP</a></li></ul></div><div class="side-group"><div class="side-label">Web Protocols</div><ul><li><a class="side-link" href="tls.html">TLS — Handshake &amp; Certificates</a></li><li><a class="side-link" href="dns-deep-dive.html">DNS — Records, Resolution, Caching</a></li><li><a class="side-link" href="http-evolution.html">HTTP/1.1 → 2 → 3</a></li></ul></div><div class="side-group"><div class="side-label">Revision</div><ul><li><a class="side-link" href="refresher.html">Rapid Refresher<span class="badge">&#9733;</span></a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">Computer Networks</a></div>
+  <div class="page-head">
+    <div class="page-kicker">Computer Networks</div>
+    <h1 class="page-title">IP Addressing &amp; Subnetting</h1>
+    <div class="page-meta">2 min read &middot; source: <code>cn/ip_subnetting.md</code></div>
+  </div>
+  <article class="prose"><blockquote>
+<p>Subnetting is one skill: split an IP into network bits and host bits, then count. Do the /26 example below twice and you own it.</p>
+</blockquote>
+<h3 id="the-idea">The idea</h3>
+<p>An IPv4 address is 32 bits. A <strong>prefix</strong> (<code>/24</code>, CIDR notation) says how many leading bits name the <em>network</em>; the rest name <em>hosts</em> inside it. The old class A/B/C system was fixed prefixes (/8, /16, /24) — CIDR made the split arbitrary and killed the classes; mention classes only as history.</p>
+<p><strong>Analogy:</strong> an address is street + house number. The prefix length decides where street ends and house begins — longer prefix, more streets, smaller streets.</p>
+<h3 id="the-mechanics-worked-26">The mechanics (worked /26)</h3>
+<p><code>192.168.1.0/26</code> → 26 network bits, 6 host bits → 2⁶ = 64 addresses per subnet.</p>
+<ul>
+<li>Block size in the last octet: 256 − 192(mask .192) = <strong>64</strong> → subnets start at .0, .64, .128, .192.</li>
+<li>Each subnet loses 2: <strong>network address</strong> (all host bits 0) and <strong>broadcast</strong> (all 1s) → <strong>62 usable</strong> hosts.</li>
+<li>Which subnet is <code>192.168.1.100/26</code>? 100 falls in [64,128) → network <code>.64</code>, broadcast <code>.127</code>, usable <code>.65–.126</code>.</li>
+</ul>
+<p>That&#39;s the entire exam: block size = 256 − mask octet; round down to find your block.</p>
+<table>
+<thead>
+<tr>
+<th>Prefix</th>
+<th>Mask</th>
+<th>Addresses</th>
+<th>Usable</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>/24</td>
+<td>255.255.255.0</td>
+<td>256</td>
+<td>254</td>
+</tr>
+<tr>
+<td>/26</td>
+<td>255.255.255.192</td>
+<td>64</td>
+<td>62</td>
+</tr>
+<tr>
+<td>/27</td>
+<td>255.255.255.224</td>
+<td>32</td>
+<td>30</td>
+</tr>
+<tr>
+<td>/30</td>
+<td>255.255.255.252</td>
+<td>4</td>
+<td>2 (router links)</td>
+</tr>
+<tr>
+<td>/31, /32</td>
+<td>—</td>
+<td>2, 1</td>
+<td>point-to-point, single host</td>
+</tr>
+</tbody></table>
+<h3 id="special-ranges-recognition-speed-matters">Special ranges (recognition speed matters)</h3>
+<ul>
+<li><strong>Private (RFC 1918)</strong>: <code>10/8</code>, <code>172.16/12</code>, <code>192.168/16</code> — what NAT hides (<a href="url-to-page.html">URL journey</a>).</li>
+<li><strong>Loopback</strong> <code>127/8</code>; <strong>link-local</strong> <code>169.254/16</code> (= &quot;DHCP failed&quot; in the wild).</li>
+<li>IPv6 in one breath: 128 bits, no NAT needed, no broadcast (multicast instead), <code>::1</code> loopback, SLAAC auto-config.</li>
+</ul>
+<h3 id="why-routers-care">Why routers care</h3>
+<p>Forwarding = <strong>longest-prefix match</strong>: a route to <code>10.1.2.0/24</code> beats <code>10.0.0.0/8</code> for <code>10.1.2.7</code>. Subnetting is what makes the table hierarchical instead of one row per host — see <a href="routing.html">routing</a>.</p>
+<h3 id="drill">Drill</h3>
+<ol>
+<li><code>172.16.35.200/20</code> — network, broadcast, usable range? <em>(Block 16 in third octet: 172.16.32.0 – 172.16.47.255.)</em></li>
+<li>Smallest subnet fitting 500 hosts? <em>( /23 → 510 usable.)</em></li>
+<li>Why does a /31 work for router-to-router links despite &quot;minus 2&quot;? <em>(RFC 3021 — no broadcast needed on point-to-point.)</em></li>
+</ol>
+<p><em>Core <a href="../companies/arista.html">Arista</a> OA material.</em></p>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="flow-vs-congestion.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">Flow Control vs Congestion Control</span></a><a class="pn-card pn-next" href="l2-switching.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">Layer 2 — Switching, VLANs, STP</span></a></nav>
+</main>
+<aside class="toc"><div class="toc-title">On this page</div><ul><li class="toc-d2"><a href="#the-idea">The idea</a></li><li class="toc-d2"><a href="#the-mechanics-worked-26">The mechanics (worked /26)</a></li><li class="toc-d2"><a href="#special-ranges-recognition-speed-matters">Special ranges (recognition speed matters)</a></li><li class="toc-d2"><a href="#why-routers-care">Why routers care</a></li><li class="toc-d2"><a href="#drill">Drill</a></li></ul></aside>
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PYQ — OS: Memory, Paging &amp; Processes · Company Prep</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#6F5680">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link is-active" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">Company Prep</a><div class="side-group"><div class="side-label">Overview</div><ul><li><a class="side-link" href="overview.html">The Map — Who Tests What</a></li></ul></div><div class="side-group"><div class="side-label">Companies</div><ul><li><a class="side-link" href="arista.html">Arista Networks</a></li><li><a class="side-link" href="intuit.html">Intuit</a></li><li><a class="side-link" href="stripe.html">Stripe</a></li><li><a class="side-link" href="de-shaw.html">D. E. Shaw</a></li><li><a class="side-link" href="rubrik.html">Rubrik</a></li><li><a class="side-link" href="citadel.html">Citadel</a></li></ul></div><div class="side-group"><div class="side-label">PYQ Bank</div><ul><li><a class="side-link is-active" href="pyq-os-memory.html">PYQ — OS: Memory, Paging &amp; Processes</a></li><li><a class="side-link" href="pyq-os-concurrency.html">PYQ — OS: Concurrency &amp; Sync</a></li><li><a class="side-link" href="pyq-networks.html">PYQ — Networks</a></li><li><a class="side-link" href="pyq-oop-design.html">PYQ — OOP &amp; Design</a></li><li><a class="side-link" href="pyq-dbms-sql.html">PYQ — DBMS &amp; SQL</a></li><li><a class="side-link" href="pyq-c-lowlevel.html">PYQ — C &amp; Low-Level</a></li><li><a class="side-link" href="pyq-cloud-ml.html">PYQ — Cloud, Containers &amp; ML</a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">Company Prep</a></div>
+  <div class="page-head">
+    <div class="page-kicker">Company Prep</div>
+    <h1 class="page-title">PYQ — OS: Memory, Paging &amp; Processes</h1>
+    <div class="page-meta">6 min read &middot; source: <code>company_wise/pyq_os_memory.md</code></div>
+  </div>
+  <article class="prose"><blockquote>
+<p>Real previous-year questions, tagged by company, repeats merged. Answers include the follow-up territory interviewers wander into.</p>
+</blockquote>
+<h3 id="architecture-basics">Architecture basics</h3>
+<p><strong>What is the difference between a 32-bit and a 64-bit processor/architecture?</strong> <code>Arista</code></p>
+<p>The bit-width is the size of the CPU&#39;s general-purpose registers and, crucially, of a <strong>pointer</strong>. A 32-bit machine can address 2³² bytes = <strong>4 GB</strong> of virtual address space per process; 64-bit gives 2⁶⁴ (practically 2⁴⁸/2⁵⁷ used — hardware doesn&#39;t wire all 64 lines). Surrounding topics they probe next: wider registers move more data per instruction; more registers in x86-64 (16 vs 8) means fewer stack spills; page-table depth grows (4–5 levels) to cover the space; a 32-bit OS cannot use &gt;4 GB RAM without PAE hacks.</p>
+<p><strong>How do you determine if a machine is 32-bit or 64-bit in a single return statement, no variables?</strong> <code>Arista</code></p>
+<pre class="hljs"><code><span class="hljs-type">int</span> <span class="hljs-title function_">is64</span><span class="hljs-params">()</span> { <span class="hljs-keyword">return</span> <span class="hljs-keyword">sizeof</span>(<span class="hljs-type">void</span> *) == <span class="hljs-number">8</span>; }</code></pre>
+<p>Pointer size <em>is</em> the architecture width — that&#39;s the whole trick. <code>sizeof</code> is compile-time, so this technically reports what the binary was <em>compiled for</em> — a sharp interviewer will accept <code>sizeof(long)</code> on Linux (LP64) but reject <code>sizeof(int)</code> (see next). Shell version: <code>getconf LONG_BIT</code>.</p>
+<p><strong>What is <code>sizeof(int)</code> on 32-bit vs 64-bit?</strong> <code>Arista</code></p>
+<p>The trap: <strong>4 bytes on both</strong> on mainstream platforms. What changes is <code>sizeof(void*)</code> (4 → 8) and, on Linux/macOS, <code>long</code> (4 → 8, the <strong>LP64</strong> model; Windows keeps long at 4 — <strong>LLP64</strong>). Only <code>sizeof(char) == 1</code> is guaranteed; the standard gives minimum ranges, not sizes. Follow-up ammo: this is why serializing structs across machines needs fixed-width <code>int32_t</code>/<code>int64_t</code>.</p>
+<h3 id="process-vs-thread">Process vs thread</h3>
+<p><strong>Difference between a process and a thread — memory layout, address spaces, resource usage?</strong> <code>Arista</code> <code>Intuit</code> <code>D. E. Shaw</code></p>
+<p>A <strong>process</strong> is an isolation unit: own virtual address space, page tables, FD table, credentials (<a href="../os/processes.html">full page</a>). A <strong>thread</strong> is an execution unit <em>inside</em> one: own stack, registers, PC — but shares code, globals, heap, and FDs with siblings. Consequences: thread creation/switch is cheaper (no page-table/TLB switch — see <a href="../os/csapp-ch9.html">CS:APP ch 9 notes</a>); processes fail independently while one crashing thread kills the whole process; processes communicate via <a href="../os/ipc.html">IPC</a>, threads via shared memory + locks. <strong>Multiprocessing vs multithreading</strong> (<code>D. E. Shaw</code> <code>Amex</code> phrasing): choose processes for fault isolation and security boundaries (Chrome tabs), threads for cheap sharing and low-latency communication (server request pools).</p>
+<p><strong>Can the execution of one thread affect other threads?</strong> <code>Arista</code></p>
+<p>Yes — that&#39;s both the feature and the bug. Legitimately: through shared data, signaling (condition variables), and shared FDs. Illegitimately: data races on shared state, one thread&#39;s segfault killing the process, a thread holding a lock stalling everyone (or dying while holding it), unbounded allocation exhausting the shared heap, and cache-level interference (false sharing — <a href="../oops/memory-layout.html">memory layout notes</a>). &quot;Local&quot; stack variables are only private by convention — any thread <em>can</em> write another&#39;s stack through a leaked pointer.</p>
+<h3 id="virtual-memory-paging">Virtual memory &amp; paging</h3>
+<p><strong>What is virtual memory?</strong> <code>Arista</code></p>
+<p>The abstraction that each process sees a private, contiguous address space, decoupled from physical RAM. The MMU + page tables translate virtual → physical per access. It buys: <strong>isolation</strong> (you can&#39;t even name another process&#39;s memory), <strong>overcommit</strong> (allocate more than RAM; touch faults it in), <strong>sharing</strong> (libraries mapped once), and <strong>RAM as a cache for disk</strong>. Deep dive: <a href="../os/csapp-ch9.html">CS:APP ch 9 notes</a>.</p>
+<p><strong>What is paging and how does it function?</strong> <code>Arista</code> <code>Intuit</code></p>
+<p>Chop virtual space into fixed <strong>pages</strong> (4 KB) and RAM into same-size <strong>frames</strong>; a per-process page table maps page → frame, and any page can land in any frame. Translation: virtual address = VPN + offset → page-table lookup (cached by the <strong>TLB</strong>) → PPN + offset. Because mapping is per-page, there&#39;s no need for contiguous physical memory — which is exactly what kills external fragmentation (below).</p>
+<p><strong>Internal vs external fragmentation — and how paging addresses them?</strong> <code>Intuit</code> <code>Qualcomm</code></p>
+<p><strong>External</strong>: free memory exists but in scattered pieces too small to use — a disease of variable-size contiguous allocation (segmentation, malloc arenas). <strong>Internal</strong>: waste <em>inside</em> an allocated unit — you got a 4 KB page but used 1 byte. Paging <strong>eliminates external</strong> fragmentation for RAM (any frame fits any page) at the price of <strong>some internal</strong> (average half a page per allocation region). &quot;Virtual memory fragmentation&quot; (<code>Qualcomm</code>): the <em>virtual</em> space itself can fragment too — a 32-bit process doing many mmaps may fail a large allocation despite enough total free space; 64-bit&#39;s vast space is the practical cure. Inside malloc, the allocator fights external fragmentation with coalescing and size-class bins (<a href="../os/csapp-ch9.html">CS:APP ch 9</a>).</p>
+<p><strong>What are page faults? Count the faults for a reference string under FIFO.</strong> <code>Arista</code></p>
+<p>A page fault = access to a page with no valid frame mapping; the kernel loads it (or kills you — segfault). Counting technique, worked: string <strong>1,2,3,4,1,2,5,1,2,3,4,5</strong>, 3 frames, FIFO evicts by <em>load order</em>:</p>
+<pre class="hljs"><code>1✗ 2✗ 3✗ | 4✗(evict 1) 1✗(evict 2) 2✗(evict 3) | 5✗(evict 4) 1✓ 2✓ | 3✗(evict 5? no—evict 1) ...
+Result: 9 faults with 3 frames, 10 with 4 frames — Belady&#x27;s anomaly.</code></pre>
+<p>Method: track the queue, mark hit/miss per access, count misses — do it in a table, out loud. The kicker fact: more frames can mean <em>more</em> faults under FIFO; LRU can&#39;t do that (<a href="../os/page-replacement.html">page replacement notes</a>).</p>
+<p><strong>Demand paging and copy-on-write during process creation — step by step.</strong> <code>NetApp</code></p>
+<p><code>fork()</code> copies page <em>tables</em>, not pages: both processes&#39; entries point at the same frames, all marked <strong>read-only</strong>. A write by either → protection fault → kernel copies <em>that one page</em>, remaps writer to the copy, restores write permission — <strong>copy-on-write</strong>. Demand paging is the same lazy philosophy at <code>exec</code>/<code>mmap</code>: map regions with no frames at all; first touch faults the page in from the binary/file/zero-pool. Net effect: fork of a 2 GB process is milliseconds, and <code>fork+exec</code> never copies the 2 GB at all.</p>
+<p><strong>What exactly happens on a page fault — interrupt to mapped page?</strong> <code>NetApp</code></p>
+<ol>
+<li>MMU can&#39;t translate → raises a fault, CPU traps to the kernel&#39;s fault handler with the faulting address and cause. 2. Kernel checks the process&#39;s memory-map metadata (Linux: VMAs): address not in any region → SIGSEGV; valid but not present → legitimate fault. 3. Locate the content: file page → page cache or disk read; anonymous swapped page → swap; first-touch heap → zero page; COW → copy the frame. 4. If RAM is full, evict a victim first (<a href="../os/page-replacement.html">replacement policies</a>, write back if dirty). 5. Update page table + TLB, return from trap — the instruction <strong>re-executes</strong>, unaware anything happened.</li>
+</ol>
+<p><strong>Which hardware translates virtual addresses, and how does the TLB fit?</strong> <code>Qualcomm</code></p>
+<p>The <strong>MMU</strong> (memory-management unit), on the CPU die. Every access must be translated; a multi-level page-table walk costs several memory reads, so the MMU caches recent translations in the <strong>TLB</strong> (~dozens–thousands of entries). TLB hit → translation is ~free; miss → hardware walks the tables; page-not-present → fault (above). Context switches used to flush the TLB (why process switches cost more than thread switches); modern CPUs tag entries with ASIDs to avoid full flushes. Huge pages (2 MB) exist mostly to stretch TLB reach.</p>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="citadel.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">Citadel</span></a><a class="pn-card pn-next" href="pyq-os-concurrency.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">PYQ — OS: Concurrency &amp; Sync</span></a></nav>
+</main>
+<aside class="toc"><div class="toc-title">On this page</div><ul><li class="toc-d2"><a href="#architecture-basics">Architecture basics</a></li><li class="toc-d2"><a href="#process-vs-thread">Process vs thread</a></li><li class="toc-d2"><a href="#virtual-memory-paging">Virtual memory &amp; paging</a></li></ul></aside>
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

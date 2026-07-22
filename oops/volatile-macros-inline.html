@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>volatile, Macros &amp; inline · OOP &amp; C++</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#8A4E5E">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link is-active" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">OOP & C++</a><div class="side-group"><div class="side-label">Lecture Notes</div><ul><li><a class="side-link is-active" href="volatile-macros-inline.html">volatile, Macros &amp; inline</a></li><li><a class="side-link" href="references-and-const.html">References &amp; const</a></li><li><a class="side-link" href="function-overloading.html">Function Overloading</a></li><li><a class="side-link" href="dynamic-memory.html">Dynamic Memory Management</a></li><li><a class="side-link" href="classes-and-objects.html">Classes &amp; Objects</a></li><li><a class="side-link" href="constructors.html">Constructors &amp; Information Hiding</a></li><li><a class="side-link" href="copy-semantics.html">Copy Constructor &amp; Copy Assignment</a></li><li><a class="side-link" href="constness-and-static.html">Const-ness &amp; Static Members</a></li><li><a class="side-link" href="friend-functions.html">Friend Functions &amp; Friend Classes</a></li><li><a class="side-link" href="operator-overloading.html">Operator Overloading</a></li><li><a class="side-link" href="inheritance.html">Inheritance &amp; Overriding</a></li><li><a class="side-link" href="multiple-private-inheritance.html">Multiple &amp; Private Inheritance</a></li><li><a class="side-link" href="virtual-functions.html">Virtual Functions &amp; Dynamic Binding</a></li><li><a class="side-link" href="vtables-and-const-cast.html">Virtual Pointer Tables &amp; const_cast</a></li><li><a class="side-link" href="cpp-casts.html">C++ Casts</a></li><li><a class="side-link" href="exceptions.html">Exceptions &amp; Error Handling</a></li><li><a class="side-link" href="try-catch-and-templates.html">try/catch &amp; Function Templates</a></li><li><a class="side-link" href="class-templates-functors.html">Class Templates &amp; Functors</a></li></ul></div><div class="side-group"><div class="side-label">Extras</div><ul><li><a class="side-link" href="compilation-model.html">The C++ Compilation Model</a></li><li><a class="side-link" href="template-metaprogramming.html">Template Metaprogramming</a></li><li><a class="side-link" href="build-your-own-vector.html">Exercise — Build Your Own Vector</a></li><li><a class="side-link" href="miscellany.html">Miscellany</a></li><li><a class="side-link" href="resources.html">Resources</a></li></ul></div><div class="side-group"><div class="side-label">Topic Notes</div><ul><li><a class="side-link" href="notes-cpp-core.html">C++ Core</a></li><li><a class="side-link" href="notes-cpp-oop.html">C++ OOP</a></li><li><a class="side-link" href="notes-cpp-advanced.html">C++ Advanced</a></li><li><a class="side-link" href="notes-ooad-uml.html">OOAD &amp; UML</a></li><li><a class="side-link" href="notes-design-patterns.html">Design Patterns</a></li><li><a class="side-link" href="notes-testing-sdlc.html">Testing, SDLC &amp; SE</a></li><li><a class="side-link" href="notes-interview-questions.html">Interview Questions</a></li></ul></div><div class="side-group"><div class="side-label">Flashcards</div><ul><li><a class="side-link" href="cards-cpp-core.html">C++ Core Flashcards</a></li><li><a class="side-link" href="cards-oop-lifetime.html">OOP, Lifetime &amp; Memory Flashcards</a></li><li><a class="side-link" href="cards-polymorphism-stl.html">Polymorphism, Casts, Templates &amp; STL Flashcards</a></li><li><a class="side-link" href="cards-ooad-uml.html">OOAD &amp; UML Flashcards</a></li><li><a class="side-link" href="cards-design-patterns.html">Design Patterns Flashcards</a></li><li><a class="side-link" href="cards-testing-sdlc.html">Testing, SDLC &amp; SE Flashcards</a></li><li><a class="side-link" href="cards-interview-drills.html">Interview &amp; Code-Reading Drills</a></li></ul></div><div class="side-group"><div class="side-label">Under the Hood</div><ul><li><a class="side-link" href="memory-layout.html">Memory Layout, Alignment &amp; Padding</a></li></ul></div><div class="side-group"><div class="side-label">Revision</div><ul><li><a class="side-link" href="refresher.html">Rapid Refresher<span class="badge">&#9733;</span></a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">OOP & C++</a></div>
+  <div class="page-head">
+    <div class="page-kicker">OOP & C++</div>
+    <h1 class="page-title">volatile, Macros &amp; inline</h1>
+    <div class="page-meta">2 min read &middot; source: <code>oops_cpp/self_notes/0.md</code></div>
+  </div>
+  <article class="prose"><h3 id="volatile">volatile</h3>
+<p>Think <strong>memory-mapped I/O vs I/O-mapped I/O</strong>: a device register lives at a memory address, and the hardware may change the value of that variable behind the compiler&#39;s back. <code>volatile</code> tells the compiler: <em>don&#39;t optimize reads/writes away, don&#39;t cache it in a register — actually touch memory every time.</em></p>
+<pre class="hljs"><code><span class="hljs-keyword">volatile</span> <span class="hljs-type">uint32_t</span>* status = <span class="hljs-built_in">reinterpret_cast</span>&lt;<span class="hljs-type">uint32_t</span>*&gt;(<span class="hljs-number">0x4000&#x27;0000</span>);
+<span class="hljs-keyword">while</span> (*status == <span class="hljs-number">0</span>) { }   <span class="hljs-comment">// without volatile the compiler hoists the load → infinite loop</span></code></pre>
+<p>Note for interviews: <code>volatile</code> is <strong>not</strong> a threading primitive in C++ — it gives no atomicity and no ordering. Threads need <code>std::atomic</code>.</p>
+<h3 id="debug-vs-production-builds">Debug vs production builds</h3>
+<p>We also have debug builds (<code>-O0 -g</code>, assertions on) and production builds (<code>-O2/-O3</code>, <code>NDEBUG</code>). Behavior differences between them are usually optimizer-exposed bugs — which is exactly why debuggability of your constructs matters:</p>
+<h3 id="dont-use-define-for-constants">Don&#39;t use #define for constants</h3>
+<ul>
+<li>Use <code>const int x = ...;</code> (or <code>constexpr</code>) or an <code>inline</code> function instead.</li>
+<li>A macro is <strong>very bad for debugging</strong>: the preprocessor does textual substitution <em>before</em> the compiler runs, so the debugger has no symbol, error messages point at expanded garbage, and there&#39;s no type checking or scoping.</li>
+<li><code>#define</code> is the preprocessor mechanism; <strong><code>inline</code> is a language keyword</strong> — an inline function is real code the compiler understands (typed, scoped, steppable) that can still be expanded at the call site with zero overhead. That&#39;s the whole trade: macro speed without macro pain.</li>
+</ul>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">define</span> SQR(x) x * x          <span class="hljs-comment">// SQR(a + b) → a + b * a + b   — silently wrong</span></span>
+<span class="hljs-function"><span class="hljs-keyword">inline</span> <span class="hljs-type">int</span> <span class="hljs-title">sqr</span><span class="hljs-params">(<span class="hljs-type">int</span> x)</span> </span>{ <span class="hljs-keyword">return</span> x * x; }   <span class="hljs-comment">// typed, scoped, debuggable</span></code></pre>
+<h3 id="const-and-pointers-the-line-trick">const and pointers — the line trick</h3>
+<p><strong>Draw a line through the <code>*</code></strong> — whatever <code>const</code> sits next to is what&#39;s constant:</p>
+<pre class="hljs"><code><span class="hljs-type">const</span> <span class="hljs-type">int</span>* p = &amp;x;   <span class="hljs-comment">// non-constant pointer to a const int   (can&#x27;t do *p = 5)</span>
+<span class="hljs-type">int</span>* <span class="hljs-type">const</span> q = &amp;x;   <span class="hljs-comment">// constant pointer to a non-const int   (can&#x27;t do q = &amp;y)</span>
+<span class="hljs-type">const</span> <span class="hljs-type">int</span>* <span class="hljs-type">const</span> r = &amp;x;   <span class="hljs-comment">// both frozen</span></code></pre>
+<p>Read right-to-left: <code>q</code> is a <code>const</code> pointer to <code>int</code>; <code>p</code> is a pointer to <code>int</code> that is <code>const</code>.</p>
+</article>
+  <nav class="prevnext"><span></span><a class="pn-card pn-next" href="references-and-const.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">References &amp; const</span></a></nav>
+</main>
+<aside class="toc"><div class="toc-title">On this page</div><ul><li class="toc-d2"><a href="#volatile">volatile</a></li><li class="toc-d2"><a href="#debug-vs-production-builds">Debug vs production builds</a></li><li class="toc-d2"><a href="#dont-use-define-for-constants">Don&#39;t use #define for constants</a></li><li class="toc-d2"><a href="#const-and-pointers-the-line-trick">const and pointers — the line trick</a></li></ul></aside>
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

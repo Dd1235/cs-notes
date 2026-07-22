@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unique Indexes · Database Systems</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#B05730">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link is-active" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">Database Systems</a><div class="side-group"><div class="side-label">Foundations</div><ul><li><a class="side-link" href="acid.html">ACID &amp; Isolation Levels</a></li><li><a class="side-link" href="normalization.html">Normalization</a></li><li><a class="side-link" href="sql.html">SQL Essentials</a></li><li><a class="side-link" href="drop-delete-truncate.html">DROP vs DELETE vs TRUNCATE</a></li></ul></div><div class="side-group"><div class="side-label">Indexing & Storage</div><ul><li><a class="side-link" href="b-plus-trees.html">B+ Trees</a></li><li><a class="side-link is-active" href="unique-indexes.html">Unique Indexes</a></li><li><a class="side-link" href="primary-vs-secondary-index.html">Primary vs Secondary Indexes</a></li><li><a class="side-link" href="write-ahead-logging.html">Write-Ahead Logging</a></li></ul></div><div class="side-group"><div class="side-label">Concurrency</div><ul><li><a class="side-link" href="concurrency-control.html">Concurrency Control Basics</a></li><li><a class="side-link" href="mvcc.html">MVCC in Depth</a></li><li><a class="side-link" href="mvcc-cmu.html">MVCC — CMU Lecture Notes</a></li></ul></div><div class="side-group"><div class="side-label">Scale & Patterns</div><ul><li><a class="side-link" href="sharding.html">Sharding vs Partitioning</a></li><li><a class="side-link" href="n-plus-one-problem.html">The N+1 Query Problem</a></li><li><a class="side-link" href="graph-databases.html">Graph Databases</a></li></ul></div><div class="side-group"><div class="side-label">SQL in Practice</div><ul><li><a class="side-link" href="joins.html">Joins — Semantics &amp; Algorithms</a></li><li><a class="side-link" href="window-functions.html">Window Functions</a></li></ul></div><div class="side-group"><div class="side-label">Distributed Data</div><ul><li><a class="side-link" href="cap-replication.html">CAP &amp; Replication</a></li></ul></div><div class="side-group"><div class="side-label">Revision</div><ul><li><a class="side-link" href="refresher.html">Rapid Refresher<span class="badge">&#9733;</span></a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">Database Systems</a></div>
+  <div class="page-head">
+    <div class="page-kicker">Database Systems</div>
+    <h1 class="page-title">Unique Indexes</h1>
+    <div class="page-meta">2 min read &middot; source: <code>dbms/unique_index.md</code></div>
+  </div>
+  <article class="prose"><p>A <strong>unique index</strong> is an index that enforces uniqueness of indexed values.</p>
+<p>Example:</p>
+<pre class="hljs"><code><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">UNIQUE</span> INDEX idx_email
+<span class="hljs-keyword">ON</span> users(email);</code></pre>
+<p>Now:</p>
+<pre class="hljs"><code><span class="hljs-keyword">INSERT INTO</span> users(email)
+<span class="hljs-keyword">VALUES</span> (<span class="hljs-string">&#x27;a@gmail.com&#x27;</span>);</code></pre>
+<p>works.</p>
+<p>But:</p>
+<pre class="hljs"><code><span class="hljs-keyword">INSERT INTO</span> users(email)
+<span class="hljs-keyword">VALUES</span> (<span class="hljs-string">&#x27;a@gmail.com&#x27;</span>);</code></pre>
+<p>fails because the index already contains that key.</p>
+<hr>
+<h3 id="how-is-it-implemented">How is it implemented?</h3>
+<p>Suppose the database uses a B+ tree.</p>
+<p>Normal index:</p>
+<pre class="hljs"><code>alice@gmail.com -&gt; row 1
+alice@gmail.com -&gt; row 42
+bob@gmail.com   -&gt; row 7</code></pre>
+<p>Duplicates are allowed.</p>
+<p>Unique index:</p>
+<pre class="hljs"><code>alice@gmail.com -&gt; row 1
+bob@gmail.com   -&gt; row 7</code></pre>
+<p>Before inserting:</p>
+<pre class="hljs"><code>charlie@gmail.com</code></pre>
+<p>the database traverses the B+ tree.</p>
+<p>If key exists:</p>
+<pre class="hljs"><code>ERROR: duplicate key</code></pre>
+<p>Otherwise:</p>
+<pre class="hljs"><code>insert key</code></pre>
+<hr>
+<h3 id="primary-key-vs-unique">PRIMARY KEY vs UNIQUE</h3>
+<p>Interview favorite.</p>
+<h4 id="primary-key">PRIMARY KEY</h4>
+<pre class="hljs"><code><span class="hljs-keyword">CREATE TABLE</span> users(
+    id <span class="hljs-type">INT</span> <span class="hljs-keyword">PRIMARY KEY</span>
+);</code></pre>
+<p>Guarantees:</p>
+<ul>
+<li>Unique</li>
+<li>Not NULL</li>
+</ul>
+<p>Only one primary key per table.</p>
+<hr>
+<h4 id="unique">UNIQUE</h4>
+<pre class="hljs"><code><span class="hljs-keyword">CREATE TABLE</span> users(
+    email <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">255</span>) <span class="hljs-keyword">UNIQUE</span>
+);</code></pre>
+<p>Guarantees:</p>
+<ul>
+<li>Unique</li>
+<li>NULL handling depends on DBMS</li>
+</ul>
+<p>Can have many unique constraints.</p>
+<hr>
+<h3 id="composite-unique-index">Composite Unique Index</h3>
+<p>Very common.</p>
+<p>Example:</p>
+<pre class="hljs"><code><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">UNIQUE</span> INDEX idx_student_course
+<span class="hljs-keyword">ON</span> enrollments(student_id, course_id);</code></pre>
+<p>Prevents:</p>
+<pre class="hljs"><code>student 1 -&gt; course 5
+student 1 -&gt; course 5</code></pre>
+<p>from being inserted twice.</p>
+<p>But allows:</p>
+<pre class="hljs"><code>student 1 -&gt; course 6
+student 2 -&gt; course 5</code></pre>
+<p>because uniqueness is on the pair.</p>
+<hr>
+<h3 id="why-not-just-use-unique-constraint">Why not just use UNIQUE constraint?</h3>
+<p>These are often effectively the same thing.</p>
+<pre class="hljs"><code>email <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">255</span>) <span class="hljs-keyword">UNIQUE</span></code></pre>
+<p>typically causes the database to automatically create a unique index underneath.</p>
+<p>For example, in:</p>
+<ul>
+<li>PostgreSQL</li>
+<li>MySQL</li>
+</ul>
+<p>a UNIQUE constraint is generally enforced via a unique index.</p>
+<hr>
+<h3 id="multiple-nulls">Multiple NULLs?</h3>
+<p>Interview trick question.</p>
+<p>In many databases:</p>
+<pre class="hljs"><code><span class="hljs-keyword">CREATE TABLE</span> users(
+    email <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">255</span>) <span class="hljs-keyword">UNIQUE</span>
+);</code></pre>
+<p>allows:</p>
+<pre class="hljs"><code>NULL
+NULL
+NULL</code></pre>
+<p>because <code>NULL != NULL</code> in SQL semantics.</p>
+<p>Examples include:</p>
+<ul>
+<li>PostgreSQL</li>
+<li>MySQL (modern versions)</li>
+</ul>
+<p>But behavior can vary across DBMSs.</p>
+<hr>
+<h3 id="performance-impact">Performance Impact</h3>
+<p>Without index:</p>
+<pre class="hljs"><code>Check duplicate
+→ scan entire table
+→ O(n)</code></pre>
+<p>With unique B+ tree index:</p>
+<pre class="hljs"><code>Lookup key
+→ O(log n)</code></pre>
+<p>Then insert into index.</p>
+<hr>
+<h3 id="common-interview-questions">Common Interview Questions</h3>
+<h4 id="can-a-unique-index-speed-up-queries">Can a unique index speed up queries?</h4>
+<p>Yes.</p>
+<p>It&#39;s still an index.</p>
+<pre class="hljs"><code><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span>
+<span class="hljs-keyword">FROM</span> users
+<span class="hljs-keyword">WHERE</span> email <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;a@gmail.com&#x27;</span>;</code></pre>
+<p>uses the index for lookup.</p>
+<hr>
+<h4 id="can-a-table-have-multiple-unique-indexes">Can a table have multiple unique indexes?</h4>
+<p>Yes.</p>
+<pre class="hljs"><code><span class="hljs-keyword">UNIQUE</span>(email)
+<span class="hljs-keyword">UNIQUE</span>(phone)
+<span class="hljs-keyword">UNIQUE</span>(username)</code></pre>
+<p>all valid.</p>
+<hr>
+<h4 id="is-every-primary-key-backed-by-a-unique-index">Is every primary key backed by a unique index?</h4>
+<p>In most major relational databases, yes.</p>
+<p>The database automatically creates an index to enforce the primary key constraint.</p>
+<hr>
+<p>A concise interview answer:</p>
+<blockquote>
+<p>A unique index is an index that both accelerates lookups and enforces uniqueness of indexed values. Internally, databases usually check the index before insertion and reject duplicate keys. Primary keys are typically implemented using unique indexes, but a table can have multiple unique indexes while only one primary key.</p>
+</blockquote>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="b-plus-trees.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">B+ Trees</span></a><a class="pn-card pn-next" href="primary-vs-secondary-index.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">Primary vs Secondary Indexes</span></a></nav>
+</main>
+<aside class="toc"><div class="toc-title">On this page</div><ul><li class="toc-d2"><a href="#how-is-it-implemented">How is it implemented?</a></li><li class="toc-d2"><a href="#primary-key-vs-unique">PRIMARY KEY vs UNIQUE</a></li><li class="toc-d2"><a href="#composite-unique-index">Composite Unique Index</a></li><li class="toc-d2"><a href="#why-not-just-use-unique-constraint">Why not just use UNIQUE constraint?</a></li><li class="toc-d2"><a href="#multiple-nulls">Multiple NULLs?</a></li><li class="toc-d2"><a href="#performance-impact">Performance Impact</a></li><li class="toc-d2"><a href="#common-interview-questions">Common Interview Questions</a></li></ul></aside>
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

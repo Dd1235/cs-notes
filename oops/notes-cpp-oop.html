@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>C++ OOP · OOP &amp; C++</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#8A4E5E">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link is-active" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">OOP & C++</a><div class="side-group"><div class="side-label">Lecture Notes</div><ul><li><a class="side-link" href="volatile-macros-inline.html">volatile, Macros &amp; inline</a></li><li><a class="side-link" href="references-and-const.html">References &amp; const</a></li><li><a class="side-link" href="function-overloading.html">Function Overloading</a></li><li><a class="side-link" href="dynamic-memory.html">Dynamic Memory Management</a></li><li><a class="side-link" href="classes-and-objects.html">Classes &amp; Objects</a></li><li><a class="side-link" href="constructors.html">Constructors &amp; Information Hiding</a></li><li><a class="side-link" href="copy-semantics.html">Copy Constructor &amp; Copy Assignment</a></li><li><a class="side-link" href="constness-and-static.html">Const-ness &amp; Static Members</a></li><li><a class="side-link" href="friend-functions.html">Friend Functions &amp; Friend Classes</a></li><li><a class="side-link" href="operator-overloading.html">Operator Overloading</a></li><li><a class="side-link" href="inheritance.html">Inheritance &amp; Overriding</a></li><li><a class="side-link" href="multiple-private-inheritance.html">Multiple &amp; Private Inheritance</a></li><li><a class="side-link" href="virtual-functions.html">Virtual Functions &amp; Dynamic Binding</a></li><li><a class="side-link" href="vtables-and-const-cast.html">Virtual Pointer Tables &amp; const_cast</a></li><li><a class="side-link" href="cpp-casts.html">C++ Casts</a></li><li><a class="side-link" href="exceptions.html">Exceptions &amp; Error Handling</a></li><li><a class="side-link" href="try-catch-and-templates.html">try/catch &amp; Function Templates</a></li><li><a class="side-link" href="class-templates-functors.html">Class Templates &amp; Functors</a></li></ul></div><div class="side-group"><div class="side-label">Extras</div><ul><li><a class="side-link" href="compilation-model.html">The C++ Compilation Model</a></li><li><a class="side-link" href="template-metaprogramming.html">Template Metaprogramming</a></li><li><a class="side-link" href="build-your-own-vector.html">Exercise — Build Your Own Vector</a></li><li><a class="side-link" href="miscellany.html">Miscellany</a></li><li><a class="side-link" href="resources.html">Resources</a></li></ul></div><div class="side-group"><div class="side-label">Topic Notes</div><ul><li><a class="side-link" href="notes-cpp-core.html">C++ Core</a></li><li><a class="side-link is-active" href="notes-cpp-oop.html">C++ OOP</a></li><li><a class="side-link" href="notes-cpp-advanced.html">C++ Advanced</a></li><li><a class="side-link" href="notes-ooad-uml.html">OOAD &amp; UML</a></li><li><a class="side-link" href="notes-design-patterns.html">Design Patterns</a></li><li><a class="side-link" href="notes-testing-sdlc.html">Testing, SDLC &amp; SE</a></li><li><a class="side-link" href="notes-interview-questions.html">Interview Questions</a></li></ul></div><div class="side-group"><div class="side-label">Flashcards</div><ul><li><a class="side-link" href="cards-cpp-core.html">C++ Core Flashcards</a></li><li><a class="side-link" href="cards-oop-lifetime.html">OOP, Lifetime &amp; Memory Flashcards</a></li><li><a class="side-link" href="cards-polymorphism-stl.html">Polymorphism, Casts, Templates &amp; STL Flashcards</a></li><li><a class="side-link" href="cards-ooad-uml.html">OOAD &amp; UML Flashcards</a></li><li><a class="side-link" href="cards-design-patterns.html">Design Patterns Flashcards</a></li><li><a class="side-link" href="cards-testing-sdlc.html">Testing, SDLC &amp; SE Flashcards</a></li><li><a class="side-link" href="cards-interview-drills.html">Interview &amp; Code-Reading Drills</a></li></ul></div><div class="side-group"><div class="side-label">Under the Hood</div><ul><li><a class="side-link" href="memory-layout.html">Memory Layout, Alignment &amp; Padding</a></li></ul></div><div class="side-group"><div class="side-label">Revision</div><ul><li><a class="side-link" href="refresher.html">Rapid Refresher<span class="badge">&#9733;</span></a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">OOP & C++</a></div>
+  <div class="page-head">
+    <div class="page-kicker">OOP & C++</div>
+    <h1 class="page-title">C++ OOP</h1>
+    <div class="page-meta">7 min read &middot; source: <code>oops_cpp/generated_notes/02_cpp_oop.md</code></div>
+  </div>
+  <article class="prose"><h3 id="class-object-state-behavior-identity">Class, Object, State, Behavior, Identity</h3>
+<p>A class defines a type. An object is a runtime instance of that type.</p>
+<ul>
+<li>State: data members.</li>
+<li>Behavior: member functions.</li>
+<li>Identity: two objects can have equal state but still be different objects.</li>
+</ul>
+<pre class="hljs"><code><span class="hljs-keyword">class</span> <span class="hljs-title class_">Counter</span> {
+    <span class="hljs-type">int</span> value_ = <span class="hljs-number">0</span>;
+
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">increment</span><span class="hljs-params">()</span> </span>{ ++value_; }
+    <span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">value</span><span class="hljs-params">()</span> <span class="hljs-type">const</span> </span>{ <span class="hljs-keyword">return</span> value_; }
+};</code></pre>
+<h3 id="encapsulation-and-information-hiding">Encapsulation and Information Hiding</h3>
+<p>Encapsulation groups data and operations. Information hiding prevents users from depending on internal representation.</p>
+<p>Use private data members and expose a minimal interface:</p>
+<pre class="hljs"><code><span class="hljs-keyword">class</span> <span class="hljs-title class_">BankAccount</span> {
+    <span class="hljs-type">long</span> <span class="hljs-type">long</span> balance_ = <span class="hljs-number">0</span>;
+
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-function"><span class="hljs-keyword">explicit</span> <span class="hljs-title">BankAccount</span><span class="hljs-params">(<span class="hljs-type">long</span> <span class="hljs-type">long</span> opening_balance)</span>
+        : balance_(opening_balance) {</span>}
+
+    <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">deposit</span><span class="hljs-params">(<span class="hljs-type">long</span> <span class="hljs-type">long</span> amount)</span> </span>{
+        <span class="hljs-keyword">if</span> (amount &lt;= <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span>;
+        balance_ += amount;
+    }
+
+    <span class="hljs-function"><span class="hljs-type">long</span> <span class="hljs-type">long</span> <span class="hljs-title">balance</span><span class="hljs-params">()</span> <span class="hljs-type">const</span> </span>{
+        <span class="hljs-keyword">return</span> balance_;
+    }
+};</code></pre>
+<p>Avoid mindless get-set interfaces. If every field has a setter, invariants are not protected.</p>
+<h3 id="access-specifiers">Access Specifiers</h3>
+<table>
+<thead>
+<tr>
+<th>Specifier</th>
+<th>Accessible from</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>public</code></td>
+<td>everyone</td>
+</tr>
+<tr>
+<td><code>protected</code></td>
+<td>class and derived classes</td>
+</tr>
+<tr>
+<td><code>private</code></td>
+<td>class and friends</td>
+</tr>
+</tbody></table>
+<p>Default access:</p>
+<ul>
+<li><code>class</code>: private.</li>
+<li><code>struct</code>: public.</li>
+</ul>
+<p>Use <code>struct</code> for passive data aggregates and <code>class</code> for invariant-owning types.</p>
+<h3 id="this-pointer"><code>this</code> Pointer</h3>
+<p>Every non-static member function receives a hidden <code>this</code> pointer.</p>
+<pre class="hljs"><code><span class="hljs-keyword">class</span> <span class="hljs-title class_">Box</span> {
+    <span class="hljs-type">int</span> width_;
+
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-function"><span class="hljs-keyword">explicit</span> <span class="hljs-title">Box</span><span class="hljs-params">(<span class="hljs-type">int</span> width)</span> : width_(width) {</span>}
+
+    <span class="hljs-function"><span class="hljs-type">bool</span> <span class="hljs-title">wider_than</span><span class="hljs-params">(<span class="hljs-type">const</span> Box&amp; other)</span> <span class="hljs-type">const</span> </span>{
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>-&gt;width_ &gt; other.width_;
+    }
+};</code></pre>
+<p><code>this</code> is unavailable in static member functions because they are not called on an object.</p>
+<h3 id="constructors">Constructors</h3>
+<p>A constructor initializes an object.</p>
+<pre class="hljs"><code><span class="hljs-keyword">class</span> <span class="hljs-title class_">Fraction</span> {
+    <span class="hljs-type">int</span> num_;
+    <span class="hljs-type">int</span> den_;
+
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-built_in">Fraction</span>(<span class="hljs-type">int</span> num, <span class="hljs-type">int</span> den) : <span class="hljs-built_in">num_</span>(num), <span class="hljs-built_in">den_</span>(den) {
+        <span class="hljs-keyword">if</span> (den_ == <span class="hljs-number">0</span>) <span class="hljs-keyword">throw</span> std::<span class="hljs-built_in">invalid_argument</span>(<span class="hljs-string">&quot;zero denominator&quot;</span>);
+    }
+};</code></pre>
+<p>Prefer member initializer lists:</p>
+<ul>
+<li>Required for references and const data members.</li>
+<li>Avoids default construction followed by later <code>operator=</code>.</li>
+<li>Initializes members in declaration order, not list order.</li>
+</ul>
+<p>Use <code>explicit</code> for single-argument constructors to prevent accidental conversions.</p>
+<pre class="hljs"><code><span class="hljs-keyword">class</span> <span class="hljs-title class_">Meter</span> {
+    <span class="hljs-type">int</span> value_;
+
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-function"><span class="hljs-keyword">explicit</span> <span class="hljs-title">Meter</span><span class="hljs-params">(<span class="hljs-type">int</span> value)</span> : value_(value) {</span>}
+};</code></pre>
+<h3 id="destructors-and-raii">Destructors and RAII</h3>
+<p>A destructor runs when an object lifetime ends.</p>
+<p>RAII: resource acquisition is initialization. Tie a resource to an object so cleanup happens automatically.</p>
+<pre class="hljs"><code><span class="hljs-keyword">class</span> <span class="hljs-title class_">File</span> {
+    FILE* fp_;
+
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-function"><span class="hljs-keyword">explicit</span> <span class="hljs-title">File</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span>* path)</span> : fp_(std::fopen(path, <span class="hljs-string">&quot;r&quot;</span>)) {</span>
+        <span class="hljs-keyword">if</span> (!fp_) <span class="hljs-keyword">throw</span> std::<span class="hljs-built_in">runtime_error</span>(<span class="hljs-string">&quot;open failed&quot;</span>);
+    }
+
+    ~<span class="hljs-built_in">File</span>() {
+        <span class="hljs-keyword">if</span> (fp_) std::<span class="hljs-built_in">fclose</span>(fp_);
+    }
+
+    <span class="hljs-built_in">File</span>(<span class="hljs-type">const</span> File&amp;) = <span class="hljs-keyword">delete</span>;
+    File&amp; <span class="hljs-keyword">operator</span>=(<span class="hljs-type">const</span> File&amp;) = <span class="hljs-keyword">delete</span>;
+};</code></pre>
+<p>Use standard RAII types when possible:</p>
+<ul>
+<li><code>std::fstream</code></li>
+<li><code>std::lock_guard</code></li>
+<li><code>std::unique_ptr</code></li>
+<li><code>std::vector</code></li>
+<li><code>std::string</code></li>
+</ul>
+<h3 id="object-lifetime">Object Lifetime</h3>
+<p>Objects are constructed before use and destroyed at lifetime end.</p>
+<p>Destruction order:</p>
+<ul>
+<li>Local automatic objects: reverse order of construction.</li>
+<li>Class members: reverse declaration order after destructor body runs.</li>
+<li>Base classes: after derived members, reverse base construction order.</li>
+</ul>
+<pre class="hljs"><code><span class="hljs-keyword">struct</span> <span class="hljs-title class_">Trace</span> {
+    std::string name;
+    <span class="hljs-function"><span class="hljs-keyword">explicit</span> <span class="hljs-title">Trace</span><span class="hljs-params">(std::string n)</span> : name(std::move(n)) {</span>}
+    ~<span class="hljs-built_in">Trace</span>() { <span class="hljs-comment">/* observe destruction order while debugging */</span> }
+};</code></pre>
+<p>Interview trap: a destructor should usually not throw. Throwing during stack unwinding can terminate the program.</p>
+<h3 id="copy-control">Copy Control</h3>
+<p>Compiler-generated operations:</p>
+<ul>
+<li>Default constructor.</li>
+<li>Destructor.</li>
+<li>Copy constructor.</li>
+<li>Copy <code>operator=</code>.</li>
+<li>Move constructor.</li>
+<li>Move <code>operator=</code>.</li>
+</ul>
+<p>Rule of 3: if you manually manage a resource and define one of destructor, copy constructor, or copy <code>operator=</code>, you probably need all three.</p>
+<p>Rule of 5: also consider move constructor and move <code>operator=</code>.</p>
+<p>Rule of 0: best design is to use RAII members so compiler-generated special members are correct.</p>
+<pre class="hljs"><code><span class="hljs-keyword">class</span> <span class="hljs-title class_">Buffer</span> {
+    std::vector&lt;<span class="hljs-type">int</span>&gt; data_;
+
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-function"><span class="hljs-keyword">explicit</span> <span class="hljs-title">Buffer</span><span class="hljs-params">(std::<span class="hljs-type">size_t</span> n)</span> : data_(n) {</span>}
+};</code></pre>
+<h3 id="copy-constructor-vs-copy-operator">Copy Constructor vs Copy <code>operator=</code></h3>
+<pre class="hljs"><code><span class="hljs-keyword">class</span> <span class="hljs-title class_">X</span> {
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-built_in">X</span>(<span class="hljs-type">const</span> X&amp; other);            <span class="hljs-comment">// copy construction</span>
+    X&amp; <span class="hljs-keyword">operator</span>=(<span class="hljs-type">const</span> X&amp; other); <span class="hljs-comment">// copy operator=</span>
+};</code></pre>
+<p>Difference:</p>
+<ul>
+<li>Copy constructor creates a new object from an existing one.</li>
+<li>Copy <code>operator=</code> replaces the state of an already-existing object.</li>
+<li><code>operator=</code> should return <code>*this</code>.</li>
+<li><code>operator=</code> must handle <code>x = x</code> or be naturally safe.</li>
+</ul>
+<p>Copy-and-swap idiom:</p>
+<pre class="hljs"><code><span class="hljs-keyword">class</span> <span class="hljs-title class_">Widget</span> {
+    std::vector&lt;<span class="hljs-type">int</span>&gt; data_;
+
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">swap</span><span class="hljs-params">(Widget&amp; other)</span> <span class="hljs-keyword">noexcept</span> </span>{
+        data_.<span class="hljs-built_in">swap</span>(other.data_);
+    }
+
+    Widget&amp; <span class="hljs-keyword">operator</span>=(Widget other) {
+        <span class="hljs-built_in">swap</span>(other);
+        <span class="hljs-keyword">return</span> *<span class="hljs-keyword">this</span>;
+    }
+};</code></pre>
+<h3 id="move-semantics">Move Semantics</h3>
+<p>Move transfers resources from a temporary or expiring object.</p>
+<pre class="hljs"><code><span class="hljs-keyword">class</span> <span class="hljs-title class_">Holder</span> {
+    std::unique_ptr&lt;<span class="hljs-type">int</span>&gt; p_;
+
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-built_in">Holder</span>() : <span class="hljs-built_in">p_</span>(std::<span class="hljs-built_in">make_unique</span>&lt;<span class="hljs-type">int</span>&gt;(<span class="hljs-number">0</span>)) {}
+    <span class="hljs-built_in">Holder</span>(Holder&amp;&amp;) <span class="hljs-keyword">noexcept</span> = <span class="hljs-keyword">default</span>;
+    Holder&amp; <span class="hljs-keyword">operator</span>=(Holder&amp;&amp;) <span class="hljs-keyword">noexcept</span> = <span class="hljs-keyword">default</span>;
+};</code></pre>
+<p><code>std::move</code> does not move by itself. It casts an expression to an rvalue reference so a move operation may be selected.</p>
+<pre class="hljs"><code>std::string a = <span class="hljs-string">&quot;abc&quot;</span>;
+std::string b = std::<span class="hljs-built_in">move</span>(a); <span class="hljs-comment">// a is valid but unspecified</span></code></pre>
+<h3 id="const-objects-and-const-member-functions">Const Objects and Const Member Functions</h3>
+<p>A const object can call only const member functions.</p>
+<pre class="hljs"><code><span class="hljs-keyword">class</span> <span class="hljs-title class_">Vector2</span> {
+    <span class="hljs-type">double</span> x_;
+    <span class="hljs-type">double</span> y_;
+
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-function"><span class="hljs-type">double</span> <span class="hljs-title">length</span><span class="hljs-params">()</span> <span class="hljs-type">const</span> </span>{
+        <span class="hljs-keyword">return</span> std::<span class="hljs-built_in">sqrt</span>(x_ * x_ + y_ * y_);
+    }
+};</code></pre>
+<p><code>const</code> after the function name means <code>this</code> is a pointer to const.</p>
+<pre class="hljs"><code><span class="hljs-function"><span class="hljs-type">double</span> <span class="hljs-title">length</span><span class="hljs-params">()</span> <span class="hljs-type">const</span></span>;</code></pre>
+<p>Use const member functions for observers. This allows use with const references and makes intent clear.</p>
+<h3 id="const-data-members-and-mutable">Const Data Members and <code>mutable</code></h3>
+<p>Const data members must be initialized in the constructor initializer list.</p>
+<pre class="hljs"><code><span class="hljs-keyword">class</span> <span class="hljs-title class_">Id</span> {
+    <span class="hljs-type">const</span> <span class="hljs-type">int</span> value_;
+
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-function"><span class="hljs-keyword">explicit</span> <span class="hljs-title">Id</span><span class="hljs-params">(<span class="hljs-type">int</span> value)</span> : value_(value) {</span>}
+};</code></pre>
+<p><code>mutable</code> allows a data member to change even in a const member function. Use it for caches or synchronization primitives, not logical state.</p>
+<pre class="hljs"><code><span class="hljs-keyword">class</span> <span class="hljs-title class_">Expensive</span> {
+    <span class="hljs-keyword">mutable</span> <span class="hljs-type">bool</span> cached_ = <span class="hljs-literal">false</span>;
+    <span class="hljs-keyword">mutable</span> <span class="hljs-type">int</span> value_ = <span class="hljs-number">0</span>;
+
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">get</span><span class="hljs-params">()</span> <span class="hljs-type">const</span> </span>{
+        <span class="hljs-keyword">if</span> (!cached_) {
+            value_ = <span class="hljs-number">42</span>;
+            cached_ = <span class="hljs-literal">true</span>;
+        }
+        <span class="hljs-keyword">return</span> value_;
+    }
+};</code></pre>
+<h3 id="static-data-and-static-member-functions">Static Data and Static Member Functions</h3>
+<p>Static data members belong to the class, not an individual object.</p>
+<pre class="hljs"><code><span class="hljs-keyword">class</span> <span class="hljs-title class_">User</span> {
+    <span class="hljs-keyword">inline</span> <span class="hljs-type">static</span> <span class="hljs-type">int</span> count_ = <span class="hljs-number">0</span>;
+
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-built_in">User</span>() { ++count_; }
+    ~<span class="hljs-built_in">User</span>() { --count_; }
+
+    <span class="hljs-function"><span class="hljs-type">static</span> <span class="hljs-type">int</span> <span class="hljs-title">count</span><span class="hljs-params">()</span> </span>{
+        <span class="hljs-keyword">return</span> count_;
+    }
+};</code></pre>
+<p>Static member functions:</p>
+<ul>
+<li>Have no <code>this</code>.</li>
+<li>Can directly access only static members.</li>
+<li>Are useful for factories, counters, and utility behavior tied to the class.</li>
+</ul>
+<h3 id="singleton">Singleton</h3>
+<p>A Singleton restricts a type to one shared instance.</p>
+<pre class="hljs"><code><span class="hljs-keyword">class</span> <span class="hljs-title class_">Config</span> {
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-function"><span class="hljs-type">static</span> Config&amp; <span class="hljs-title">instance</span><span class="hljs-params">()</span> </span>{
+        <span class="hljs-type">static</span> Config c;
+        <span class="hljs-keyword">return</span> c;
+    }
+
+    <span class="hljs-built_in">Config</span>(<span class="hljs-type">const</span> Config&amp;) = <span class="hljs-keyword">delete</span>;
+    Config&amp; <span class="hljs-keyword">operator</span>=(<span class="hljs-type">const</span> Config&amp;) = <span class="hljs-keyword">delete</span>;
+
+<span class="hljs-keyword">private</span>:
+    <span class="hljs-built_in">Config</span>() = <span class="hljs-keyword">default</span>;
+};</code></pre>
+<p>Use sparingly. It creates hidden global state and makes testing harder. Dependency injection is often cleaner.</p>
+<h3 id="friend-functions-and-friend-classes">Friend Functions and Friend Classes</h3>
+<p><code>friend</code> grants access to private/protected members.</p>
+<pre class="hljs"><code><span class="hljs-keyword">class</span> <span class="hljs-title class_">Fraction</span> {
+    <span class="hljs-type">int</span> num_;
+    <span class="hljs-type">int</span> den_;
+
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-built_in">Fraction</span>(<span class="hljs-type">int</span> n, <span class="hljs-type">int</span> d) : <span class="hljs-built_in">num_</span>(n), <span class="hljs-built_in">den_</span>(d) {}
+
+    <span class="hljs-keyword">friend</span> std::ostream&amp; <span class="hljs-keyword">operator</span>&lt;&lt;(std::ostream&amp; os, <span class="hljs-type">const</span> Fraction&amp; f);
+};
+
+std::ostream&amp; <span class="hljs-keyword">operator</span>&lt;&lt;(std::ostream&amp; os, <span class="hljs-type">const</span> Fraction&amp; f) {
+    <span class="hljs-keyword">return</span> os &lt;&lt; f.num_ &lt;&lt; <span class="hljs-string">&#x27;/&#x27;</span> &lt;&lt; f.den_;
+}</code></pre>
+<p>Use friend for tightly coupled operations such as symmetric operators or stream insertion. Do not use it to bypass design.</p>
+<h3 id="operator-overloading">Operator Overloading</h3>
+<p>Operators are functions with operator syntax.</p>
+<pre class="hljs"><code><span class="hljs-keyword">class</span> <span class="hljs-title class_">Fraction</span> {
+    <span class="hljs-type">int</span> n_;
+    <span class="hljs-type">int</span> d_;
+
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-built_in">Fraction</span>(<span class="hljs-type">int</span> n, <span class="hljs-type">int</span> d) : <span class="hljs-built_in">n_</span>(n), <span class="hljs-built_in">d_</span>(d) {}
+
+    Fraction <span class="hljs-keyword">operator</span>+(<span class="hljs-type">const</span> Fraction&amp; rhs) <span class="hljs-type">const</span> {
+        <span class="hljs-keyword">return</span> <span class="hljs-built_in">Fraction</span>(n_ * rhs.d_ + rhs.n_ * d_, d_ * rhs.d_);
+    }
+};</code></pre>
+<p>Rules:</p>
+<ul>
+<li>You cannot create new operators.</li>
+<li>You cannot change precedence or associativity.</li>
+<li>At least one operand must be user-defined for most overloads.</li>
+<li>Some operators should be members: <code>=</code>, <code>[]</code>, <code>()</code>, <code>-&gt;</code>.</li>
+<li>Stream operators are usually non-member functions.</li>
+</ul>
+<p>Good overloads match natural meaning:</p>
+<table>
+<thead>
+<tr>
+<th>Operator</th>
+<th>Good use</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>+</code></td>
+<td>value-like addition</td>
+</tr>
+<tr>
+<td><code>==</code></td>
+<td>equality of observable value</td>
+</tr>
+<tr>
+<td><code>&lt;</code></td>
+<td>strict ordering</td>
+</tr>
+<tr>
+<td><code>&lt;&lt;</code></td>
+<td>stream output</td>
+</tr>
+<tr>
+<td><code>[]</code></td>
+<td>indexing</td>
+</tr>
+<tr>
+<td><code>()</code></td>
+<td>function object</td>
+</tr>
+</tbody></table>
+<p>Bad overloads surprise the reader. Do not make <code>+</code> mutate, or <code>*</code> mean &quot;save to database&quot;.</p>
+<h3 id="namespaces">Namespaces</h3>
+<p>Namespaces group names and avoid collisions.</p>
+<pre class="hljs"><code><span class="hljs-keyword">namespace</span> math {
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">Fraction</span> {};
+}
+
+math::Fraction f;</code></pre>
+<p>Guidelines:</p>
+<ul>
+<li>Do not put <code>using namespace std;</code> in headers.</li>
+<li>Prefer qualified names in shared interfaces.</li>
+<li>Namespace aliases are useful for long names.</li>
+</ul>
+<pre class="hljs"><code><span class="hljs-keyword">namespace</span> fs = std::filesystem;</code></pre>
+<h3 id="oop-design-checklist">OOP Design Checklist</h3>
+<p>For each class, ask:</p>
+<ul>
+<li>What invariant does it protect?</li>
+<li>Who owns each resource?</li>
+<li>Are constructors forcing valid state?</li>
+<li>Does copying make sense? If not, delete it.</li>
+<li>Does moving make sense? If yes, mark move operations <code>noexcept</code> when possible.</li>
+<li>Which functions are observers and should be <code>const</code>?</li>
+<li>Is inheritance needed, or would composition be simpler?</li>
+</ul>
+<h3 id="checkpoints">Checkpoints</h3>
+<ul>
+<li>Difference between class and object?</li>
+<li>What is the hidden <code>this</code> pointer?</li>
+<li>Why prefer initializer lists?</li>
+<li>What is RAII?</li>
+<li>What are Rule of 3, Rule of 5, and Rule of 0?</li>
+<li>When is a destructor virtual?</li>
+<li>What does <code>std::move</code> actually do?</li>
+<li>Why should stream operators often be friends or non-members?</li>
+<li>Why is uncontrolled Singleton usage risky?</li>
+</ul>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="notes-cpp-core.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">C++ Core</span></a><a class="pn-card pn-next" href="notes-cpp-advanced.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">C++ Advanced</span></a></nav>
+</main>
+<aside class="toc"><div class="toc-title">On this page</div><ul><li class="toc-d2"><a href="#class-object-state-behavior-identity">Class, Object, State, Behavior, Identity</a></li><li class="toc-d2"><a href="#encapsulation-and-information-hiding">Encapsulation and Information Hiding</a></li><li class="toc-d2"><a href="#access-specifiers">Access Specifiers</a></li><li class="toc-d2"><a href="#this-pointer"><code>this</code> Pointer</a></li><li class="toc-d2"><a href="#constructors">Constructors</a></li><li class="toc-d2"><a href="#destructors-and-raii">Destructors and RAII</a></li><li class="toc-d2"><a href="#object-lifetime">Object Lifetime</a></li><li class="toc-d2"><a href="#copy-control">Copy Control</a></li><li class="toc-d2"><a href="#copy-constructor-vs-copy-operator">Copy Constructor vs Copy <code>operator=</code></a></li><li class="toc-d2"><a href="#move-semantics">Move Semantics</a></li><li class="toc-d2"><a href="#const-objects-and-const-member-functions">Const Objects and Const Member Functions</a></li><li class="toc-d2"><a href="#const-data-members-and-mutable">Const Data Members and <code>mutable</code></a></li><li class="toc-d2"><a href="#static-data-and-static-member-functions">Static Data and Static Member Functions</a></li><li class="toc-d2"><a href="#singleton">Singleton</a></li><li class="toc-d2"><a href="#friend-functions-and-friend-classes">Friend Functions and Friend Classes</a></li><li class="toc-d2"><a href="#operator-overloading">Operator Overloading</a></li><li class="toc-d2"><a href="#namespaces">Namespaces</a></li><li class="toc-d2"><a href="#oop-design-checklist">OOP Design Checklist</a></li><li class="toc-d2"><a href="#checkpoints">Checkpoints</a></li></ul></aside>
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

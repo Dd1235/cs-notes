@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PYQ — DBMS &amp; SQL · Company Prep</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#6F5680">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link is-active" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">Company Prep</a><div class="side-group"><div class="side-label">Overview</div><ul><li><a class="side-link" href="overview.html">The Map — Who Tests What</a></li></ul></div><div class="side-group"><div class="side-label">Companies</div><ul><li><a class="side-link" href="arista.html">Arista Networks</a></li><li><a class="side-link" href="intuit.html">Intuit</a></li><li><a class="side-link" href="stripe.html">Stripe</a></li><li><a class="side-link" href="de-shaw.html">D. E. Shaw</a></li><li><a class="side-link" href="rubrik.html">Rubrik</a></li><li><a class="side-link" href="citadel.html">Citadel</a></li></ul></div><div class="side-group"><div class="side-label">PYQ Bank</div><ul><li><a class="side-link" href="pyq-os-memory.html">PYQ — OS: Memory, Paging &amp; Processes</a></li><li><a class="side-link" href="pyq-os-concurrency.html">PYQ — OS: Concurrency &amp; Sync</a></li><li><a class="side-link" href="pyq-networks.html">PYQ — Networks</a></li><li><a class="side-link" href="pyq-oop-design.html">PYQ — OOP &amp; Design</a></li><li><a class="side-link is-active" href="pyq-dbms-sql.html">PYQ — DBMS &amp; SQL</a></li><li><a class="side-link" href="pyq-c-lowlevel.html">PYQ — C &amp; Low-Level</a></li><li><a class="side-link" href="pyq-cloud-ml.html">PYQ — Cloud, Containers &amp; ML</a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">Company Prep</a></div>
+  <div class="page-head">
+    <div class="page-kicker">Company Prep</div>
+    <h1 class="page-title">PYQ — DBMS &amp; SQL</h1>
+    <div class="page-meta">4 min read &middot; source: <code>company_wise/pyq_dbms_sql.md</code></div>
+  </div>
+  <article class="prose"><blockquote>
+<p>Intuit&#39;s SQL battery, D. E. Shaw&#39;s schema design, and the storage questions from Flipkart/NetApp — answered with the trade-off language interviewers reward.</p>
+</blockquote>
+<p><strong>What is an ORM, and ORM vs hand-written SQL — trade-offs?</strong> <code>Intuit</code></p>
+<p>An <strong>Object-Relational Mapper</strong> (Hibernate, SQLAlchemy, Django ORM) maps classes↔tables and objects↔rows, generating SQL from object operations, managing identity, sessions/units-of-work, and migrations. <strong>For</strong>: productivity, type safety, protection from injection by default, portable across engines, CRUD for free. <strong>Against</strong>: generated SQL can be naive — the flagship failure is the <a href="../dbms/n-plus-one-problem.html">N+1 query problem</a> (1 query for posts, N for authors — fix with eager loading/<code>select_related</code>); opaque performance; leaky abstraction for window functions, CTEs, engine hints. The mature answer: ORM for the 90% CRUD, hand-tuned SQL (most ORMs allow raw escape hatches) for hot reporting/analytics paths — measured with <code>EXPLAIN</code>, not vibes.</p>
+<p><strong>Walk normalization 1NF → 5NF.</strong> <code>Intuit</code></p>
+<p>Full detail: <a href="../dbms/normalization.html">normalization notes</a>. The ladder, one line each: <strong>1NF</strong> — atomic values, no repeating groups. <strong>2NF</strong> — no partial dependency on part of a composite key (order-line&#39;s <code>product_name</code> depends on product alone → out). <strong>3NF</strong> — no transitive dependency (customer&#39;s <code>city → pincode</code> chain → out). <strong>BCNF</strong> — <em>every</em> determinant is a candidate key (3NF&#39;s edge cases with overlapping keys). <strong>4NF</strong> — no independent multi-valued dependencies stored together (a person&#39;s phones × emails must not cross-product in one table). <strong>5NF/PJNF</strong> — no lossless decomposition remains possible; join dependencies implied only by keys (rare; cyclic constraint schemas). Close with why we stop: each level trades redundancy/anomaly protection for joins — production schemas live at 3NF/BCNF and <strong>denormalize deliberately</strong> for read paths.</p>
+<p><strong>How do NoSQL databases handle concurrency and integrity — which ACID parts get traded?</strong> <code>Intuit</code></p>
+<p>Typical distributed NoSQL (Dynamo-style, Mongo, Cassandra): <strong>Durability</strong> kept (WALs/replication — <a href="../dbms/write-ahead-logging.html">WAL notes</a>); <strong>Atomicity</strong> kept only per-document/row, historically not across items (Mongo added multi-document transactions, at a cost); <strong>Isolation</strong> weakened — no global serializability; per-key <a href="../dbms/mvcc.html">MVCC</a>, optimistic version checks (CAS on a version field), or last-write-wins with vector clocks; <strong>Consistency</strong> (the C both of ACID and CAP) traded for availability — <strong>eventual consistency</strong> with tunable read/write quorums (<code>R+W&gt;N</code> for read-your-writes — <a href="../dbms/cap-replication.html">CAP &amp; replication</a>). The framing that scores: it&#39;s <strong>BASE vs ACID</strong> — push conflict resolution to the application (merge carts, CRDTs) in exchange for partition-tolerant availability and horizontal scale.</p>
+<p><strong>Write the SQL to flag duplicate rows with GROUP BY/HAVING.</strong> <code>Intuit</code></p>
+<pre class="hljs"><code><span class="hljs-comment">-- find the duplicated identities</span>
+<span class="hljs-keyword">SELECT</span> email, <span class="hljs-built_in">COUNT</span>(<span class="hljs-operator">*</span>) <span class="hljs-keyword">AS</span> n
+<span class="hljs-keyword">FROM</span> users
+<span class="hljs-keyword">GROUP</span> <span class="hljs-keyword">BY</span> email
+<span class="hljs-keyword">HAVING</span> <span class="hljs-built_in">COUNT</span>(<span class="hljs-operator">*</span>) <span class="hljs-operator">&gt;</span> <span class="hljs-number">1</span>;
+
+<span class="hljs-comment">-- delete all but the earliest copy (the production follow-up)</span>
+<span class="hljs-keyword">DELETE</span> <span class="hljs-keyword">FROM</span> users
+<span class="hljs-keyword">WHERE</span> id <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">IN</span> (
+  <span class="hljs-keyword">SELECT</span> <span class="hljs-built_in">MIN</span>(id) <span class="hljs-keyword">FROM</span> users <span class="hljs-keyword">GROUP</span> <span class="hljs-keyword">BY</span> email
+);</code></pre>
+<p>Say <em>why</em> HAVING: <strong>WHERE filters rows before grouping; HAVING filters groups after aggregation</strong> — a <code>WHERE COUNT(*)&gt;1</code> is illegal because counts don&#39;t exist yet. Bonus points: the <a href="../dbms/window-functions.html">window-function version</a> (<code>ROW_NUMBER() OVER (PARTITION BY email ORDER BY id)</code> → delete <code>rn &gt; 1</code>) handles &quot;keep newest by timestamp&quot; more flexibly, and a <code>UNIQUE</code> <a href="../dbms/unique-indexes.html">index</a> is how you prevent recurrence.</p>
+<p><strong>Indexing on write-heavy tables — the trade-offs.</strong> <code>Flipkart</code></p>
+<p>Every secondary index is another <a href="../dbms/b-plus-trees.html">B+ tree</a> that <strong>every write must also update</strong>: an INSERT into a table with 6 indexes does ~7 tree modifications, with page splits, WAL volume, and lock/latch traffic to match. Reads get O(log n) lookups; writes pay per index. Levers to name: index only what queries prove they need (drop unused — <code>pg_stat_user_indexes</code>); <strong>composite indexes</strong> serve multiple query shapes with one tree (leftmost-prefix rule); partial indexes (<code>WHERE status=&#39;active&#39;</code>) shrink the write surface; in Postgres, <strong>HOT updates</strong> avoid index maintenance only if no indexed column changed — so <em>not</em> indexing a hot-updated column is itself an optimization; extreme write rates → LSM-based engines (RocksDB) that turn random index writes into sequential merges.</p>
+<p><strong>Design a schema for ball-by-ball cricket (or any real-time sports) data.</strong> <code>D. E. Shaw</code></p>
+<p>Model the <strong>event as the atomic fact</strong> and everything else as dimensions: <code>tournament</code>, <code>team</code>, <code>player</code>, <code>match</code> (teams, venue, date), <code>innings</code> (match, batting team, order), and the heart — <code>delivery</code>: <code>(match_id, innings_no, over_no, ball_in_over)</code> as a composite natural key, plus <code>bowler_id</code>, <code>striker_id</code>, <code>non_striker_id</code>, <code>runs_off_bat</code>, <code>extras</code> + <code>extra_type</code>, <code>wicket_type</code> + <code>dismissed_player_id</code> (nullable), <code>ts</code>. Normalized (3NF: players/teams referenced, never repeated), append-only — which matches the domain: deliveries happen once and never update. Aggregates (scorecards, player stats) are <strong>derived</strong>, not stored — or maintained as materialized views refreshed per over. Indexing for the query patterns: <code>(match_id, innings_no, over_no, ball_in_over)</code> clustered/for order, <code>(bowler_id, match_id)</code> and <code>(striker_id, match_id)</code> for player timelines. Scale sentence: partition by tournament/season (<a href="../dbms/sharding.html">sharding notes</a>); real-time feed = the insert stream itself.</p>
+<p><strong>Database storage engines vs raw filesystem storage — when does each win?</strong> <code>NetApp</code></p>
+<p>A storage engine (InnoDB, RocksDB) layers on top of files: <a href="../dbms/b-plus-trees.html">B+ trees</a>/LSM organization, <a href="../dbms/write-ahead-logging.html">WAL + crash recovery</a>, <a href="../dbms/mvcc.html">transactions &amp; MVCC</a>, indexes, buffer-pool caching. The filesystem gives you hierarchical names → byte streams, <a href="../os/filesystems.html">journaling for its own metadata</a>, and OS page-cache — but no transactions across writes, no secondary indexes, no query language. Use raw files for: large immutable blobs (images, video — store the <em>path</em> in the DB), append-only logs, config. Use an engine when you need atomic multi-item updates, point/range queries by content, or concurrent writers with isolation. The hybrid is the norm: metadata in the database, bulk bytes on the filesystem/object store — because databases handle many small hot rows well and filesystems handle huge sequential streams well.</p>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="pyq-oop-design.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">PYQ — OOP &amp; Design</span></a><a class="pn-card pn-next" href="pyq-c-lowlevel.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">PYQ — C &amp; Low-Level</span></a></nav>
+</main>
+
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

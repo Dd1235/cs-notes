@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DROP vs DELETE vs TRUNCATE · Database Systems</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#B05730">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link is-active" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">Database Systems</a><div class="side-group"><div class="side-label">Foundations</div><ul><li><a class="side-link" href="acid.html">ACID &amp; Isolation Levels</a></li><li><a class="side-link" href="normalization.html">Normalization</a></li><li><a class="side-link" href="sql.html">SQL Essentials</a></li><li><a class="side-link is-active" href="drop-delete-truncate.html">DROP vs DELETE vs TRUNCATE</a></li></ul></div><div class="side-group"><div class="side-label">Indexing & Storage</div><ul><li><a class="side-link" href="b-plus-trees.html">B+ Trees</a></li><li><a class="side-link" href="unique-indexes.html">Unique Indexes</a></li><li><a class="side-link" href="primary-vs-secondary-index.html">Primary vs Secondary Indexes</a></li><li><a class="side-link" href="write-ahead-logging.html">Write-Ahead Logging</a></li></ul></div><div class="side-group"><div class="side-label">Concurrency</div><ul><li><a class="side-link" href="concurrency-control.html">Concurrency Control Basics</a></li><li><a class="side-link" href="mvcc.html">MVCC in Depth</a></li><li><a class="side-link" href="mvcc-cmu.html">MVCC — CMU Lecture Notes</a></li></ul></div><div class="side-group"><div class="side-label">Scale & Patterns</div><ul><li><a class="side-link" href="sharding.html">Sharding vs Partitioning</a></li><li><a class="side-link" href="n-plus-one-problem.html">The N+1 Query Problem</a></li><li><a class="side-link" href="graph-databases.html">Graph Databases</a></li></ul></div><div class="side-group"><div class="side-label">SQL in Practice</div><ul><li><a class="side-link" href="joins.html">Joins — Semantics &amp; Algorithms</a></li><li><a class="side-link" href="window-functions.html">Window Functions</a></li></ul></div><div class="side-group"><div class="side-label">Distributed Data</div><ul><li><a class="side-link" href="cap-replication.html">CAP &amp; Replication</a></li></ul></div><div class="side-group"><div class="side-label">Revision</div><ul><li><a class="side-link" href="refresher.html">Rapid Refresher<span class="badge">&#9733;</span></a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">Database Systems</a></div>
+  <div class="page-head">
+    <div class="page-kicker">Database Systems</div>
+    <h1 class="page-title">DROP vs DELETE vs TRUNCATE</h1>
+    <div class="page-meta">4 min read &middot; source: <code>dbms/drop_del_truncate.md</code></div>
+  </div>
+  <article class="prose"><p>These three are among the most common SQL interview questions.</p>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Removes Data</th>
+<th>Removes Table</th>
+<th>Can Use WHERE</th>
+<th>Rollback?*</th>
+<th>Resets Identity</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>DELETE</td>
+<td>Yes</td>
+<td>No</td>
+<td>Yes</td>
+<td>Usually Yes</td>
+<td>No</td>
+</tr>
+<tr>
+<td>TRUNCATE</td>
+<td>Yes (all rows)</td>
+<td>No</td>
+<td>No</td>
+<td>DB-dependent</td>
+<td>Usually Yes</td>
+</tr>
+<tr>
+<td>DROP</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>No</td>
+<td>Usually No</td>
+<td>N/A</td>
+</tr>
+</tbody></table>
+<ul>
+<li>Exact rollback behavior depends on the DBMS.</li>
+</ul>
+<hr>
+<h2 id="delete">DELETE</h2>
+<p>Removes selected rows.</p>
+<h4 id="example">Example</h4>
+<pre class="hljs"><code><span class="hljs-keyword">DELETE</span> <span class="hljs-keyword">FROM</span> Employees
+<span class="hljs-keyword">WHERE</span> EmployeeID <span class="hljs-operator">=</span> <span class="hljs-number">5</span>;</code></pre>
+<p>Before:</p>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Name</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>Alice</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Bob</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Charlie</td>
+</tr>
+</tbody></table>
+<p>After:</p>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Name</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>Alice</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Charlie</td>
+</tr>
+</tbody></table>
+<hr>
+<h4 id="delete-all-rows">Delete all rows</h4>
+<pre class="hljs"><code><span class="hljs-keyword">DELETE</span> <span class="hljs-keyword">FROM</span> Employees;</code></pre>
+<p>Table remains:</p>
+<pre class="hljs"><code>Employees</code></pre>
+<p>but contains zero rows.</p>
+<hr>
+<h4 id="characteristics">Characteristics</h4>
+<ul>
+<li>DML (Data Manipulation Language)</li>
+<li>Row-by-row deletion</li>
+<li>Supports WHERE</li>
+<li>Fires DELETE triggers</li>
+<li>Generates more logs</li>
+<li>Slower for huge tables</li>
+</ul>
+<hr>
+<h4 id="typical-use-case">Typical use case</h4>
+<pre class="hljs"><code><span class="hljs-keyword">DELETE</span> <span class="hljs-keyword">FROM</span> Sessions
+<span class="hljs-keyword">WHERE</span> ExpiryTime <span class="hljs-operator">&lt;</span> NOW();</code></pre>
+<hr>
+<h2 id="truncate">TRUNCATE</h2>
+<p>Removes all rows very efficiently.</p>
+<h4 id="example-1">Example</h4>
+<pre class="hljs"><code><span class="hljs-keyword">TRUNCATE</span> <span class="hljs-keyword">TABLE</span> Employees;</code></pre>
+<p>Before:</p>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Name</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>Alice</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Bob</td>
+</tr>
+</tbody></table>
+<p>After:</p>
+<pre class="hljs"><code>Employees
+(empty)</code></pre>
+<hr>
+<h4 id="characteristics-1">Characteristics</h4>
+<ul>
+<li>DDL in most databases</li>
+<li>Removes all rows</li>
+<li>No WHERE clause</li>
+<li>Usually deallocates pages instead of deleting rows one by one</li>
+<li>Much faster than DELETE</li>
+</ul>
+<hr>
+<h4 id="invalid">Invalid</h4>
+<pre class="hljs"><code><span class="hljs-keyword">TRUNCATE</span> <span class="hljs-keyword">TABLE</span> Employees
+<span class="hljs-keyword">WHERE</span> ID <span class="hljs-operator">=</span> <span class="hljs-number">5</span>;</code></pre>
+<p>Not allowed.</p>
+<hr>
+<h4 id="identity-reset">Identity reset</h4>
+<p>Suppose:</p>
+<pre class="hljs"><code><span class="hljs-keyword">INSERT INTO</span> Employees <span class="hljs-keyword">VALUES</span> (...);</code></pre>
+<p>created:</p>
+<pre class="hljs"><code>1
+2
+3</code></pre>
+<p>Then:</p>
+<pre class="hljs"><code><span class="hljs-keyword">TRUNCATE</span> <span class="hljs-keyword">TABLE</span> Employees;</code></pre>
+<p>Next insert often gets:</p>
+<pre class="hljs"><code>1</code></pre>
+<p>again.</p>
+<p>With DELETE:</p>
+<pre class="hljs"><code>4</code></pre>
+<p>usually continues.</p>
+<p>(Database dependent but common interview answer.)</p>
+<hr>
+<h2 id="drop">DROP</h2>
+<p>Removes the entire object.</p>
+<h4 id="example-2">Example</h4>
+<pre class="hljs"><code><span class="hljs-keyword">DROP</span> <span class="hljs-keyword">TABLE</span> Employees;</code></pre>
+<p>Before:</p>
+<pre class="hljs"><code>Employees</code></pre>
+<p>After:</p>
+<pre class="hljs"><code>Table does not exist</code></pre>
+<hr>
+<h4 id="characteristics-2">Characteristics</h4>
+<ul>
+<li>Removes data</li>
+<li>Removes indexes</li>
+<li>Removes constraints</li>
+<li>Removes metadata</li>
+<li>Removes table definition</li>
+</ul>
+<p>Everything is gone.</p>
+<hr>
+<h4 id="after-drop">After DROP</h4>
+<pre class="hljs"><code><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> Employees;</code></pre>
+<p>fails because the table no longer exists.</p>
+<hr>
+<h2 id="visual-analogy">Visual analogy</h2>
+<p>Suppose a notebook.</p>
+<h4 id="delete-1">DELETE</h4>
+<p>Erase some pages.</p>
+<pre class="hljs"><code>Notebook still exists.</code></pre>
+<hr>
+<h4 id="truncate-1">TRUNCATE</h4>
+<p>Rip out all written pages.</p>
+<pre class="hljs"><code>Notebook still exists.</code></pre>
+<hr>
+<h4 id="drop-1">DROP</h4>
+<p>Throw away the notebook.</p>
+<pre class="hljs"><code>Notebook gone.</code></pre>
+<hr>
+<h2 id="logging-difference">Logging difference</h2>
+<h4 id="delete-2">DELETE</h4>
+<pre class="hljs"><code><span class="hljs-keyword">DELETE</span> <span class="hljs-keyword">FROM</span> Orders;</code></pre>
+<p>Database may log:</p>
+<pre class="hljs"><code>Delete row 1
+Delete row 2
+Delete row 3
+...
+Delete row 1,000,000</code></pre>
+<p>Lots of work.</p>
+<hr>
+<h4 id="truncate-2">TRUNCATE</h4>
+<p>Database often logs something closer to:</p>
+<pre class="hljs"><code>Deallocate these pages</code></pre>
+<p>Much cheaper.</p>
+<hr>
+<h2 id="foreign-key-behavior">Foreign Key behavior</h2>
+<p>Suppose:</p>
+<pre class="hljs"><code>Customers
+Orders</code></pre>
+<p>and:</p>
+<pre class="hljs"><code>Orders.CustomerID
+    references Customers</code></pre>
+<p>Then:</p>
+<pre class="hljs"><code><span class="hljs-keyword">TRUNCATE</span> Customers;</code></pre>
+<p>often fails because child rows exist.</p>
+<p>Similarly:</p>
+<pre class="hljs"><code><span class="hljs-keyword">DROP</span> <span class="hljs-keyword">TABLE</span> Customers;</code></pre>
+<p>may fail unless constraints are removed first.</p>
+<p>Interviewers like this follow-up.</p>
+<hr>
+<h2 id="most-common-interview-answer">Most common interview answer</h2>
+<h4 id="delete-3">DELETE</h4>
+<pre class="hljs"><code><span class="hljs-keyword">DELETE</span> <span class="hljs-keyword">FROM</span> Employees <span class="hljs-keyword">WHERE</span> ID<span class="hljs-operator">=</span><span class="hljs-number">5</span>;</code></pre>
+<ul>
+<li>Removes selected rows</li>
+<li>Supports WHERE</li>
+<li>Slower</li>
+<li>Table structure remains</li>
+</ul>
+<hr>
+<h4 id="truncate-3">TRUNCATE</h4>
+<pre class="hljs"><code><span class="hljs-keyword">TRUNCATE</span> <span class="hljs-keyword">TABLE</span> Employees;</code></pre>
+<ul>
+<li>Removes all rows</li>
+<li>No WHERE</li>
+<li>Faster</li>
+<li>Table structure remains</li>
+<li>Often resets identity</li>
+</ul>
+<hr>
+<h4 id="drop-2">DROP</h4>
+<pre class="hljs"><code><span class="hljs-keyword">DROP</span> <span class="hljs-keyword">TABLE</span> Employees;</code></pre>
+<ul>
+<li>Removes entire table</li>
+<li>Data + schema removed</li>
+<li>Must recreate table to use it again</li>
+</ul>
+<hr>
+<h4 id="one-line-summary">One-line summary</h4>
+<pre class="hljs"><code>DELETE   -&gt; remove rows
+TRUNCATE -&gt; remove all rows quickly
+DROP     -&gt; remove the table itself</code></pre>
+<p>That&#39;s usually the exact level expected in SDE interviews, with bonus points if you mention:</p>
+<ul>
+<li>DML vs DDL,</li>
+<li>logging/page deallocation,</li>
+<li>identity reset,</li>
+<li>foreign-key restrictions.</li>
+</ul>
+<p>any of these may fail because of referential integrity</p>
+<pre class="hljs"><code>ON DELETE CASCASDE
+ON DELETE SET NULL
+DROP TABLE Customers CASCADE;
+needed
+</code></pre>
+<p>referential integrity violation.</p>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="sql.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">SQL Essentials</span></a><a class="pn-card pn-next" href="b-plus-trees.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">B+ Trees</span></a></nav>
+</main>
+<aside class="toc"><div class="toc-title">On this page</div><ul><li class="toc-d1"><a href="#delete">DELETE</a></li><li class="toc-d1"><a href="#truncate">TRUNCATE</a></li><li class="toc-d1"><a href="#drop">DROP</a></li><li class="toc-d1"><a href="#visual-analogy">Visual analogy</a></li><li class="toc-d1"><a href="#logging-difference">Logging difference</a></li><li class="toc-d1"><a href="#foreign-key-behavior">Foreign Key behavior</a></li><li class="toc-d1"><a href="#most-common-interview-answer">Most common interview answer</a></li></ul></aside>
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

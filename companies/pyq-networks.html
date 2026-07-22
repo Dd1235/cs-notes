@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PYQ — Networks · Company Prep</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#6F5680">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link is-active" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">Company Prep</a><div class="side-group"><div class="side-label">Overview</div><ul><li><a class="side-link" href="overview.html">The Map — Who Tests What</a></li></ul></div><div class="side-group"><div class="side-label">Companies</div><ul><li><a class="side-link" href="arista.html">Arista Networks</a></li><li><a class="side-link" href="intuit.html">Intuit</a></li><li><a class="side-link" href="stripe.html">Stripe</a></li><li><a class="side-link" href="de-shaw.html">D. E. Shaw</a></li><li><a class="side-link" href="rubrik.html">Rubrik</a></li><li><a class="side-link" href="citadel.html">Citadel</a></li></ul></div><div class="side-group"><div class="side-label">PYQ Bank</div><ul><li><a class="side-link" href="pyq-os-memory.html">PYQ — OS: Memory, Paging &amp; Processes</a></li><li><a class="side-link" href="pyq-os-concurrency.html">PYQ — OS: Concurrency &amp; Sync</a></li><li><a class="side-link is-active" href="pyq-networks.html">PYQ — Networks</a></li><li><a class="side-link" href="pyq-oop-design.html">PYQ — OOP &amp; Design</a></li><li><a class="side-link" href="pyq-dbms-sql.html">PYQ — DBMS &amp; SQL</a></li><li><a class="side-link" href="pyq-c-lowlevel.html">PYQ — C &amp; Low-Level</a></li><li><a class="side-link" href="pyq-cloud-ml.html">PYQ — Cloud, Containers &amp; ML</a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">Company Prep</a></div>
+  <div class="page-head">
+    <div class="page-kicker">Company Prep</div>
+    <h1 class="page-title">PYQ — Networks</h1>
+    <div class="page-meta">2 min read &middot; source: <code>company_wise/pyq_networks.md</code></div>
+  </div>
+  <article class="prose"><blockquote>
+<p>Arista&#39;s CN screen in question form. Each answer here is the summary; the deep pages carry the full mechanics.</p>
+</blockquote>
+<p><strong>What is DNS, and how does a full lookup flow work — local, root, TLD, authoritative?</strong> <code>Arista</code></p>
+<p>DNS maps names → IPs (and more — MX, TXT, CNAME records). The flow, in the order it actually short-circuits: browser cache → OS cache/<code>hosts</code> file → your configured <strong>recursive resolver</strong> (router/ISP/1.1.1.1). On a full miss, the recursive resolver walks the hierarchy <strong>iteratively</strong>: a <strong>root server</strong> (13 anycast identities) refers it to the <strong>TLD servers</strong> for <code>.com</code>; the TLD refers to the domain&#39;s <strong>authoritative servers</strong> (per its NS records + glue); the authoritative server answers with the A/AAAA record. Every layer caches per the record&#39;s <strong>TTL</strong>, which is why the 3-hop walk almost never happens. Depth for follow-ups — record types, negative caching, anycast, DoH: <a href="../cn/dns-deep-dive.html">DNS deep dive</a>.</p>
+<p><strong>What happens, networking-wise, when you type a URL into the browser?</strong> <code>Arista</code></p>
+<p>The full narrated chain is this site&#39;s opening page — <a href="../cn/url-to-page.html">what happens when you type a URL</a> — with the flow diagram at the end. The skeleton to recite: parse scheme (HSTS may force https) → DNS resolution (above) → <strong>ARP</strong> for the gateway&#39;s MAC (destination IP isn&#39;t in your subnet) → <strong>NAT</strong> at the router rewrites private source IP/port → TCP three-way handshake to port 443 (<a href="../cn/tcp-vs-udp.html">TCP deep dive</a>) → <strong>TLS 1.3</strong> handshake, ALPN negotiating HTTP/2 or 3 (<a href="../cn/tls.html">TLS page</a>) → request → response → render. The differentiating detail for Arista: at <em>every</em> hop the destination IP stays constant while the destination <strong>MAC changes</strong> — IP routes between networks, MAC delivers on the local segment (<a href="../cn/l2-switching.html">L2 switching</a>).</p>
+<p><strong>Roles and workings of DHCP, IP, and TCP.</strong> <code>Arista</code></p>
+<p><strong>DHCP</strong> — how a machine joins a network with zero config. The <strong>DORA</strong> exchange, over UDP broadcast (ports 67/68): <strong>D</strong>iscover (client broadcasts &quot;any DHCP servers?&quot;), <strong>O</strong>ffer (server proposes an IP + lease), <strong>R</strong>equest (client asks for it — broadcast again, so competing servers know who won), <strong>A</strong>ck (server confirms: your IP, subnet mask, gateway, DNS servers, lease time). Leases renew at half-life; the fallback <code>169.254.x.x</code> self-assigned address is the &quot;DHCP failed&quot; tell (<a href="../cn/ip-subnetting.html">addressing notes</a>).</p>
+<p><strong>IP</strong> — best-effort, connectionless <em>routing between networks</em>: every packet independently forwarded by <strong>longest-prefix match</strong> on destination address, TTL decremented per hop (traceroute exploits the resulting ICMP errors). No delivery, ordering, or integrity promises — that&#39;s deliberate; smartness lives at the edges (<a href="../cn/routing.html">routing page</a>).</p>
+<p><strong>TCP</strong> — the reliability layer on top: connection state via the three-way handshake, a <strong>byte stream</strong> (no message boundaries — framing is your job), ordering via sequence numbers, reliability via ACKs + retransmission, <strong>flow control</strong> protecting the receiver (rwnd) and <strong>congestion control</strong> protecting the network (cwnd). The complete internals — handshake, sliding window, slow start, TIME_WAIT — are the <a href="../cn/tcp-vs-udp.html">TCP deep dive</a> and <a href="../cn/flow-vs-congestion.html">flow vs congestion</a> pages.</p>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="pyq-os-concurrency.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">PYQ — OS: Concurrency &amp; Sync</span></a><a class="pn-card pn-next" href="pyq-oop-design.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">PYQ — OOP &amp; Design</span></a></nav>
+</main>
+
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

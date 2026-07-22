@@ -1,0 +1,461 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Testing, SDLC &amp; SE · OOP &amp; C++</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#8A4E5E">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link is-active" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">OOP & C++</a><div class="side-group"><div class="side-label">Lecture Notes</div><ul><li><a class="side-link" href="volatile-macros-inline.html">volatile, Macros &amp; inline</a></li><li><a class="side-link" href="references-and-const.html">References &amp; const</a></li><li><a class="side-link" href="function-overloading.html">Function Overloading</a></li><li><a class="side-link" href="dynamic-memory.html">Dynamic Memory Management</a></li><li><a class="side-link" href="classes-and-objects.html">Classes &amp; Objects</a></li><li><a class="side-link" href="constructors.html">Constructors &amp; Information Hiding</a></li><li><a class="side-link" href="copy-semantics.html">Copy Constructor &amp; Copy Assignment</a></li><li><a class="side-link" href="constness-and-static.html">Const-ness &amp; Static Members</a></li><li><a class="side-link" href="friend-functions.html">Friend Functions &amp; Friend Classes</a></li><li><a class="side-link" href="operator-overloading.html">Operator Overloading</a></li><li><a class="side-link" href="inheritance.html">Inheritance &amp; Overriding</a></li><li><a class="side-link" href="multiple-private-inheritance.html">Multiple &amp; Private Inheritance</a></li><li><a class="side-link" href="virtual-functions.html">Virtual Functions &amp; Dynamic Binding</a></li><li><a class="side-link" href="vtables-and-const-cast.html">Virtual Pointer Tables &amp; const_cast</a></li><li><a class="side-link" href="cpp-casts.html">C++ Casts</a></li><li><a class="side-link" href="exceptions.html">Exceptions &amp; Error Handling</a></li><li><a class="side-link" href="try-catch-and-templates.html">try/catch &amp; Function Templates</a></li><li><a class="side-link" href="class-templates-functors.html">Class Templates &amp; Functors</a></li></ul></div><div class="side-group"><div class="side-label">Extras</div><ul><li><a class="side-link" href="compilation-model.html">The C++ Compilation Model</a></li><li><a class="side-link" href="template-metaprogramming.html">Template Metaprogramming</a></li><li><a class="side-link" href="build-your-own-vector.html">Exercise — Build Your Own Vector</a></li><li><a class="side-link" href="miscellany.html">Miscellany</a></li><li><a class="side-link" href="resources.html">Resources</a></li></ul></div><div class="side-group"><div class="side-label">Topic Notes</div><ul><li><a class="side-link" href="notes-cpp-core.html">C++ Core</a></li><li><a class="side-link" href="notes-cpp-oop.html">C++ OOP</a></li><li><a class="side-link" href="notes-cpp-advanced.html">C++ Advanced</a></li><li><a class="side-link" href="notes-ooad-uml.html">OOAD &amp; UML</a></li><li><a class="side-link" href="notes-design-patterns.html">Design Patterns</a></li><li><a class="side-link is-active" href="notes-testing-sdlc.html">Testing, SDLC &amp; SE</a></li><li><a class="side-link" href="notes-interview-questions.html">Interview Questions</a></li></ul></div><div class="side-group"><div class="side-label">Flashcards</div><ul><li><a class="side-link" href="cards-cpp-core.html">C++ Core Flashcards</a></li><li><a class="side-link" href="cards-oop-lifetime.html">OOP, Lifetime &amp; Memory Flashcards</a></li><li><a class="side-link" href="cards-polymorphism-stl.html">Polymorphism, Casts, Templates &amp; STL Flashcards</a></li><li><a class="side-link" href="cards-ooad-uml.html">OOAD &amp; UML Flashcards</a></li><li><a class="side-link" href="cards-design-patterns.html">Design Patterns Flashcards</a></li><li><a class="side-link" href="cards-testing-sdlc.html">Testing, SDLC &amp; SE Flashcards</a></li><li><a class="side-link" href="cards-interview-drills.html">Interview &amp; Code-Reading Drills</a></li></ul></div><div class="side-group"><div class="side-label">Under the Hood</div><ul><li><a class="side-link" href="memory-layout.html">Memory Layout, Alignment &amp; Padding</a></li></ul></div><div class="side-group"><div class="side-label">Revision</div><ul><li><a class="side-link" href="refresher.html">Rapid Refresher<span class="badge">&#9733;</span></a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">OOP & C++</a></div>
+  <div class="page-head">
+    <div class="page-kicker">OOP & C++</div>
+    <h1 class="page-title">Testing, SDLC &amp; SE</h1>
+    <div class="page-meta">6 min read &middot; source: <code>oops_cpp/generated_notes/06_testing_sdlc_se.md</code></div>
+  </div>
+  <article class="prose"><h3 id="why-software-engineering-matters">Why Software Engineering Matters</h3>
+<p>Software projects fail because of:</p>
+<ul>
+<li>Unclear requirements.</li>
+<li>Poor communication.</li>
+<li>Underestimated complexity.</li>
+<li>Weak design boundaries.</li>
+<li>Inadequate testing.</li>
+<li>Changing requirements without control.</li>
+<li>Schedule pressure that creates technical debt.</li>
+</ul>
+<p>Engineering response:</p>
+<ul>
+<li>Understand requirements.</li>
+<li>Model before building.</li>
+<li>Design for change.</li>
+<li>Test continuously.</li>
+<li>Manage scope, time, cost, and quality.</li>
+</ul>
+<h3 id="sdlc-stages">SDLC Stages</h3>
+<p>Typical stages:</p>
+<ol>
+<li>Requirement gathering and analysis.</li>
+<li>Design.</li>
+<li>Implementation.</li>
+<li>Testing.</li>
+<li>Deployment.</li>
+<li>Maintenance.</li>
+</ol>
+<p>The stages may be sequential or iterative depending on the process model.</p>
+<h3 id="requirements">Requirements</h3>
+<p>Requirement qualities:</p>
+<ul>
+<li>Clear.</li>
+<li>Testable.</li>
+<li>Consistent.</li>
+<li>Complete enough for current iteration.</li>
+<li>Traceable to design and tests.</li>
+<li>Prioritized.</li>
+</ul>
+<p>Types:</p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Functional</td>
+<td>what the system does</td>
+</tr>
+<tr>
+<td>Non-functional</td>
+<td>quality constraints such as latency, security, reliability</td>
+</tr>
+<tr>
+<td>Domain constraint</td>
+<td>rule from the business or environment</td>
+</tr>
+<tr>
+<td>Interface requirement</td>
+<td>interaction with external systems</td>
+</tr>
+</tbody></table>
+<p>Bad requirement: &quot;system should be fast&quot;.</p>
+<p>Better: &quot;search should return results within 200 ms for 95 percent of requests under target load&quot;.</p>
+<h3 id="sdlc-models">SDLC Models</h3>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Idea</th>
+<th>Works best when</th>
+<th>Risk</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Waterfall</td>
+<td>sequential phases</td>
+<td>requirements are stable</td>
+<td>late feedback</td>
+</tr>
+<tr>
+<td>Iterative-incremental</td>
+<td>build in increments</td>
+<td>partial delivery is useful</td>
+<td>architecture drift</td>
+</tr>
+<tr>
+<td>V-model</td>
+<td>development paired with test levels</td>
+<td>high assurance systems</td>
+<td>can be rigid</td>
+</tr>
+<tr>
+<td>RAD</td>
+<td>rapid prototyping</td>
+<td>UI/business apps needing fast feedback</td>
+<td>weak architecture if rushed</td>
+</tr>
+<tr>
+<td>Spiral</td>
+<td>risk-driven cycles</td>
+<td>high-risk complex systems</td>
+<td>management overhead</td>
+</tr>
+<tr>
+<td>Agile</td>
+<td>adaptive iterations</td>
+<td>changing requirements</td>
+<td>weak if discipline is missing</td>
+</tr>
+<tr>
+<td>TDD</td>
+<td>tests before code</td>
+<td>clear unit behavior</td>
+<td>poor tests can mislead</td>
+</tr>
+</tbody></table>
+<h3 id="agile-and-scrum">Agile and Scrum</h3>
+<p>Agile values:</p>
+<ul>
+<li>Working software.</li>
+<li>Customer collaboration.</li>
+<li>Responding to change.</li>
+<li>Individuals and interactions.</li>
+</ul>
+<p>Scrum concepts:</p>
+<ul>
+<li>Product backlog: ordered work list.</li>
+<li>Sprint backlog: selected work for the sprint.</li>
+<li>Sprint planning: decide what to build.</li>
+<li>Daily sync: surface blockers.</li>
+<li>Sprint review: inspect product increment.</li>
+<li>Retrospective: improve process.</li>
+<li>Burndown chart: remaining work trend.</li>
+</ul>
+<p>Important distinction:</p>
+<ul>
+<li>Agile is not &quot;no planning&quot;.</li>
+<li>Agile is short-feedback planning with frequent inspection.</li>
+</ul>
+<h3 id="verification-and-validation">Verification and Validation</h3>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Question</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Verification</td>
+<td>Are we building the product right?</td>
+</tr>
+<tr>
+<td>Validation</td>
+<td>Are we building the right product?</td>
+</tr>
+</tbody></table>
+<p>Verification includes reviews, static analysis, and tests against spec.</p>
+<p>Validation checks whether the result solves the user&#39;s real problem.</p>
+<h3 id="testing-vocabulary">Testing Vocabulary</h3>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Error</td>
+<td>human mistake</td>
+</tr>
+<tr>
+<td>Fault/bug</td>
+<td>defect in artifact</td>
+</tr>
+<tr>
+<td>Failure</td>
+<td>observed incorrect behavior</td>
+</tr>
+<tr>
+<td>Test case</td>
+<td>inputs, steps, expected result</td>
+</tr>
+<tr>
+<td>Test suite</td>
+<td>collection of test cases</td>
+</tr>
+<tr>
+<td>Oracle</td>
+<td>way to decide pass/fail</td>
+</tr>
+<tr>
+<td>Regression</td>
+<td>previously working behavior breaks</td>
+</tr>
+</tbody></table>
+<h3 id="black-box-testing">Black-Box Testing</h3>
+<p>Black-box testing uses external behavior without looking at implementation.</p>
+<p>Techniques:</p>
+<ul>
+<li>Equivalence partitioning.</li>
+<li>Boundary value analysis.</li>
+<li>Decision table testing.</li>
+<li>State transition testing.</li>
+<li>Use-case based testing.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Technique</th>
+<th>Use</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Equivalence partitioning</td>
+<td>group inputs expected to behave similarly</td>
+</tr>
+<tr>
+<td>Boundary value analysis</td>
+<td>test edges such as min, max, just inside/outside</td>
+</tr>
+<tr>
+<td>Decision table</td>
+<td>test combinations of conditions and actions</td>
+</tr>
+<tr>
+<td>State transition</td>
+<td>test valid/invalid state changes</td>
+</tr>
+</tbody></table>
+<p>Sample: if valid age is <code>18..60</code>, test <code>17</code>, <code>18</code>, <code>60</code>, <code>61</code>, and a normal middle value.</p>
+<h3 id="white-box-testing">White-Box Testing</h3>
+<p>White-box testing uses implementation knowledge.</p>
+<p>Coverage types:</p>
+<ul>
+<li>Statement coverage.</li>
+<li>Branch/decision coverage.</li>
+<li>Condition coverage.</li>
+<li>Path coverage.</li>
+<li>Loop boundary coverage.</li>
+</ul>
+<p>Coverage is useful but not sufficient. A test can execute code without asserting meaningful behavior.</p>
+<h3 id="test-levels">Test Levels</h3>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Focus</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Unit</td>
+<td>small function/class</td>
+</tr>
+<tr>
+<td>Integration</td>
+<td>interactions between components</td>
+</tr>
+<tr>
+<td>System</td>
+<td>whole system behavior</td>
+</tr>
+<tr>
+<td>Acceptance</td>
+<td>user/business expectations</td>
+</tr>
+<tr>
+<td>Regression</td>
+<td>protect previous behavior</td>
+</tr>
+<tr>
+<td>Smoke</td>
+<td>quick build sanity</td>
+</tr>
+<tr>
+<td>Performance</td>
+<td>latency, throughput, resource use</td>
+</tr>
+<tr>
+<td>Security</td>
+<td>abuse cases and vulnerabilities</td>
+</tr>
+</tbody></table>
+<h3 id="test-plan">Test Plan</h3>
+<p>A good test plan states:</p>
+<ul>
+<li>Scope.</li>
+<li>Features under test.</li>
+<li>Features not under test.</li>
+<li>Test strategy.</li>
+<li>Test data.</li>
+<li>Environment.</li>
+<li>Entry and exit criteria.</li>
+<li>Risks.</li>
+<li>Responsibilities.</li>
+</ul>
+<p>For interview answers, connect test cases to requirements and risks.</p>
+<h3 id="debugging">Debugging</h3>
+<p>Practical debugging flow:</p>
+<ol>
+<li>Reproduce the failure.</li>
+<li>Minimize the input.</li>
+<li>Form a hypothesis.</li>
+<li>Inspect logs/state.</li>
+<li>Add a failing test if possible.</li>
+<li>Fix the root cause.</li>
+<li>Keep the regression test.</li>
+</ol>
+<p>Avoid random changes. Debugging is controlled hypothesis testing.</p>
+<h3 id="bug-tracking">Bug Tracking</h3>
+<p>Useful bug report:</p>
+<ul>
+<li>Title.</li>
+<li>Steps to reproduce.</li>
+<li>Expected behavior.</li>
+<li>Actual behavior.</li>
+<li>Environment.</li>
+<li>Severity and priority.</li>
+<li>Logs/screenshots where relevant.</li>
+</ul>
+<p>Severity is impact. Priority is scheduling.</p>
+<h3 id="maintenance">Maintenance</h3>
+<p>Maintenance types:</p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Corrective</td>
+<td>fix defects</td>
+</tr>
+<tr>
+<td>Adaptive</td>
+<td>adjust to changed environment</td>
+</tr>
+<tr>
+<td>Perfective</td>
+<td>improve performance/usability/features</td>
+</tr>
+<tr>
+<td>Preventive</td>
+<td>refactor to reduce future risk</td>
+</tr>
+</tbody></table>
+<p>Most real software cost happens after initial release. Design for maintainability matters.</p>
+<h3 id="version-control-and-release">Version Control and Release</h3>
+<p>Version control supports:</p>
+<ul>
+<li>History.</li>
+<li>Collaboration.</li>
+<li>Branching.</li>
+<li>Code review.</li>
+<li>Rollback.</li>
+<li>Traceability.</li>
+</ul>
+<p>Release discipline:</p>
+<ul>
+<li>Versioning.</li>
+<li>Changelog.</li>
+<li>Automated checks.</li>
+<li>Deployment plan.</li>
+<li>Rollback plan.</li>
+<li>Monitoring after deployment.</li>
+</ul>
+<h3 id="project-management">Project Management</h3>
+<p>The core tradeoff triangle:</p>
+<ul>
+<li>Scope.</li>
+<li>Time.</li>
+<li>Cost.</li>
+</ul>
+<p>Quality is affected by all three. If scope grows without changing time or cost, quality usually suffers.</p>
+<p>Project manager responsibilities:</p>
+<ul>
+<li>Clarify goals.</li>
+<li>Track progress and risks.</li>
+<li>Manage dependencies.</li>
+<li>Communicate status.</li>
+<li>Support people.</li>
+<li>Resolve tradeoffs.</li>
+</ul>
+<p>People management matters because communication failures become engineering failures.</p>
+<h3 id="smart-software-engineering">Smart Software Engineering</h3>
+<p>AI in software engineering:</p>
+<ul>
+<li>Code search and completion.</li>
+<li>Test generation.</li>
+<li>Bug triage.</li>
+<li>Requirements clustering.</li>
+<li>Static-analysis assistance.</li>
+<li>Documentation assistance.</li>
+</ul>
+<p>Software engineering for AI:</p>
+<ul>
+<li>Data quality and versioning.</li>
+<li>Model evaluation.</li>
+<li>Bias and drift monitoring.</li>
+<li>Reproducibility.</li>
+<li>Explainability.</li>
+<li>Deployment and rollback.</li>
+</ul>
+<p>AI engineering:</p>
+<ul>
+<li>Treat model, data, prompts, evaluation, and product behavior as one engineered system.</li>
+<li>Use benchmarks and human review.</li>
+<li>Monitor behavior in production.</li>
+</ul>
+<h3 id="checkpoints">Checkpoints</h3>
+<ul>
+<li>Verification vs validation?</li>
+<li>Waterfall vs iterative development?</li>
+<li>Why is boundary value analysis effective?</li>
+<li>Statement coverage vs branch coverage?</li>
+<li>What belongs in a test plan?</li>
+<li>Severity vs priority?</li>
+<li>Corrective vs adaptive maintenance?</li>
+<li>What happens if scope grows but time and cost stay fixed?</li>
+<li>What extra engineering concerns appear in AI systems?</li>
+</ul>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="notes-design-patterns.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">Design Patterns</span></a><a class="pn-card pn-next" href="notes-interview-questions.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">Interview Questions</span></a></nav>
+</main>
+<aside class="toc"><div class="toc-title">On this page</div><ul><li class="toc-d2"><a href="#why-software-engineering-matters">Why Software Engineering Matters</a></li><li class="toc-d2"><a href="#sdlc-stages">SDLC Stages</a></li><li class="toc-d2"><a href="#requirements">Requirements</a></li><li class="toc-d2"><a href="#sdlc-models">SDLC Models</a></li><li class="toc-d2"><a href="#agile-and-scrum">Agile and Scrum</a></li><li class="toc-d2"><a href="#verification-and-validation">Verification and Validation</a></li><li class="toc-d2"><a href="#testing-vocabulary">Testing Vocabulary</a></li><li class="toc-d2"><a href="#black-box-testing">Black-Box Testing</a></li><li class="toc-d2"><a href="#white-box-testing">White-Box Testing</a></li><li class="toc-d2"><a href="#test-levels">Test Levels</a></li><li class="toc-d2"><a href="#test-plan">Test Plan</a></li><li class="toc-d2"><a href="#debugging">Debugging</a></li><li class="toc-d2"><a href="#bug-tracking">Bug Tracking</a></li><li class="toc-d2"><a href="#maintenance">Maintenance</a></li><li class="toc-d2"><a href="#version-control-and-release">Version Control and Release</a></li><li class="toc-d2"><a href="#project-management">Project Management</a></li><li class="toc-d2"><a href="#smart-software-engineering">Smart Software Engineering</a></li><li class="toc-d2"><a href="#checkpoints">Checkpoints</a></li></ul></aside>
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

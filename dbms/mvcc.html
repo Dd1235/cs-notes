@@ -1,0 +1,1293 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MVCC in Depth · Database Systems</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script type="module">
+import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+mermaid.initialize({
+  startOnLoad: true,
+  theme: 'base',
+  themeVariables: {
+    fontFamily: 'Inter, sans-serif',
+    fontSize: '14px',
+    primaryColor: '#F1E8D7',
+    primaryTextColor: '#2E2A21',
+    primaryBorderColor: '#8B8170',
+    lineColor: '#57503F',
+    secondaryColor: '#FDFAF3',
+    tertiaryColor: '#FBF6EA',
+    clusterBkg: '#FBF6EA',
+    clusterBorder: '#E2D8C3',
+    actorBkg: '#F1E8D7',
+    actorBorder: '#8B8170',
+    actorTextColor: '#2E2A21',
+    actorLineColor: '#B8AD97',
+    signalColor: '#57503F',
+    signalTextColor: '#2E2A21',
+    labelBoxBkgColor: '#F1E8D7',
+    labelTextColor: '#2E2A21',
+    loopTextColor: '#57503F',
+    noteBkgColor: '#FBF3DC',
+    noteBorderColor: '#D9B36C',
+    noteTextColor: '#57503F',
+    activationBkgColor: '#EFE6D2',
+    activationBorderColor: '#8B8170',
+    edgeLabelBackground: '#F7F1E4'
+  }
+});
+</script>
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#B05730">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link is-active" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">Database Systems</a><div class="side-group"><div class="side-label">Foundations</div><ul><li><a class="side-link" href="acid.html">ACID &amp; Isolation Levels</a></li><li><a class="side-link" href="normalization.html">Normalization</a></li><li><a class="side-link" href="sql.html">SQL Essentials</a></li><li><a class="side-link" href="drop-delete-truncate.html">DROP vs DELETE vs TRUNCATE</a></li></ul></div><div class="side-group"><div class="side-label">Indexing & Storage</div><ul><li><a class="side-link" href="b-plus-trees.html">B+ Trees</a></li><li><a class="side-link" href="unique-indexes.html">Unique Indexes</a></li><li><a class="side-link" href="primary-vs-secondary-index.html">Primary vs Secondary Indexes</a></li><li><a class="side-link" href="write-ahead-logging.html">Write-Ahead Logging</a></li></ul></div><div class="side-group"><div class="side-label">Concurrency</div><ul><li><a class="side-link" href="concurrency-control.html">Concurrency Control Basics</a></li><li><a class="side-link is-active" href="mvcc.html">MVCC in Depth</a></li><li><a class="side-link" href="mvcc-cmu.html">MVCC — CMU Lecture Notes</a></li></ul></div><div class="side-group"><div class="side-label">Scale & Patterns</div><ul><li><a class="side-link" href="sharding.html">Sharding vs Partitioning</a></li><li><a class="side-link" href="n-plus-one-problem.html">The N+1 Query Problem</a></li><li><a class="side-link" href="graph-databases.html">Graph Databases</a></li></ul></div><div class="side-group"><div class="side-label">SQL in Practice</div><ul><li><a class="side-link" href="joins.html">Joins — Semantics &amp; Algorithms</a></li><li><a class="side-link" href="window-functions.html">Window Functions</a></li></ul></div><div class="side-group"><div class="side-label">Distributed Data</div><ul><li><a class="side-link" href="cap-replication.html">CAP &amp; Replication</a></li></ul></div><div class="side-group"><div class="side-label">Revision</div><ul><li><a class="side-link" href="refresher.html">Rapid Refresher<span class="badge">&#9733;</span></a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">Database Systems</a></div>
+  <div class="page-head">
+    <div class="page-kicker">Database Systems</div>
+    <h1 class="page-title">MVCC in Depth</h1>
+    <div class="page-meta">22 min read &middot; source: <code>dbms/mvcc.md</code></div>
+  </div>
+  <article class="prose"><p>updates - lock the row or the table<br>anybody who wants to read wont be able to<br>lost failed transactions deadlocks etc. possible.</p>
+<p>multi version concurrency control - reading a record - query the highest version (timestamp, generated number etc.)</p>
+<p>you have large version chain - uber had switched from postgres to mysql because count of postgres was super slow</p>
+<p><a href="https://www.youtube.com/watch?v=8f7cktxHPw8" target="_blank" rel="noopener">yt video</a></p>
+<p>lsm trees are prety good for write heavy. they make writes super fast.</p>
+<pre class="hljs"><code>Locking:
+one row, one current value
+
+MVCC:
+one row, many versions
+
+Transaction:
+reads a snapshot of those versions
+
+Cleanup:
+VACUUM / Undo logs
+
+Benefit:
+readers don't block writers</code></pre>
+<div class="diagram"><pre class="mermaid">graph LR
+    subgraph row [&quot;logical row id = 42&quot;]
+        V3[&quot;v3 balance=70&lt;br/&gt;xmin=105 (uncommitted)&quot;] --&gt; V2[&quot;v2 balance=90&lt;br/&gt;xmin=100&quot;] --&gt; V1[&quot;v1 balance=100&lt;br/&gt;xmin=90&quot;]
+    end
+    T1[&quot;reader txn, snapshot @ ts 102&quot;] -.-&gt;|&quot;sees v2 — skips uncommitted v3&quot;| V2
+    T2[&quot;writer txn 105&quot;] -.-&gt;|&quot;appends v3, blocks nobody&quot;| V3</pre></div>
+<p>Write skew is the anomaly that makes people realize:</p>
+<blockquote>
+<p>Snapshot Isolation is not the same as Serializable.</p>
+</blockquote>
+<p>The key point is:</p>
+<blockquote>
+<p>Two transactions read the same data, make decisions based on that data, but update different rows.</p>
+</blockquote>
+<p>Since they update different rows, there is no write-write conflict for MVCC to detect.</p>
+<hr>
+<h3 id="the-classic-doctor-example">The Classic Doctor Example</h3>
+<p>Constraint:</p>
+<pre class="hljs"><code>At least one doctor must be on call.</code></pre>
+<p>Table:</p>
+<table>
+<thead>
+<tr>
+<th>doctor</th>
+<th>on_call</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Alice</td>
+<td>true</td>
+</tr>
+<tr>
+<td>Bob</td>
+<td>true</td>
+</tr>
+</tbody></table>
+<hr>
+<h4 id="transaction-t1-alice-goes-off-call">Transaction T1 (Alice goes off call)</h4>
+<p>Reads:</p>
+<table>
+<thead>
+<tr>
+<th>doctor</th>
+<th>on_call</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Alice</td>
+<td>true</td>
+</tr>
+<tr>
+<td>Bob</td>
+<td>true</td>
+</tr>
+</tbody></table>
+<p>T1 thinks:</p>
+<pre class="hljs"><code>Bob is still on call.
+Safe for me to leave.</code></pre>
+<hr>
+<h4 id="transaction-t2-bob-goes-off-call">Transaction T2 (Bob goes off call)</h4>
+<p>At the same time reads:</p>
+<table>
+<thead>
+<tr>
+<th>doctor</th>
+<th>on_call</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Alice</td>
+<td>true</td>
+</tr>
+<tr>
+<td>Bob</td>
+<td>true</td>
+</tr>
+</tbody></table>
+<p>T2 thinks:</p>
+<pre class="hljs"><code>Alice is still on call.
+Safe for me to leave.</code></pre>
+<hr>
+<h4 id="updates">Updates</h4>
+<p>T1:</p>
+<pre class="hljs"><code><span class="hljs-keyword">UPDATE</span> doctors
+<span class="hljs-keyword">SET</span> on_call <span class="hljs-operator">=</span> <span class="hljs-literal">false</span>
+<span class="hljs-keyword">WHERE</span> doctor <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;Alice&#x27;</span>;</code></pre>
+<p>T2:</p>
+<pre class="hljs"><code><span class="hljs-keyword">UPDATE</span> doctors
+<span class="hljs-keyword">SET</span> on_call <span class="hljs-operator">=</span> <span class="hljs-literal">false</span>
+<span class="hljs-keyword">WHERE</span> doctor <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;Bob&#x27;</span>;</code></pre>
+<p>Notice:</p>
+<pre class="hljs"><code>T1 writes Alice row
+T2 writes Bob row</code></pre>
+<p>Different rows.</p>
+<p>No write conflict.</p>
+<p>Both commit.</p>
+<hr>
+<p>Final state:</p>
+<table>
+<thead>
+<tr>
+<th>doctor</th>
+<th>on_call</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Alice</td>
+<td>false</td>
+</tr>
+<tr>
+<td>Bob</td>
+<td>false</td>
+</tr>
+</tbody></table>
+<p>Constraint violated:</p>
+<pre class="hljs"><code>Nobody is on call.</code></pre>
+<hr>
+<h3 id="why-mvcc-allows-this">Why MVCC Allows This</h3>
+<p>MVCC only notices:</p>
+<pre class="hljs"><code>Did two transactions modify the same row?</code></pre>
+<p>Here:</p>
+<pre class="hljs"><code>T1 -&gt; Alice
+T2 -&gt; Bob</code></pre>
+<p>No overlap.</p>
+<p>So both are allowed.</p>
+<p>The problem is that the conflict was logical, not physical.</p>
+<p>Both transactions depended on:</p>
+<pre class="hljs"><code>&quot;someone else remains on call&quot;</code></pre>
+<p>but the database only sees row updates.</p>
+<hr>
+<h3 id="compare-with-lost-update">Compare With Lost Update</h3>
+<p>Initial:</p>
+<pre class="hljs"><code>balance = 100</code></pre>
+<p>T1:</p>
+<pre class="hljs"><code>100 -&gt; 110</code></pre>
+<p>T2:</p>
+<pre class="hljs"><code>100 -&gt; 120</code></pre>
+<p>Both modify the same row.</p>
+<p>MVCC detects:</p>
+<pre class="hljs"><code>write-write conflict</code></pre>
+<p>and aborts one.</p>
+<p>So lost updates are prevented.</p>
+<hr>
+<h3 id="write-skew-read-write-dependency-cycle">Write Skew = Read-Write Dependency Cycle</h3>
+<p>Think of it like:</p>
+<pre class="hljs"><code>T1 reads Bob
+T1 writes Alice
+
+T2 reads Alice
+T2 writes Bob</code></pre>
+<p>Graph:</p>
+<pre class="hljs"><code>T1 ----reads----&gt; Bob
+ ^                |
+ |                |
+ |                v
+Alice &lt;---writes-- T2
+
+T2 ----reads----&gt; Alice
+ ^                |
+ |                |
+ |                v
+Bob   &lt;---writes-- T1</code></pre>
+<p>Each transaction made a decision based on data the other changed.</p>
+<hr>
+<h3 id="another-example-bank-approval">Another Example: Bank Approval</h3>
+<p>Rule:</p>
+<pre class="hljs"><code>At least one manager must approve a loan.</code></pre>
+<p>Table:</p>
+<table>
+<thead>
+<tr>
+<th>manager</th>
+<th>approved</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>A</td>
+<td>true</td>
+</tr>
+<tr>
+<td>B</td>
+<td>true</td>
+</tr>
+</tbody></table>
+<p>Both managers withdraw approval simultaneously.</p>
+<p>Each sees:</p>
+<pre class="hljs"><code>Other manager approved.</code></pre>
+<p>Both set:</p>
+<pre class="hljs"><code>approved = false</code></pre>
+<p>Final:</p>
+<pre class="hljs"><code>No approvals.</code></pre>
+<p>Again:</p>
+<pre class="hljs"><code>Different rows.
+No write conflict.
+Constraint broken.</code></pre>
+<hr>
+<h3 id="why-serializable-prevents-it">Why Serializable Prevents It</h3>
+<p>Serializable asks:</p>
+<blockquote>
+<p>Could these transactions have happened one after another in some order?</p>
+</blockquote>
+<p>Try:</p>
+<pre class="hljs"><code>T1 then T2</code></pre>
+<p>After T1 commits:</p>
+<p>| Alice | false |<br>| Bob | true |</p>
+<p>Now T2 would read:</p>
+<pre class="hljs"><code>Alice = false</code></pre>
+<p>and should not proceed.</p>
+<p>So the execution cannot be serialized.</p>
+<p>Database aborts one transaction.</p>
+<hr>
+<h3 id="interview-explanation">Interview Explanation</h3>
+<p>A good answer is:</p>
+<blockquote>
+<p>Write skew occurs under Snapshot Isolation when two transactions read overlapping data, make decisions based on that snapshot, and update different rows. Because there is no write-write conflict, both transactions can commit even though a business constraint is violated. Serializable isolation prevents this by detecting the dependency cycle and aborting one transaction.</p>
+</blockquote>
+<p>The key distinction:</p>
+<pre class="hljs"><code>Lost Update:
+    same row written twice
+
+Write Skew:
+    different rows written,
+    shared constraint violated</code></pre>
+<p>That sentence alone is often enough to impress an interviewer because many candidates can explain lost updates but not write skew.</p>
+<p>MVCC is <strong>not specific to relational databases</strong>.</p>
+<p>It&#39;s a concurrency-control technique that can be used by any database that needs:</p>
+<pre class="hljs"><code>Concurrent readers
+Concurrent writers
+Consistent snapshots</code></pre>
+<hr>
+<h3 id="relational-databases-using-mvcc">Relational Databases Using MVCC</h3>
+<p>Common examples:</p>
+<ul>
+<li>PostgreSQL</li>
+<li>MySQL</li>
+<li>Oracle Database</li>
+<li>CockroachDB</li>
+</ul>
+<p>These are the databases where interviewers most often discuss MVCC.</p>
+<hr>
+<h3 id="nosql-databases-using-mvcc">NoSQL Databases Using MVCC</h3>
+<p>Many NoSQL systems use MVCC or something very close to it.</p>
+<p>Examples:</p>
+<ul>
+<li>CouchDB</li>
+<li>FoundationDB</li>
+<li>TiKV</li>
+<li>Apache HBase (versioned cells)</li>
+<li>Apache Cassandra (timestamped versions, not classic MVCC)</li>
+</ul>
+<p>For example, FoundationDB is essentially:</p>
+<pre class="hljs"><code>Key-value store
++
+MVCC
++
+Snapshot transactions</code></pre>
+<p>despite not being a traditional relational database.</p>
+<hr>
+<h3 id="why-mvcc-fits-naturally-with-lsm-systems">Why MVCC Fits Naturally with LSM Systems</h3>
+<p>LSM trees already create immutable data structures:</p>
+<pre class="hljs"><code>MemTable
+↓ flush
+SSTable
+↓ compaction
+New SSTable</code></pre>
+<p>Old versions naturally exist for a while.</p>
+<p>Many distributed KV stores exploit this to provide snapshot reads.</p>
+<p>Examples:</p>
+<ul>
+<li>TiKV</li>
+<li>CockroachDB</li>
+<li>YugabyteDB</li>
+</ul>
+<hr>
+<h3 id="what-about-redis">What About Redis?</h3>
+<p>Classic Redis:</p>
+<pre class="hljs"><code>Single-threaded command execution</code></pre>
+<p>doesn&#39;t need MVCC.</p>
+<p>A command runs:</p>
+<pre class="hljs"><code>GET
+SET
+INCR</code></pre>
+<p>to completion before the next command.</p>
+<p>So concurrency control is largely avoided.</p>
+<hr>
+<h3 id="what-about-mongodb">What About MongoDB?</h3>
+<p>Modern versions of:</p>
+<p>MongoDB</p>
+<p>support snapshot reads and multi-document transactions using MVCC-like techniques internally.</p>
+<p>So even document databases increasingly adopt MVCC concepts.</p>
+<hr>
+<h3 id="why-people-associate-mvcc-with-sql">Why People Associate MVCC with SQL</h3>
+<p>Historically, MVCC became famous through:</p>
+<ul>
+<li>PostgreSQL</li>
+<li>Oracle</li>
+<li>InnoDB</li>
+</ul>
+<p>and because it is heavily discussed when teaching:</p>
+<pre class="hljs"><code>ACID
+Isolation levels
+Transactions</code></pre>
+<p>which are traditionally relational database topics.</p>
+<hr>
+<h3 id="interview-perspective">Interview Perspective</h3>
+<p>If asked:</p>
+<blockquote>
+<p>Is MVCC only for relational databases?</p>
+</blockquote>
+<p>A strong answer is:</p>
+<blockquote>
+<p>No. MVCC is a concurrency-control mechanism rather than a relational feature. It is used by many SQL databases such as PostgreSQL and InnoDB, but also by distributed key-value stores and document databases. The core idea is maintaining multiple versions of data so readers can access a consistent snapshot without blocking writers.</p>
+</blockquote>
+<p>A useful mental model:</p>
+<pre class="hljs"><code>B+ Tree      -&gt; storage structure
+LSM Tree     -&gt; storage structure
+
+MVCC         -&gt; concurrency control
+
+WAL          -&gt; durability
+
+Replication  -&gt; distribution</code></pre>
+<p>These are mostly orthogonal design choices. A database can be:</p>
+<pre class="hljs"><code>B+ Tree + MVCC + WAL</code></pre>
+<p>(PostgreSQL)</p>
+<p>or</p>
+<pre class="hljs"><code>LSM + MVCC + WAL</code></pre>
+<p>(CockroachDB/TiKV-like systems)</p>
+<p>or</p>
+<pre class="hljs"><code>LSM + WAL + no MVCC</code></pre>
+<p>depending on its design goals.</p>
+<p>Historically, before MVCC became dominant, databases mainly used <strong>lock-based concurrency control</strong>.</p>
+<p>There are several alternatives:</p>
+<h3 id="1-two-phase-locking-2pl">1. Two-Phase Locking (2PL)</h3>
+<p>Classic textbook solution.</p>
+<p>Transactions acquire locks:</p>
+<pre class="hljs"><code>T1:
+Read A
+→ shared lock(A)
+
+Write B
+→ exclusive lock(B)</code></pre>
+<p>Locks are held until commit.</p>
+<p>Example:</p>
+<pre class="hljs"><code>T1 reads row X
+T2 wants to update row X
+
+T2 waits</code></pre>
+<p>Readers and writers can block each other.</p>
+<h4 id="pros">Pros</h4>
+<ul>
+<li>Serializable</li>
+<li>Conceptually simple</li>
+</ul>
+<h4 id="cons">Cons</h4>
+<pre class="hljs"><code>Reader blocks writer
+Writer blocks reader
+Deadlocks</code></pre>
+<p>This is why MVCC became popular.</p>
+<hr>
+<h3 id="2-strict-two-phase-locking-strict-2pl">2. Strict Two-Phase Locking (Strict 2PL)</h3>
+<p>Used heavily in older database systems.</p>
+<p>Rule:</p>
+<pre class="hljs"><code>Hold write locks until commit.</code></pre>
+<p>Provides:</p>
+<pre class="hljs"><code>Conflict Serializability
+Recoverability</code></pre>
+<p>Many interview questions about locking assume Strict 2PL.</p>
+<hr>
+<h3 id="3-timestamp-ordering">3. Timestamp Ordering</h3>
+<p>Every transaction gets a timestamp.</p>
+<pre class="hljs"><code>T1 = 10
+T2 = 20</code></pre>
+<p>Database enforces:</p>
+<pre class="hljs"><code>All operations appear in timestamp order.</code></pre>
+<p>Example:</p>
+<p>If T2 writes a row first:</p>
+<pre class="hljs"><code>x = 5</code></pre>
+<p>and later T1 tries to write:</p>
+<pre class="hljs"><code>x = 4</code></pre>
+<p>T1 is aborted because it violates timestamp order.</p>
+<h4 id="pros-1">Pros</h4>
+<p>No deadlocks.</p>
+<h4 id="cons-1">Cons</h4>
+<p>Many aborts under contention.</p>
+<hr>
+<h3 id="4-optimistic-concurrency-control-occ">4. Optimistic Concurrency Control (OCC)</h3>
+<p>Assumption:</p>
+<pre class="hljs"><code>Conflicts are rare.</code></pre>
+<p>Transactions run without locks.</p>
+<p>At commit:</p>
+<pre class="hljs"><code>Validate reads/writes.</code></pre>
+<p>If conflict exists:</p>
+<pre class="hljs"><code>Abort transaction.</code></pre>
+<p>Example:</p>
+<pre class="hljs"><code>Read A = 10
+Read B = 20
+Compute
+Commit</code></pre>
+<p>At commit:</p>
+<pre class="hljs"><code>Did somebody change A or B?</code></pre>
+<p>If yes:</p>
+<pre class="hljs"><code>Abort</code></pre>
+<hr>
+<h4 id="where-occ-appears">Where OCC Appears</h4>
+<p>Common in:</p>
+<ul>
+<li>Distributed databases</li>
+<li>In-memory databases</li>
+<li>Application-level versioning</li>
+</ul>
+<p>Example pattern:</p>
+<pre class="hljs"><code><span class="hljs-keyword">UPDATE</span> account
+<span class="hljs-keyword">SET</span> balance <span class="hljs-operator">=</span> <span class="hljs-number">200</span>,
+    version <span class="hljs-operator">=</span> version <span class="hljs-operator">+</span> <span class="hljs-number">1</span>
+<span class="hljs-keyword">WHERE</span> id <span class="hljs-operator">=</span> <span class="hljs-number">1</span>
+  <span class="hljs-keyword">AND</span> version <span class="hljs-operator">=</span> <span class="hljs-number">5</span>;</code></pre>
+<p>If affected rows = 0:</p>
+<pre class="hljs"><code>Conflict detected</code></pre>
+<p>This is optimistic concurrency control.</p>
+<hr>
+<h3 id="5-serializable-snapshot-isolation-ssi">5. Serializable Snapshot Isolation (SSI)</h3>
+<p>Interesting hybrid.</p>
+<p>Used by:</p>
+<p>PostgreSQL</p>
+<p>Internally:</p>
+<pre class="hljs"><code>MVCC snapshots
++
+Dependency tracking
++
+Transaction aborts</code></pre>
+<p>Not purely locking.</p>
+<p>Not purely MVCC.</p>
+<p>Not purely OCC.</p>
+<hr>
+<h3 id="6-single-threaded-execution">6. Single-Threaded Execution</h3>
+<p>Used by:</p>
+<p>Redis (classic design)</p>
+<p>Idea:</p>
+<pre class="hljs"><code>No concurrency
+No concurrency bugs</code></pre>
+<p>Commands execute:</p>
+<pre class="hljs"><code>SET
+GET
+INCR</code></pre>
+<p>one at a time.</p>
+<p>No need for MVCC.</p>
+<hr>
+<h3 id="7-event-sourcing-append-only-logs">7. Event Sourcing / Append-Only Logs</h3>
+<p>Some systems avoid in-place updates entirely.</p>
+<p>Example:</p>
+<pre class="hljs"><code>Deposit +100
+Withdraw -50</code></pre>
+<p>instead of:</p>
+<pre class="hljs"><code>balance = 50</code></pre>
+<p>Conflicts are resolved at a higher layer.</p>
+<p>Used in:</p>
+<ul>
+<li>Kafka-based architectures</li>
+<li>Some distributed systems</li>
+</ul>
+<p>Not really a direct replacement for MVCC, but often changes concurrency requirements.</p>
+<hr>
+<h2 id="why-mvcc-won">Why MVCC Won</h2>
+<p>Suppose:</p>
+<pre class="hljs"><code>1000 readers
+10 writers</code></pre>
+<p>With locking:</p>
+<pre class="hljs"><code>Readers may block writers.
+Writers may block readers.</code></pre>
+<p>With MVCC:</p>
+<pre class="hljs"><code>Readers read old versions.
+Writers create new versions.</code></pre>
+<p>Much higher concurrency.</p>
+<p>This is why nearly every modern general-purpose database uses some form of MVCC.</p>
+<hr>
+<h2 id="interview-summary">Interview Summary</h2>
+<p>If asked:</p>
+<blockquote>
+<p>What are alternatives to MVCC?</p>
+</blockquote>
+<p>Answer:</p>
+<table>
+<thead>
+<tr>
+<th>Technique</th>
+<th>Main Idea</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Two-Phase Locking</td>
+<td>Use read/write locks</td>
+</tr>
+<tr>
+<td>Strict 2PL</td>
+<td>Hold locks until commit</td>
+</tr>
+<tr>
+<td>Timestamp Ordering</td>
+<td>Enforce timestamp order</td>
+</tr>
+<tr>
+<td>OCC</td>
+<td>Validate at commit time</td>
+</tr>
+<tr>
+<td>SSI</td>
+<td>MVCC + dependency checking</td>
+</tr>
+<tr>
+<td>Single-threaded execution</td>
+<td>Avoid concurrency entirely</td>
+</tr>
+</tbody></table>
+<p>The most important comparison is:</p>
+<pre class="hljs"><code>2PL:
+    wait for locks
+
+MVCC:
+    read old versions
+
+OCC:
+    detect conflicts at commit</code></pre>
+<p>Those three form the core concurrency-control families you&#39;ll encounter in database papers and interviews.</p>
+<ul>
+<li>with mvcc dbms maintains multiple physical versions of a single logical object</li>
+<li>when a transactionw rites, creates a new version</li>
+<li>when a transaction reads, reads the newest version that existed when the transaction started</li>
+<li>writers don&#39;t block readers and readers don&#39;t block writers.</li>
+<li>can easily support time travel queries</li>
+</ul>
+<p>design decisions:</p>
+<ol>
+<li>concurrency control protocol -&gt; 2pl, time stamp ordering, optimistic concurrency control</li>
+<li>version storage</li>
+<li>garbage collection</li>
+<li>index management</li>
+</ol>
+<p>snapshot isolation - providing a transaction with a consistent snapshot of the database when the transaction started. data values from the snapshot consist of only values from committed transactions and the transaction operates in complete isolation from other transactions until it finishes.</p>
+<p>What you pasted is actually from the CMU 15-445 notes, and it&#39;s more accurate than the simplified explanation I gave earlier.</p>
+<p>The key sentence is:</p>
+<blockquote>
+<p>&quot;The choice of concurrency protocol is between ... two-phase locking, timestamp ordering, optimistic concurrency control.&quot;</p>
+</blockquote>
+<p>This is the subtle distinction.</p>
+<h3 id="there-are-two-ways-people-use-the-term-mvcc">There are two ways people use the term MVCC</h3>
+<h4 id="simplified-textbookinterview-usage">Simplified textbook/interview usage</h4>
+<p>People often say:</p>
+<pre class="hljs"><code>2PL vs MVCC</code></pre>
+<p>meaning:</p>
+<pre class="hljs"><code>Lock-based systems
+vs
+Snapshot-based systems</code></pre>
+<p>This is the common PostgreSQL vs old lock-manager discussion.</p>
+<hr>
+<h4 id="more-precise-systems-usage-cmu-notes">More precise systems usage (CMU notes)</h4>
+<p>MVCC is not itself a concurrency protocol.</p>
+<p>MVCC is:</p>
+<pre class="hljs"><code>Multiple versions
++
+Snapshot visibility rules
++
+Version storage
++
+Garbage collection
++
+Index management</code></pre>
+<p>Then you still need a protocol to decide:</p>
+<pre class="hljs"><code>Who commits?
+Who aborts?
+Who wins conflicts?</code></pre>
+<p>That&#39;s where:</p>
+<pre class="hljs"><code>2PL
+Timestamp Ordering
+OCC</code></pre>
+<p>come in.</p>
+<p>This is what Andy Pavlo is getting at.</p>
+<hr>
+<h2 id="think-of-it-like-this">Think of it like this</h2>
+<p>Suppose I tell you:</p>
+<pre class="hljs"><code>I store multiple versions of rows.</code></pre>
+<p>You still don&#39;t know:</p>
+<pre class="hljs"><code>Can two transactions commit?
+Should one abort?
+What if they conflict?</code></pre>
+<p>Those are concurrency-control questions.</p>
+<p>MVCC alone doesn&#39;t answer them.</p>
+<hr>
+<h2 id="example-1-mvcc-timestamp-ordering">Example 1: MVCC + Timestamp Ordering</h2>
+<p>Many research databases do:</p>
+<pre class="hljs"><code>Version A (ts=10)
+Version B (ts=20)
+Version C (ts=30)</code></pre>
+<p>Readers choose versions by timestamp.</p>
+<p>Writers obey timestamp-ordering rules.</p>
+<p>This is literally:</p>
+<pre class="hljs"><code>MVCC + TO</code></pre>
+<hr>
+<h2 id="example-2-mvcc-occ">Example 2: MVCC + OCC</h2>
+<p>A transaction:</p>
+<pre class="hljs"><code>Reads snapshot
+Creates tentative versions</code></pre>
+<p>At commit:</p>
+<pre class="hljs"><code>Validate read set</code></pre>
+<p>If validation succeeds:</p>
+<pre class="hljs"><code>Commit</code></pre>
+<p>Otherwise:</p>
+<pre class="hljs"><code>Abort</code></pre>
+<p>This is:</p>
+<pre class="hljs"><code>MVCC + OCC</code></pre>
+<hr>
+<h2 id="example-3-postgresql">Example 3: PostgreSQL</h2>
+<p>PostgreSQL roughly uses:</p>
+<pre class="hljs"><code>MVCC
++
+Row-level locks
++
+Serializable Snapshot Isolation</code></pre>
+<p>for conflict resolution.</p>
+<p>Not pure TO.</p>
+<p>Not pure OCC.</p>
+<p>Not pure 2PL.</p>
+<p>It&#39;s a hybrid.</p>
+<hr>
+<h2 id="why-the-confusion-exists">Why the confusion exists</h2>
+<p>Historically:</p>
+<h4 id="old-systems">Old systems</h4>
+<pre class="hljs"><code>2PL</code></pre>
+<p>stored only one version.</p>
+<p>Readers blocked writers.</p>
+<p>Writers blocked readers.</p>
+<hr>
+<h4 id="new-systems">New systems</h4>
+<pre class="hljs"><code>MVCC</code></pre>
+<p>stored many versions.</p>
+<p>Readers stopped blocking writers.</p>
+<p>So people started talking as if:</p>
+<pre class="hljs"><code>MVCC replaced 2PL</code></pre>
+<p>which is true at a very high level.</p>
+<p>But internally:</p>
+<pre class="hljs"><code>MVCC</code></pre>
+<p>did not eliminate the need for a concurrency-control protocol.</p>
+<p>It changed how reads work.</p>
+<hr>
+<h2 id="another-important-correction">Another important correction</h2>
+<p>You asked:</p>
+<blockquote>
+<p>So MVCC isn&#39;t the best for consistency?</p>
+</blockquote>
+<p>Not exactly.</p>
+<p>MVCC itself says almost nothing about consistency.</p>
+<p>You can have:</p>
+<pre class="hljs"><code>MVCC + Read Committed</code></pre>
+<p>which is relatively weak.</p>
+<p>Or:</p>
+<pre class="hljs"><code>MVCC + Serializable</code></pre>
+<p>which is the strongest standard SQL isolation level.</p>
+<p>For example:</p>
+<p>PostgreSQL uses MVCC and can provide Serializable isolation.</p>
+<p>So MVCC is not inherently weaker.</p>
+<hr>
+<h2 id="the-layered-view">The layered view</h2>
+<p>This is probably the cleanest interview model:</p>
+<pre class="hljs"><code>Recovery Layer
+    WAL
+
+Storage Layer
+    B+Tree / LSM
+
+Versioning Layer
+    MVCC
+
+Concurrency Protocol
+    2PL / TO / OCC / SSI
+
+Isolation Level
+    RC / RR / Serializable</code></pre>
+<p>The CMU notes are essentially teaching that:</p>
+<pre class="hljs"><code>MVCC = versioning architecture
+
+2PL / TO / OCC = concurrency protocol</code></pre>
+<p>and modern systems mix and match them.</p>
+<p>That&#39;s the more advanced and technically precise view.</p>
+<p>Lock granularity is about:</p>
+<blockquote>
+<p><strong>How big a thing does a lock protect?</strong></p>
+</blockquote>
+<p>The smaller the granularity, the more concurrency you get, but the more locks the DBMS must manage.</p>
+<hr>
+<h3 id="database-hierarchy">Database Hierarchy</h3>
+<p>Think of a database as:</p>
+<pre class="hljs"><code>Database
+ └── Table
+      └── Page
+           └── Row</code></pre>
+<p>You can place locks at any level.</p>
+<hr>
+<h3 id="database-level-lock">Database-Level Lock</h3>
+<pre class="hljs"><code>LOCK DATABASE</code></pre>
+<p>One lock protects everything.</p>
+<pre class="hljs"><code>T1 locks database
+T2 waits
+T3 waits
+T4 waits</code></pre>
+<h4 id="pros-2">Pros</h4>
+<ul>
+<li>Simple</li>
+</ul>
+<h4 id="cons-2">Cons</h4>
+<ul>
+<li>Terrible concurrency</li>
+</ul>
+<p>Almost never used for normal transactions.</p>
+<hr>
+<h3 id="table-level-lock">Table-Level Lock</h3>
+<pre class="hljs"><code>LOCK TABLE users</code></pre>
+<p>Example:</p>
+<pre class="hljs"><code>T1 updates user #5</code></pre>
+<p>but</p>
+<pre class="hljs"><code>T2 updates user #1000</code></pre>
+<p>must wait because entire table is locked.</p>
+<h4 id="pros-3">Pros</h4>
+<ul>
+<li>Fewer locks</li>
+</ul>
+<h4 id="cons-3">Cons</h4>
+<ul>
+<li>Unnecessary blocking</li>
+</ul>
+<hr>
+<h3 id="page-level-lock">Page-Level Lock</h3>
+<p>Suppose a page contains:</p>
+<pre class="hljs"><code>Rows 1-100</code></pre>
+<p>Locking the page means:</p>
+<pre class="hljs"><code>Any row in page
+→ protected by same lock</code></pre>
+<p>Historically used more often.</p>
+<p>Nowadays row-level locking is preferred.</p>
+<hr>
+<h3 id="row-level-lock">Row-Level Lock</h3>
+<p>Most common.</p>
+<p>Example:</p>
+<pre class="hljs"><code><span class="hljs-keyword">UPDATE</span> accounts
+<span class="hljs-keyword">SET</span> balance <span class="hljs-operator">=</span> balance <span class="hljs-operator">-</span> <span class="hljs-number">100</span>
+<span class="hljs-keyword">WHERE</span> id <span class="hljs-operator">=</span> <span class="hljs-number">5</span>;</code></pre>
+<p>Locks only:</p>
+<pre class="hljs"><code>row id=5</code></pre>
+<p>Other rows remain available.</p>
+<h4 id="pros-4">Pros</h4>
+<p>Maximum concurrency.</p>
+<h4 id="cons-4">Cons</h4>
+<p>Potentially millions of locks.</p>
+<hr>
+<h2 id="why-not-always-use-row-locks">Why Not Always Use Row Locks?</h2>
+<p>Imagine:</p>
+<pre class="hljs"><code><span class="hljs-keyword">UPDATE</span> orders
+<span class="hljs-keyword">SET</span> status<span class="hljs-operator">=</span><span class="hljs-string">&#x27;closed&#x27;</span>;</code></pre>
+<p>affecting:</p>
+<pre class="hljs"><code>10 million rows</code></pre>
+<p>Row locking means:</p>
+<pre class="hljs"><code>10 million lock objects</code></pre>
+<p>Huge overhead.</p>
+<p>Sometimes a table lock is cheaper.</p>
+<hr>
+<h2 id="lock-escalation">Lock Escalation</h2>
+<p>Classic interview topic.</p>
+<p>Suppose:</p>
+<pre class="hljs"><code>T1 acquires:
+1000 row locks
+2000 row locks
+5000 row locks</code></pre>
+<p>Eventually DBMS decides:</p>
+<pre class="hljs"><code>Forget individual locks.
+Lock entire table.</code></pre>
+<p>This is:</p>
+<pre class="hljs"><code>Lock escalation</code></pre>
+<p>Used by:</p>
+<ul>
+<li>Microsoft SQL Server</li>
+</ul>
+<hr>
+<h2 id="shared-vs-exclusive-locks">Shared vs Exclusive Locks</h2>
+<p>At every granularity you can have:</p>
+<h4 id="shared-s">Shared (S)</h4>
+<p>Read lock.</p>
+<pre class="hljs"><code>Many readers allowed.</code></pre>
+<hr>
+<h4 id="exclusive-x">Exclusive (X)</h4>
+<p>Write lock.</p>
+<pre class="hljs"><code>Only one writer.</code></pre>
+<hr>
+<p>Example:</p>
+<pre class="hljs"><code>S + S  = allowed
+S + X  = blocked
+X + X  = blocked</code></pre>
+<hr>
+<h2 id="the-big-problem">The Big Problem</h2>
+<p>Suppose:</p>
+<pre class="hljs"><code>T1 locks row #5</code></pre>
+<p>and</p>
+<pre class="hljs"><code>T2 wants table lock</code></pre>
+<p>How does T2 know whether rows inside are locked?</p>
+<p>Need a hierarchy.</p>
+<p>This leads to:</p>
+<pre class="hljs"><code>Intention Locks</code></pre>
+<hr>
+<h2 id="intention-locks">Intention Locks</h2>
+<p>Interview favorite.</p>
+<p>Types:</p>
+<pre class="hljs"><code>IS = Intention Shared
+IX = Intention Exclusive
+S
+X</code></pre>
+<hr>
+<p>Example:</p>
+<p>T1 wants:</p>
+<pre class="hljs"><code>Row #5 X lock</code></pre>
+<p>Before doing that:</p>
+<pre class="hljs"><code>Table gets IX
+Row gets X</code></pre>
+<p>Meaning:</p>
+<pre class="hljs"><code>&quot;I intend to take exclusive locks below.&quot;</code></pre>
+<p>Now if T2 asks:</p>
+<pre class="hljs"><code>Table S lock</code></pre>
+<p>DBMS immediately sees:</p>
+<pre class="hljs"><code>IX exists</code></pre>
+<p>and can reject it.</p>
+<p>No need to inspect every row.</p>
+<hr>
+<h2 id="compatibility-matrix">Compatibility Matrix</h2>
+<p>You don&#39;t usually memorize the whole matrix for SDE interviews.</p>
+<p>Know:</p>
+<pre class="hljs"><code>IS compatible with IS
+
+IX compatible with IX
+
+S conflicts with IX
+
+X conflicts with everything</code></pre>
+<p>is enough.</p>
+<hr>
+<h2 id="example-interview-question">Example Interview Question</h2>
+<h4 id="why-use-table-locks">Why use table locks?</h4>
+<p>Answer:</p>
+<pre class="hljs"><code>Lower memory overhead.
+Fewer lock manager operations.</code></pre>
+<hr>
+<h4 id="why-use-row-locks">Why use row locks?</h4>
+<p>Answer:</p>
+<pre class="hljs"><code>Higher concurrency.
+Less blocking.</code></pre>
+<hr>
+<h4 id="why-intention-locks">Why intention locks?</h4>
+<p>Answer:</p>
+<pre class="hljs"><code>Allow hierarchical locking efficiently.
+Avoid scanning all child locks.</code></pre>
+<hr>
+<h2 id="connection-to-mvcc">Connection to MVCC</h2>
+<p>Modern databases often use:</p>
+<pre class="hljs"><code>MVCC for reads
+Locks for writes</code></pre>
+<p>Example:</p>
+<p>In PostgreSQL:</p>
+<pre class="hljs"><code>SELECT</code></pre>
+<p>usually doesn&#39;t acquire traditional read locks because MVCC provides snapshots.</p>
+<p>But:</p>
+<pre class="hljs"><code><span class="hljs-keyword">UPDATE</span> ...
+<span class="hljs-keyword">DELETE</span> ...
+<span class="hljs-keyword">SELECT</span> <span class="hljs-keyword">FOR</span> <span class="hljs-keyword">UPDATE</span> ...</code></pre>
+<p>still use row-level locks.</p>
+<p>So lock granularity remains important even in MVCC systems.</p>
+<hr>
+<p>For interviews, the hierarchy to remember is:</p>
+<pre class="hljs"><code>Database
+  ↓
+Table
+  ↓
+Page
+  ↓
+Row</code></pre>
+<p>and the key tradeoff is:</p>
+<pre class="hljs"><code>Coarse-grained locks:
+    fewer locks, less overhead,
+    more blocking
+
+Fine-grained locks:
+    more locks, more overhead,
+    less blocking</code></pre>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>IS</th>
+<th>IX</th>
+<th>S</th>
+<th>SIX</th>
+<th>X</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>IS</strong></td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✗</td>
+</tr>
+<tr>
+<td><strong>IX</strong></td>
+<td>✓</td>
+<td>✓</td>
+<td>✗</td>
+<td>✗</td>
+<td>✗</td>
+</tr>
+<tr>
+<td><strong>S</strong></td>
+<td>✓</td>
+<td>✗</td>
+<td>✓</td>
+<td>✗</td>
+<td>✗</td>
+</tr>
+<tr>
+<td><strong>SIX</strong></td>
+<td>✓</td>
+<td>✗</td>
+<td>✗</td>
+<td>✗</td>
+<td>✗</td>
+</tr>
+<tr>
+<td><strong>X</strong></td>
+<td>✗</td>
+<td>✗</td>
+<td>✗</td>
+<td>✗</td>
+<td>✗</td>
+</tr>
+</tbody></table>
+<p>A plain-English explanation that still sounds technically strong is:</p>
+<blockquote>
+<p>The database lets transactions lock at different levels of the hierarchy—database, table, page, or row. Intention locks are like putting a sign on a parent object saying &quot;I plan to take locks somewhere underneath this.&quot; This allows the database to quickly determine whether a table-level lock is compatible with existing row-level locks without scanning every row lock in the table.</p>
+</blockquote>
+<p>Then explain the two important ones:</p>
+<h4 id="is-intention-shared">IS (Intention Shared)</h4>
+<p>Means:</p>
+<pre class="hljs"><code>I am not locking this table itself.
+I plan to take shared/read locks on some rows inside it.</code></pre>
+<p>Example:</p>
+<pre class="hljs"><code>Read row 5</code></pre>
+<p>Before taking:</p>
+<pre class="hljs"><code>S(Row 5)</code></pre>
+<p>the transaction takes:</p>
+<pre class="hljs"><code>IS(Table)</code></pre>
+<p>which tells everyone:</p>
+<pre class="hljs"><code>&quot;I&#x27;m reading some rows in this table.&quot;</code></pre>
+<hr>
+<h4 id="ix-intention-exclusive">IX (Intention Exclusive)</h4>
+<p>Means:</p>
+<pre class="hljs"><code>I am not locking this table itself.
+I plan to take exclusive/write locks on some rows inside it.</code></pre>
+<p>Example:</p>
+<pre class="hljs"><code>Update row 5</code></pre>
+<p>Before taking:</p>
+<pre class="hljs"><code>X(Row 5)</code></pre>
+<p>the transaction takes:</p>
+<pre class="hljs"><code>IX(Table)</code></pre>
+<p>which tells everyone:</p>
+<pre class="hljs"><code>&quot;I&#x27;m modifying some rows in this table.&quot;</code></pre>
+<hr>
+<h3 id="why-not-just-lock-the-row">Why Not Just Lock The Row?</h3>
+<p>Suppose:</p>
+<pre class="hljs"><code>T1 updates Row 5</code></pre>
+<p>and therefore holds:</p>
+<pre class="hljs"><code>X(Row 5)</code></pre>
+<p>Now:</p>
+<pre class="hljs"><code>T2 wants S(Table)</code></pre>
+<p>meaning:</p>
+<pre class="hljs"><code>Read entire table</code></pre>
+<p>Without intention locks, the DBMS would need to ask:</p>
+<pre class="hljs"><code>Are any rows locked?
+Check row 1...
+Check row 2...
+Check row 3...
+...
+Check row 10 million...</code></pre>
+<p>That&#39;s impractical.</p>
+<p>Instead:</p>
+<pre class="hljs"><code>T1 already placed IX(Table)</code></pre>
+<p>so T2 immediately sees:</p>
+<pre class="hljs"><code>IX exists
+→ cannot take S(Table)</code></pre>
+<p>Done in O(1).</p>
+<hr>
+<h3 id="the-most-important-compatibility-rule">The Most Important Compatibility Rule</h3>
+<p>People often think:</p>
+<pre class="hljs"><code>IX means writing
+IX means writing
+Therefore conflict</code></pre>
+<p>But that&#39;s wrong.</p>
+<p>Example:</p>
+<pre class="hljs"><code>T1:
+IX(Table)
+X(Row 1)
+
+T2:
+IX(Table)
+X(Row 2)</code></pre>
+<p>Both are allowed.</p>
+<p>Why?</p>
+<p>Because:</p>
+<pre class="hljs"><code>They are only announcing
+their intention to write.</code></pre>
+<p>The actual conflict check happens at the row.</p>
+<pre class="hljs"><code>Row 1 ≠ Row 2</code></pre>
+<p>so both proceed.</p>
+<p>This is the entire reason intention locks exist: many writers can coexist on different rows while still preventing someone from suddenly taking a table-wide lock.</p>
+<hr>
+<h3 id="what-stable-actually-means">What S(Table) Actually Means</h3>
+<p>When you take:</p>
+<pre class="hljs"><code>S(Table)</code></pre>
+<p>you&#39;re saying:</p>
+<pre class="hljs"><code>I want the entire table
+to behave as one read-locked object.</code></pre>
+<p>Therefore:</p>
+<pre class="hljs"><code>S(Table)</code></pre>
+<p>cannot coexist with:</p>
+<pre class="hljs"><code>IX(Table)</code></pre>
+<p>because somebody is modifying rows.</p>
+<hr>
+<h3 id="interview-version-30-seconds">Interview Version (30 seconds)</h3>
+<blockquote>
+<p>Intention locks are metadata locks used in multi-granularity locking. They tell the database that a transaction intends to acquire row-level locks underneath a table or page. This lets the lock manager determine whether a table-level lock conflicts with existing row-level activity without scanning every row lock. IS means &quot;I intend to read rows below,&quot; IX means &quot;I intend to write rows below.&quot; Multiple IX locks are allowed because the actual conflicts are checked at the row level, while a table-level shared or exclusive lock conflicts with IX because it affects the whole table.</p>
+</blockquote>
+<p>That&#39;s roughly how a database engineer would explain it rather than reciting the compatibility matrix.<br>Use this as the clean model:</p>
+<pre class="hljs"><code>MVCC = multiple versions + snapshot reads
+
+Then add a conflict-control policy:
+1. MVCC + 2PL
+2. MVCC + Timestamp Ordering
+3. MVCC + OCC
+4. MVCC + SSI</code></pre>
+<h3 id="1-mvcc-2pl-locking">1. MVCC + 2PL / locking</h3>
+<p>Used in practical systems like PostgreSQL/InnoDB-style engines.</p>
+<h4 id="what-happens">What happens</h4>
+<pre class="hljs"><code>READ:
+    read from snapshot
+    usually no read lock
+
+WRITE:
+    take row/write lock
+    create new version
+    commit makes version visible</code></pre>
+<p>Example:</p>
+<pre class="hljs"><code>T1 reads x=10
+T2 updates x=20
+T1 still sees x=10</code></pre>
+<p>But if:</p>
+<pre class="hljs"><code>T1 updates row A
+T2 updates row A</code></pre>
+<p>one waits or aborts.</p>
+<h4 id="guarantees">Guarantees</h4>
+<p>Depends on isolation level:</p>
+<pre class="hljs"><code>Read Committed:
+    each statement gets fresh snapshot
+
+Repeatable Read:
+    whole transaction gets one snapshot
+
+Serializable:
+    needs extra machinery</code></pre>
+<h4 id="key-point">Key point</h4>
+<p>MVCC helps reads. Locks still handle writes.</p>
+<hr>
+<h3 id="2-mvcc-timestamp-ordering">2. MVCC + Timestamp Ordering</h3>
+<p>Common in distributed SQL / KV-style systems.</p>
+<h4 id="what-happens-1">What happens</h4>
+<p>Every transaction/version has a timestamp.</p>
+<pre class="hljs"><code>x=10 @ ts=5
+x=20 @ ts=9
+x=30 @ ts=15</code></pre>
+<p>A transaction at timestamp 10 reads:</p>
+<pre class="hljs"><code>x=20</code></pre>
+<p>because it is the newest version ≤ 10.</p>
+<p>Writes are checked against timestamp-order rules.</p>
+<h4 id="guarantees-1">Guarantees</h4>
+<p>Can provide serializable isolation if timestamp ordering is enforced correctly.</p>
+<h4 id="key-point-1">Key point</h4>
+<p>Timestamps decide both:</p>
+<pre class="hljs"><code>which version you see
+whether your write is allowed</code></pre>
+<hr>
+<h3 id="3-mvcc-occ">3. MVCC + OCC</h3>
+<p>Used often in distributed/in-memory systems.</p>
+<h4 id="what-happens-2">What happens</h4>
+<p>Transaction does:</p>
+<pre class="hljs"><code>1. Read from snapshot
+2. Buffer writes privately
+3. At commit, validate
+4. If conflict: abort
+5. Else: publish new versions</code></pre>
+<p>Example:</p>
+<pre class="hljs"><code>T1 reads A, B
+T2 modifies A
+T1 commits</code></pre>
+<p>At validation:</p>
+<pre class="hljs"><code>Did A change after my snapshot?
+Yes → abort T1</code></pre>
+<h4 id="guarantees-2">Guarantees</h4>
+<p>Can provide serializable isolation if validation checks the full read/write set.</p>
+<p>Can provide weaker snapshot isolation if it only checks write-write conflicts.</p>
+<h4 id="key-point-2">Key point</h4>
+<p>No waiting during execution; conflicts are paid for at commit time.</p>
+<hr>
+<h3 id="4-mvcc-snapshot-isolation">4. MVCC + Snapshot Isolation</h3>
+<p>This is the common “MVCC behavior” people talk about.</p>
+<h4 id="what-happens-3">What happens</h4>
+<p>Transaction gets a fixed snapshot.</p>
+<pre class="hljs"><code>T1 starts
+T1 sees database as of time 100</code></pre>
+<p>Even if other transactions commit later, T1 keeps seeing time 100.</p>
+<p>Writes are usually checked by:</p>
+<pre class="hljs"><code>first-writer-wins</code></pre>
+<p>If two transactions update same row, one fails.</p>
+<h4 id="guarantees-3">Guarantees</h4>
+<p>Prevents:</p>
+<pre class="hljs"><code>dirty reads
+non-repeatable reads
+many phantom-like effects</code></pre>
+<p>But allows:</p>
+<pre class="hljs"><code>write skew</code></pre>
+<p>So it is not always serializable.</p>
+<h4 id="key-point-3">Key point</h4>
+<p>Snapshot isolation is strong for reads, but not fully serializable.</p>
+<hr>
+<h3 id="5-mvcc-ssi">5. MVCC + SSI</h3>
+<p>Serializable Snapshot Isolation.</p>
+<p>Used by PostgreSQL for Serializable isolation.</p>
+<h4 id="what-happens-4">What happens</h4>
+<p>Transactions still read MVCC snapshots.</p>
+<p>Additionally, DB tracks dependencies:</p>
+<pre class="hljs"><code>T1 read something T2 changed
+T2 read something T1 changed</code></pre>
+<p>If it detects a dangerous cycle, it aborts one transaction.</p>
+<h4 id="guarantees-4">Guarantees</h4>
+<p>Serializable.</p>
+<p>Prevents:</p>
+<pre class="hljs"><code>write skew
+phantoms
+non-serializable schedules</code></pre>
+<h4 id="key-point-4">Key point</h4>
+<p>Looks like snapshot isolation to the programmer, but aborts transactions that would break serializability.</p>
+<hr>
+<h3 id="summary-table">Summary Table</h3>
+<table>
+<thead>
+<tr>
+<th>Combination</th>
+<th>Reads</th>
+<th>Writes</th>
+<th>Conflict handling</th>
+<th>Typical guarantee</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>MVCC + Locks</td>
+<td>Snapshot reads</td>
+<td>Row locks + new version</td>
+<td>Wait/abort</td>
+<td>RC/RR/Serializable with extras</td>
+</tr>
+<tr>
+<td>MVCC + TO</td>
+<td>Read version by timestamp</td>
+<td>Timestamp-checked writes</td>
+<td>Abort/restart</td>
+<td>Can be Serializable</td>
+</tr>
+<tr>
+<td>MVCC + OCC</td>
+<td>Read snapshot</td>
+<td>Buffer writes</td>
+<td>Validate at commit</td>
+<td>SI or Serializable</td>
+</tr>
+<tr>
+<td>MVCC + SI</td>
+<td>One snapshot per txn</td>
+<td>First-writer-wins</td>
+<td>Abort same-row conflicts</td>
+<td>Not fully Serializable</td>
+</tr>
+<tr>
+<td>MVCC + SSI</td>
+<td>Snapshot reads</td>
+<td>Track dependencies</td>
+<td>Abort dangerous cycles</td>
+<td>Serializable</td>
+</tr>
+</tbody></table>
+<h3 id="interview-answer">Interview answer</h3>
+<blockquote>
+<p>MVCC itself means the database stores multiple versions and lets transactions read a consistent snapshot. It is not the whole isolation algorithm. Real systems combine MVCC with locks, timestamp ordering, optimistic validation, or SSI to decide which transactions can commit. The guarantees depend on the isolation level: Read Committed uses fresh snapshots per statement, Repeatable Read/Snapshot Isolation uses one snapshot per transaction, and Serializable requires extra conflict detection such as 2PL, timestamp ordering, OCC validation, or SSI.</p>
+</blockquote>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="concurrency-control.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">Concurrency Control Basics</span></a><a class="pn-card pn-next" href="mvcc-cmu.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">MVCC — CMU Lecture Notes</span></a></nav>
+</main>
+<aside class="toc"><div class="toc-title">On this page</div><ul><li class="toc-d2"><a href="#the-classic-doctor-example">The Classic Doctor Example</a></li><li class="toc-d2"><a href="#why-mvcc-allows-this">Why MVCC Allows This</a></li><li class="toc-d2"><a href="#compare-with-lost-update">Compare With Lost Update</a></li><li class="toc-d2"><a href="#write-skew-read-write-dependency-cycle">Write Skew = Read-Write Dependency Cycle</a></li><li class="toc-d2"><a href="#another-example-bank-approval">Another Example: Bank Approval</a></li><li class="toc-d2"><a href="#why-serializable-prevents-it">Why Serializable Prevents It</a></li><li class="toc-d2"><a href="#interview-explanation">Interview Explanation</a></li><li class="toc-d2"><a href="#relational-databases-using-mvcc">Relational Databases Using MVCC</a></li><li class="toc-d2"><a href="#nosql-databases-using-mvcc">NoSQL Databases Using MVCC</a></li><li class="toc-d2"><a href="#why-mvcc-fits-naturally-with-lsm-systems">Why MVCC Fits Naturally with LSM Systems</a></li><li class="toc-d2"><a href="#what-about-redis">What About Redis?</a></li><li class="toc-d2"><a href="#what-about-mongodb">What About MongoDB?</a></li><li class="toc-d2"><a href="#why-people-associate-mvcc-with-sql">Why People Associate MVCC with SQL</a></li><li class="toc-d2"><a href="#interview-perspective">Interview Perspective</a></li><li class="toc-d2"><a href="#1-two-phase-locking-2pl">1. Two-Phase Locking (2PL)</a></li><li class="toc-d2"><a href="#2-strict-two-phase-locking-strict-2pl">2. Strict Two-Phase Locking (Strict 2PL)</a></li><li class="toc-d2"><a href="#3-timestamp-ordering">3. Timestamp Ordering</a></li><li class="toc-d2"><a href="#4-optimistic-concurrency-control-occ">4. Optimistic Concurrency Control (OCC)</a></li><li class="toc-d2"><a href="#5-serializable-snapshot-isolation-ssi">5. Serializable Snapshot Isolation (SSI)</a></li><li class="toc-d2"><a href="#6-single-threaded-execution">6. Single-Threaded Execution</a></li><li class="toc-d2"><a href="#7-event-sourcing-append-only-logs">7. Event Sourcing / Append-Only Logs</a></li><li class="toc-d1"><a href="#why-mvcc-won">Why MVCC Won</a></li><li class="toc-d1"><a href="#interview-summary">Interview Summary</a></li><li class="toc-d2"><a href="#there-are-two-ways-people-use-the-term-mvcc">There are two ways people use the term MVCC</a></li><li class="toc-d1"><a href="#think-of-it-like-this">Think of it like this</a></li><li class="toc-d1"><a href="#example-1-mvcc-timestamp-ordering">Example 1: MVCC + Timestamp Ordering</a></li><li class="toc-d1"><a href="#example-2-mvcc-occ">Example 2: MVCC + OCC</a></li><li class="toc-d1"><a href="#example-3-postgresql">Example 3: PostgreSQL</a></li><li class="toc-d1"><a href="#why-the-confusion-exists">Why the confusion exists</a></li><li class="toc-d1"><a href="#another-important-correction">Another important correction</a></li><li class="toc-d1"><a href="#the-layered-view">The layered view</a></li><li class="toc-d2"><a href="#database-hierarchy">Database Hierarchy</a></li><li class="toc-d2"><a href="#database-level-lock">Database-Level Lock</a></li><li class="toc-d2"><a href="#table-level-lock">Table-Level Lock</a></li><li class="toc-d2"><a href="#page-level-lock">Page-Level Lock</a></li><li class="toc-d2"><a href="#row-level-lock">Row-Level Lock</a></li><li class="toc-d1"><a href="#why-not-always-use-row-locks">Why Not Always Use Row Locks?</a></li><li class="toc-d1"><a href="#lock-escalation">Lock Escalation</a></li><li class="toc-d1"><a href="#shared-vs-exclusive-locks">Shared vs Exclusive Locks</a></li><li class="toc-d1"><a href="#the-big-problem">The Big Problem</a></li><li class="toc-d1"><a href="#intention-locks">Intention Locks</a></li><li class="toc-d1"><a href="#compatibility-matrix">Compatibility Matrix</a></li><li class="toc-d1"><a href="#example-interview-question">Example Interview Question</a></li><li class="toc-d1"><a href="#connection-to-mvcc">Connection to MVCC</a></li><li class="toc-d2"><a href="#why-not-just-lock-the-row">Why Not Just Lock The Row?</a></li><li class="toc-d2"><a href="#the-most-important-compatibility-rule">The Most Important Compatibility Rule</a></li><li class="toc-d2"><a href="#what-stable-actually-means">What S(Table) Actually Means</a></li><li class="toc-d2"><a href="#interview-version-30-seconds">Interview Version (30 seconds)</a></li><li class="toc-d2"><a href="#1-mvcc-2pl-locking">1. MVCC + 2PL / locking</a></li><li class="toc-d2"><a href="#2-mvcc-timestamp-ordering">2. MVCC + Timestamp Ordering</a></li><li class="toc-d2"><a href="#3-mvcc-occ">3. MVCC + OCC</a></li><li class="toc-d2"><a href="#4-mvcc-snapshot-isolation">4. MVCC + Snapshot Isolation</a></li><li class="toc-d2"><a href="#5-mvcc-ssi">5. MVCC + SSI</a></li><li class="toc-d2"><a href="#summary-table">Summary Table</a></li><li class="toc-d2"><a href="#interview-answer">Interview answer</a></li></ul></aside>
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

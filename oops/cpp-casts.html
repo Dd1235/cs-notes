@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>C++ Casts · OOP &amp; C++</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#8A4E5E">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link is-active" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">OOP & C++</a><div class="side-group"><div class="side-label">Lecture Notes</div><ul><li><a class="side-link" href="volatile-macros-inline.html">volatile, Macros &amp; inline</a></li><li><a class="side-link" href="references-and-const.html">References &amp; const</a></li><li><a class="side-link" href="function-overloading.html">Function Overloading</a></li><li><a class="side-link" href="dynamic-memory.html">Dynamic Memory Management</a></li><li><a class="side-link" href="classes-and-objects.html">Classes &amp; Objects</a></li><li><a class="side-link" href="constructors.html">Constructors &amp; Information Hiding</a></li><li><a class="side-link" href="copy-semantics.html">Copy Constructor &amp; Copy Assignment</a></li><li><a class="side-link" href="constness-and-static.html">Const-ness &amp; Static Members</a></li><li><a class="side-link" href="friend-functions.html">Friend Functions &amp; Friend Classes</a></li><li><a class="side-link" href="operator-overloading.html">Operator Overloading</a></li><li><a class="side-link" href="inheritance.html">Inheritance &amp; Overriding</a></li><li><a class="side-link" href="multiple-private-inheritance.html">Multiple &amp; Private Inheritance</a></li><li><a class="side-link" href="virtual-functions.html">Virtual Functions &amp; Dynamic Binding</a></li><li><a class="side-link" href="vtables-and-const-cast.html">Virtual Pointer Tables &amp; const_cast</a></li><li><a class="side-link is-active" href="cpp-casts.html">C++ Casts</a></li><li><a class="side-link" href="exceptions.html">Exceptions &amp; Error Handling</a></li><li><a class="side-link" href="try-catch-and-templates.html">try/catch &amp; Function Templates</a></li><li><a class="side-link" href="class-templates-functors.html">Class Templates &amp; Functors</a></li></ul></div><div class="side-group"><div class="side-label">Extras</div><ul><li><a class="side-link" href="compilation-model.html">The C++ Compilation Model</a></li><li><a class="side-link" href="template-metaprogramming.html">Template Metaprogramming</a></li><li><a class="side-link" href="build-your-own-vector.html">Exercise — Build Your Own Vector</a></li><li><a class="side-link" href="miscellany.html">Miscellany</a></li><li><a class="side-link" href="resources.html">Resources</a></li></ul></div><div class="side-group"><div class="side-label">Topic Notes</div><ul><li><a class="side-link" href="notes-cpp-core.html">C++ Core</a></li><li><a class="side-link" href="notes-cpp-oop.html">C++ OOP</a></li><li><a class="side-link" href="notes-cpp-advanced.html">C++ Advanced</a></li><li><a class="side-link" href="notes-ooad-uml.html">OOAD &amp; UML</a></li><li><a class="side-link" href="notes-design-patterns.html">Design Patterns</a></li><li><a class="side-link" href="notes-testing-sdlc.html">Testing, SDLC &amp; SE</a></li><li><a class="side-link" href="notes-interview-questions.html">Interview Questions</a></li></ul></div><div class="side-group"><div class="side-label">Flashcards</div><ul><li><a class="side-link" href="cards-cpp-core.html">C++ Core Flashcards</a></li><li><a class="side-link" href="cards-oop-lifetime.html">OOP, Lifetime &amp; Memory Flashcards</a></li><li><a class="side-link" href="cards-polymorphism-stl.html">Polymorphism, Casts, Templates &amp; STL Flashcards</a></li><li><a class="side-link" href="cards-ooad-uml.html">OOAD &amp; UML Flashcards</a></li><li><a class="side-link" href="cards-design-patterns.html">Design Patterns Flashcards</a></li><li><a class="side-link" href="cards-testing-sdlc.html">Testing, SDLC &amp; SE Flashcards</a></li><li><a class="side-link" href="cards-interview-drills.html">Interview &amp; Code-Reading Drills</a></li></ul></div><div class="side-group"><div class="side-label">Under the Hood</div><ul><li><a class="side-link" href="memory-layout.html">Memory Layout, Alignment &amp; Padding</a></li></ul></div><div class="side-group"><div class="side-label">Revision</div><ul><li><a class="side-link" href="refresher.html">Rapid Refresher<span class="badge">&#9733;</span></a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">OOP & C++</a></div>
+  <div class="page-head">
+    <div class="page-kicker">OOP & C++</div>
+    <h1 class="page-title">C++ Casts</h1>
+    <div class="page-meta">6 min read &middot; source: <code>oops_cpp/self_notes/17.md</code></div>
+  </div>
+  <article class="prose"><p>In C we lose information and there is lack of clarity of semantics. In C++ we can perform a fresh inference of type with or without change of value.</p>
+<ul>
+<li><p>static_cast performs all conversions allowed implicitly. Not long those with pointers to classes, but als a void* to any pointer type. Convert integeres, floating-ponit values and enum types to enum types</p>
+</li>
+<li><p>no checks are performed during run-time to guarantee that the object being converted is in fact a full object of the destination type.</p>
+</li>
+<li><p>not only upcast but allso downcast.</p>
+</li>
+<li><p>can explicitly call a single argument constructor or a conversion operator, the user define cast. convert to rvalue references, convert enum class values to integers or floating point, convert any type to void.</p>
+</li>
+<li><p>instead of i = d; do i = static_cast<int>(d) - okay, no warning from compiler</p>
+</li>
+</ul>
+<pre class="hljs"><code>double* pd = &amp;d;
+
+i = pd; // implicit, error, not okay, wouldn't happen, why do this? assign double* to an int? serialization deserialization, cannot write down pointer values, same pointer address won't occur, need some indicative reference numbers
+i = static_cast&lt;int&gt;(pd); // static_cast - error
+i = (int)pd; // c cstyle, okay, risky, use reinterpret_cast</code></pre>
+<p>we get compiler error on static cast because it does not allow conversion on unrelated types. Like pointer to a double to an int. c-style cast works because it works in every case.</p>
+<p>static_cast will work with downcasting but its better to not. dynamic_cast is runtime checked. Requires at least one virtual method (polymorphic types)</p>
+<pre class="hljs"><code>class Base  { public: virtual ~Base() {} };
+class Dog   : public Base {};
+class Cat   : public Base {};
+
+Base* b = new Dog();
+
+// pointer version: returns nullptr on failure
+Dog* d = dynamic_cast&lt;Dog*&gt;(b);   // succeeds — d != nullptr
+Cat* c = dynamic_cast&lt;Cat*&gt;(b);   // fails   — c == nullptr
+
+if (d) { /* safe to use */ }
+
+// reference version: throws std::bad_cast on failure
+try {
+    Dog&amp; ref = dynamic_cast&lt;Dog&amp;&gt;(*b);   // ok
+    Cat&amp; bad = dynamic_cast&lt;Cat&amp;&gt;(*b);   // throws
+} catch (const std::bad_cast&amp; e) { ... }</code></pre>
+<pre class="hljs"><code>
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">Window</span> { <span class="hljs-keyword">public</span>: <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-type">void</span> <span class="hljs-title">onResize</span><span class="hljs-params">()</span></span>;...};
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">SpecialWindow</span> : <span class="hljs-keyword">public</span> Window {
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-type">void</span> <span class="hljs-title">onResize</span><span class="hljs-params">()</span></span>{
+        <span class="hljs-built_in">static_cast</span>&lt;Window&gt;(*<span class="hljs-keyword">this</span>).<span class="hljs-built_in">onResize</span>();
+        <span class="hljs-comment">// this doesn&#x27;t work! you create a temporary object which is a copy and then call onResize on that!</span>
+        <span class="hljs-comment">// do special window specific stuff</span>
+    }
+}</code></pre>
+<p>instead <code>Window::onResize();</code></p>
+<p>static_cast with unrelated classes? If class A has a constructor that takes a const reference to class B, in that case static_cast<A>(my_b_object) will work.</p>
+<pre class="hljs"><code>class A{
+    ...
+public:
+    // cast B to A
+    A(const&amp; B){
+        ...
+    }
+    operator int(){
+        cout &lt;&lt; &quot;A::operator int()\n&quot;; return A();
+    }
+    // cast A to B
+    operator B()
+}</code></pre>
+<p>this would make static_cast<B>(a_object) or (B)a;</p>
+<ul>
+<li>make sure you don&#39;t end up using the temporary object like the window case.</li>
+</ul>
+<h3 id="reinterpretcast">reinterpret_cast</h3>
+<ul>
+<li>converts any pointer type to any other pointer type (static can only upcase or downcast, don&#39;t downcast ever)</li>
+<li>can also cast pointers to or from integer types.</li>
+</ul>
+<pre class="hljs"><code>
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">A</span> {};
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">B</span> {};
+
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>{
+    <span class="hljs-type">int</span> i = <span class="hljs-number">2</span>;
+    <span class="hljs-type">double</span> d = <span class="hljs-number">3.7</span>;
+    <span class="hljs-type">double</span>* pd = <span class="hljs-number">7</span>d;
+
+    i = pd; <span class="hljs-comment">// error</span>
+    i = <span class="hljs-built_in">reinterpret_cast</span>&lt;<span class="hljs-type">int</span>&gt;(pd); <span class="hljs-comment">// okay</span>
+    i = (<span class="hljs-type">int</span>)pd; <span class="hljs-comment">// c style okay</span>
+    cout &lt;&lt; pd &lt;&lt; <span class="hljs-string">&quot; &quot;</span> &lt;&lt; i &lt;&lt; endl;
+
+    A *pA;
+    B *pB;
+
+    pA = pB; <span class="hljs-comment">// error</span>
+    pA = <span class="hljs-built_in">reinterpret_cast</span>&lt;A*&gt;(pB) <span class="hljs-comment">// okay</span>
+    pA = (A*)pB; <span class="hljs-comment">// C stle, okay</span>
+}</code></pre>
+<p>applications - serialization, deserialization, packetization, depacketization, etc.</p>
+<h3 id="dynamic-cast">Dynamic Cast</h3>
+<ul>
+<li><p>can only be used with pointers and references to classes or with void*</p>
+</li>
+<li><p>ensure result of the type conversion points to a valid complete object of hte destination pointer type</p>
+</li>
+<li><p>naturally includes pointer upcase (pointer_to_derived to pointer_to_base)</p>
+</li>
+<li><p>can also downcast polymorphic classes if-and-only-if pointed object is a valid complete object of the target type</p>
+</li>
+<li><p>down_cast would only work if its valid. for unrelated_cast it would be invalid other than when you have null or void*</p>
+</li>
+<li><p>downcast dispatch needs a polymorphic hierarchy.</p>
+</li>
+<li><p>can also be used iwth references and that is interesting.</p>
+</li>
+<li><p>can take a reference to B, and convert it to a reference to A, so upcast, and that&#39;s okay. but use static cast.</p>
+</li>
+<li><p>downcast on both pointer and reference</p>
+</li>
+<li><p>now <code>A &amp;rA3 = b;</code> here its a b class object ( the derived class)</p>
+</li>
+<li><p>there is no &quot;null reference&quot;, so throws an exception if you try to do illegal casting using references. bad-cast exception.</p>
+</li>
+<li><p>can&#39;t downcast reference illegally. This computation cannot be proceeded.</p>
+</li>
+<li><p>can also get bad-cast error for unrelated cast.</p>
+</li>
+<li><p>so why does dynamic type need polymorphic hierarchy? in c++ once you have created an object, how to know which class? its just a bit pattern. Looking at that object don&#39;t know if its a pair of int or complex type etc.</p>
+</li>
+<li><p>when there is a polymorphic hierarchy, each class has a vfunction table that is unique for that class.</p>
+</li>
+<li><p>that object will have a pointer to the vtable</p>
+</li>
+<li><p>that pointer is the identity, which class it came from.</p>
+</li>
+<li><p>that info is used by dynamic_cast.</p>
+</li>
+</ul>
+<h3 id="typeid-operator-herehttpsencppreferencecomcpplanguagetypeid">typeid operator <a href="https://en.cppreference.com/cpp/language/typeid" target="_blank" rel="noopener">here</a></h3>
+<ul>
+<li><p>there is a <code>typeid</code> operator is used where the dynamic type of a polymorphic object must be known and for a static type identification.</p>
+</li>
+<li><p><em>polymorphic object</em> - Objects of a class type that declares or inherits at least one virtual function are polymorphic objects.</p>
+</li>
+<li><p>lvalid expression</p>
+</li>
+<li><p>typeid oeprator can be applied ona type or an expression</p>
+</li>
+<li><p><code>operator== operator!=</code> checks whether the objects refer to the same type</p>
+</li>
+<li><p><code>name</code> implementation defined name of the type</p>
+</li>
+<li><p>won&#39;t work for non polymorphic type</p>
+</li>
+<li><p>works for polymorphic type only as it uses <em>RTTI</em> vtable. run time type information</p>
+</li>
+<li><p>if polymorphic object is bad <code>bad_typeid</code> exception</p>
+</li>
+</ul>
+<pre class="hljs"><code>A a;
+cout &lt;&lt; <span class="hljs-built_in">typeid</span>(a).<span class="hljs-built_in">name</span>() &lt;&lt; <span class="hljs-string">&quot;: &quot;</span> &lt;&lt; <span class="hljs-built_in">typeid</span>(&amp;a).<span class="hljs-built_in">name</span>() &lt;&lt; endl; <span class="hljs-comment">// static</span>
+A *p = &amp;a;
+cout &lt;&lt; <span class="hljs-built_in">typeid</span>(p).<span class="hljs-built_in">name</span>() &lt;&lt; <span class="hljs-string">&quot;: &quot;</span> &lt;&lt; <span class="hljs-built_in">typeid</span>(*p).<span class="hljs-built_in">name</span>() &lt;&lt; endl; <span class="hljs-comment">// dynamic</span>
+
+B b; <span class="hljs-comment">// derived from A</span>
+cout &lt;&lt; <span class="hljs-built_in">typeid</span>(b).<span class="hljs-built_in">name</span>() &lt;&lt; <span class="hljs-string">&quot;: &quot;</span> &lt;&lt; <span class="hljs-built_in">typeid</span>(&amp;b).<span class="hljs-built_in">name</span>() &lt;&lt; endl; <span class="hljs-comment">// static</span>
+p = &amp;b;
+<span class="hljs-comment">// same, typeid of p and deref p, we have dynamic</span>
+A &amp;r1 = a; A&amp; r2 = b;
+<span class="hljs-comment">// typeid and name, we get classA: classB</span></code></pre>
+<p>If its non-polymorphic hierarchy, it will not dynamically understand that derefencing base class pointer is actually pointing to a derived class. Derived class has no vtable so system as runtime does not print <code>class Derived</code> when you get typeid of the dereferenced object. Unless there is no vtable no way for compiler to tell the type of the object, if my base class pointer is pointing to derived class object.</p>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="vtables-and-const-cast.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">Virtual Pointer Tables &amp; const_cast</span></a><a class="pn-card pn-next" href="exceptions.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">Exceptions &amp; Error Handling</span></a></nav>
+</main>
+<aside class="toc"><div class="toc-title">On this page</div><ul><li class="toc-d2"><a href="#reinterpretcast">reinterpret_cast</a></li><li class="toc-d2"><a href="#dynamic-cast">Dynamic Cast</a></li><li class="toc-d2"><a href="#typeid-operator-herehttpsencppreferencecomcpplanguagetypeid">typeid operator <a href="https://en.cppreference.com/cpp/language/typeid" target="_blank" rel="noopener">here</a></a></li></ul></aside>
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Class Templates &amp; Functors · OOP &amp; C++</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#8A4E5E">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link is-active" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">OOP & C++</a><div class="side-group"><div class="side-label">Lecture Notes</div><ul><li><a class="side-link" href="volatile-macros-inline.html">volatile, Macros &amp; inline</a></li><li><a class="side-link" href="references-and-const.html">References &amp; const</a></li><li><a class="side-link" href="function-overloading.html">Function Overloading</a></li><li><a class="side-link" href="dynamic-memory.html">Dynamic Memory Management</a></li><li><a class="side-link" href="classes-and-objects.html">Classes &amp; Objects</a></li><li><a class="side-link" href="constructors.html">Constructors &amp; Information Hiding</a></li><li><a class="side-link" href="copy-semantics.html">Copy Constructor &amp; Copy Assignment</a></li><li><a class="side-link" href="constness-and-static.html">Const-ness &amp; Static Members</a></li><li><a class="side-link" href="friend-functions.html">Friend Functions &amp; Friend Classes</a></li><li><a class="side-link" href="operator-overloading.html">Operator Overloading</a></li><li><a class="side-link" href="inheritance.html">Inheritance &amp; Overriding</a></li><li><a class="side-link" href="multiple-private-inheritance.html">Multiple &amp; Private Inheritance</a></li><li><a class="side-link" href="virtual-functions.html">Virtual Functions &amp; Dynamic Binding</a></li><li><a class="side-link" href="vtables-and-const-cast.html">Virtual Pointer Tables &amp; const_cast</a></li><li><a class="side-link" href="cpp-casts.html">C++ Casts</a></li><li><a class="side-link" href="exceptions.html">Exceptions &amp; Error Handling</a></li><li><a class="side-link" href="try-catch-and-templates.html">try/catch &amp; Function Templates</a></li><li><a class="side-link is-active" href="class-templates-functors.html">Class Templates &amp; Functors</a></li></ul></div><div class="side-group"><div class="side-label">Extras</div><ul><li><a class="side-link" href="compilation-model.html">The C++ Compilation Model</a></li><li><a class="side-link" href="template-metaprogramming.html">Template Metaprogramming</a></li><li><a class="side-link" href="build-your-own-vector.html">Exercise — Build Your Own Vector</a></li><li><a class="side-link" href="miscellany.html">Miscellany</a></li><li><a class="side-link" href="resources.html">Resources</a></li></ul></div><div class="side-group"><div class="side-label">Topic Notes</div><ul><li><a class="side-link" href="notes-cpp-core.html">C++ Core</a></li><li><a class="side-link" href="notes-cpp-oop.html">C++ OOP</a></li><li><a class="side-link" href="notes-cpp-advanced.html">C++ Advanced</a></li><li><a class="side-link" href="notes-ooad-uml.html">OOAD &amp; UML</a></li><li><a class="side-link" href="notes-design-patterns.html">Design Patterns</a></li><li><a class="side-link" href="notes-testing-sdlc.html">Testing, SDLC &amp; SE</a></li><li><a class="side-link" href="notes-interview-questions.html">Interview Questions</a></li></ul></div><div class="side-group"><div class="side-label">Flashcards</div><ul><li><a class="side-link" href="cards-cpp-core.html">C++ Core Flashcards</a></li><li><a class="side-link" href="cards-oop-lifetime.html">OOP, Lifetime &amp; Memory Flashcards</a></li><li><a class="side-link" href="cards-polymorphism-stl.html">Polymorphism, Casts, Templates &amp; STL Flashcards</a></li><li><a class="side-link" href="cards-ooad-uml.html">OOAD &amp; UML Flashcards</a></li><li><a class="side-link" href="cards-design-patterns.html">Design Patterns Flashcards</a></li><li><a class="side-link" href="cards-testing-sdlc.html">Testing, SDLC &amp; SE Flashcards</a></li><li><a class="side-link" href="cards-interview-drills.html">Interview &amp; Code-Reading Drills</a></li></ul></div><div class="side-group"><div class="side-label">Under the Hood</div><ul><li><a class="side-link" href="memory-layout.html">Memory Layout, Alignment &amp; Padding</a></li></ul></div><div class="side-group"><div class="side-label">Revision</div><ul><li><a class="side-link" href="refresher.html">Rapid Refresher<span class="badge">&#9733;</span></a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">OOP & C++</a></div>
+  <div class="page-head">
+    <div class="page-kicker">OOP & C++</div>
+    <h1 class="page-title">Class Templates &amp; Functors</h1>
+    <div class="page-meta">3 min read &middot; source: <code>oops_cpp/self_notes/20.md</code></div>
+  </div>
+  <article class="prose"><ul>
+<li>eg. <code>Stack&lt;char&gt;</code></li>
+<li>class template can be done with a forward declaration</li>
+</ul>
+<pre class="hljs"><code>template&lt;class T&gt; class Stack;
+Stack&lt;char&gt; s; // is an error
+Stack&lt;char&gt; *ps; // is okay, doesn't need to know impl
+void ReverseString(Stack&lt;char&gt;&amp; s, char *str); // is okay</code></pre>
+<p><code>template&lt;class T&gt; class X {class body involving type T}</code></p>
+<p>can have partial template specialization<br><code>template&lt;class T, int size&gt;</code></p>
+<p><code>template &lt;int N&gt;</code> - N is a compile time integer, not a type</p>
+<pre class="hljs"><code>template&lt;class T&gt;
+template &lt;typename T&gt;</code></pre>
+<p>there is no different, typename was introduced because T might not be a class.</p>
+<pre class="hljs"><code>template&lt;typename T&gt;
+void f(){
+    // T::value_type x; this is an error
+    typename T::value_type x;
+}</code></pre>
+<pre class="hljs"><code>template&lt;class T&gt;
+class Set {
+public:
+    Set() {};
+    virtual void add(const T&amp; val);
+    int length();
+    bool find(const T &amp;val);
+private:
+    List&lt;T&gt; items;
+};
+
+template&lt;class T&gt;
+void Set&lt;T&gt;::add(const T &amp;val){
+    if(items.find(val)) return;
+    items.put(val);
+}
+template&lt;class T&gt; int Set&lt;T&gt;::length() {return items.length();}
+template&lt;class T&gt; bool Set&lt;T&gt;::find(const T&amp;val){
+    return items.find(val);
+}</code></pre>
+<p>this was <code>parametric polymorphism</code></p>
+<h2 id="functors">Functors</h2>
+<ul>
+<li>a callable entity is a function</li>
+<li>how to recognize? ()</li>
+<li>a callable entity supports operator()</li>
+<li>such objects are called function objects or Functors</li>
+</ul>
+<p>There are several callable entities in C++</p>
+<ul>
+<li>function-like macros</li>
+<li>c functions</li>
+<li>member functions static and non static</li>
+<li>pointers to functions</li>
+<li>ref to functions</li>
+<li>functors</li>
+</ul>
+<p>every function is also a pointer. function pointer -&gt; address of the first point where the function starts.</p>
+<ul>
+<li>defining a func pointer - <code>int (*pt2Function) (int, char, char);</code></li>
+<li><code>pt2Function = &amp;my_func; // OR pt2Function = my_func</code></li>
+<li>a function actually means its address</li>
+<li><code>int res = (*pt2Function)(12, &#39;a&#39;,&#39;b&#39;)</code></li>
+</ul>
+<p><code>int (A::*pt2Member)(float, char, char);</code></p>
+<ul>
+<li><p>what can we do? assign an address, compare them, call a function using a function pointer, pass a function pointer as an argument..</p>
+</li>
+<li><p>replace switch/ if statements, repalizing user-defined late binding.</p>
+</li>
+</ul>
+<p>smart functions - functors are functions with a state</p>
+<ul>
+<li><p>functors are functions with a state, can encapsulate c/c++ function pointers, uses templates and engages polymorphism.</p>
+</li>
+<li><p>has its own type</p>
+</li>
+<li><p>any class that overloads the function call operator</p>
+<ul>
+<li>void operator() ();</li>
+<li>int operator()(int, int);</li>
+<li>double operator()(int, double)</li>
+</ul>
+</li>
+</ul>
+<pre class="hljs"><code>int adder(int a, int b){
+    return a + b;
+}
+class AdderFunctor{
+public:
+// encapsulated, now it is behaviour of the object
+    int operator()(int a, int b){
+        return a+b;
+    }
+};
+void main(){
+    int x = 5;
+    int y = 7;
+    int z = adder(x, y);
+    AdderFunctor aF;
+    int w = aF(x, y); // aF.operator()(x,y)
+}</code></pre>
+<pre class="hljs"><code>#include &lt;cmath&gt;
+#include &lt;functional&gt;
+
+struct less_mag : public std::binary_function&lt;double, double, bool&gt;
+{
+    bool operator()(double x, double y) const
+    {
+        return std::fabs(x) &lt; std::fabs(y);
+    }
+};</code></pre>
+<ul>
+<li><p>can pass into sort. less_mag is a function that inherits the overloaded operator.</p>
+</li>
+<li><p>binary_function deprecated</p>
+</li>
+</ul>
+<pre class="hljs"><code>struct less_mag
+{
+    bool operator()(double x, double y) const
+    {
+        return std::fabs(x) &lt; std::fabs(y);
+    }
+};</code></pre>
+<p>sort would repeatedly call less_mag()(a, b);</p>
+<p>stl components and algorithms has a whole lot of use of functors, we need to specialize binary_function or unary_function (now deprecated) and make functors</p>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="try-catch-and-templates.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">try/catch &amp; Function Templates</span></a><a class="pn-card pn-next" href="compilation-model.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">The C++ Compilation Model</span></a></nav>
+</main>
+
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rapid Refresher · Operating Systems</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#77682E">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link is-active" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">Operating Systems</a><div class="side-group"><div class="side-label">Notes</div><ul><li><a class="side-link" href="multithreading-cpp.html">Multithreading in C++</a></li><li><a class="side-link" href="semaphore-vs-mutex.html">Semaphore vs Mutex</a></li><li><a class="side-link" href="csapp-ch12.html">Concurrent Programming — CS:APP Ch. 12</a></li><li><a class="side-link" href="csapp-ch9.html">Virtual Memory — CS:APP Ch. 9</a></li></ul></div><div class="side-group"><div class="side-label">Processes & Scheduling</div><ul><li><a class="side-link" href="processes.html">Processes — Lifecycle, fork &amp; Friends</a></li><li><a class="side-link" href="scheduling.html">CPU Scheduling — FIFO to MLFQ</a></li></ul></div><div class="side-group"><div class="side-label">Locks & Memory</div><ul><li><a class="side-link" href="locks-internals.html">How Locks Actually Work</a></li><li><a class="side-link" href="deadlock.html">Deadlock</a></li><li><a class="side-link" href="page-replacement.html">Page Replacement — FIFO, LRU, Clock</a></li></ul></div><div class="side-group"><div class="side-label">Files & IPC</div><ul><li><a class="side-link" href="filesystems.html">Filesystems — Inodes &amp; Journaling</a></li><li><a class="side-link" href="ipc.html">IPC — Pipes, Shared Memory, Signals</a></li></ul></div><div class="side-group"><div class="side-label">Revision</div><ul><li><a class="side-link is-active" href="refresher.html">Rapid Refresher<span class="badge">&#9733;</span></a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">Operating Systems</a></div>
+  <div class="page-head">
+    <div class="page-kicker">Operating Systems</div>
+    <h1 class="page-title">Rapid Refresher</h1>
+    <div class="page-meta">3 min read &middot; source: <code>website/content/os_refresher.md</code></div>
+  </div>
+  <article class="prose"><blockquote>
+<p>A last-pass revision sheet distilled from the OS notes. Concurrency is the highest-yield interview area here — drill the mutex/semaphore and threading rows hardest.</p>
+</blockquote>
+<h2 id="process-vs-thread">Process vs thread</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Process</th>
+<th>Thread</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Address space</td>
+<td>own</td>
+<td>shared with siblings</td>
+</tr>
+<tr>
+<td>Owns</td>
+<td>pages, FDs, signal handlers</td>
+<td>stack + registers + PC</td>
+</tr>
+<tr>
+<td>Create/switch cost</td>
+<td>heavy</td>
+<td>light</td>
+</tr>
+<tr>
+<td>Failure isolation</td>
+<td>strong</td>
+<td>one bad thread kills all</td>
+</tr>
+<tr>
+<td>Talk via</td>
+<td>IPC (pipes, sockets, shm)</td>
+<td>shared memory (needs sync)</td>
+</tr>
+</tbody></table>
+<h2 id="three-ways-to-serve-many-clients-csapp-ch-12">Three ways to serve many clients (CS:APP ch. 12)</h2>
+<ol>
+<li><strong>Multiprocess</strong> — fork per client: isolated, expensive.</li>
+<li><strong>I/O multiplexing</strong> — one thread, <code>select/poll/epoll</code>: efficient, event-state machine complexity.</li>
+<li><strong>Multithreading</strong> — thread per client or pool: shared state, needs locks.</li>
+</ol>
+<h2 id="c-threading-toolbox">C++ threading toolbox</h2>
+<ul>
+<li>Create: <code>std::thread t(fn, args...)</code> (function ptr, lambda, functor); always <code>join()</code> or <code>detach()</code>.</li>
+<li><code>std::mutex</code> + <code>std::lock_guard</code> (RAII, scope-locked) / <code>std::unique_lock</code> (movable, works with condvars).</li>
+<li><code>std::condition_variable</code> — wait for a predicate: <code>cv.wait(lk, []{ return ready; })</code> (loop handles spurious wakeups).</li>
+<li><code>std::async</code> / <code>std::future</code> — get a value out of a thread without manual plumbing.</li>
+<li><code>std::atomic&lt;T&gt;</code> — lock-free counters/flags; beware: atomicity ≠ ordering of surrounding code.</li>
+</ul>
+<h2 id="mutex-vs-semaphore-the-essay-in-four-lines">Mutex vs semaphore — the essay in four lines</h2>
+<blockquote>
+<p>A <strong>mutex</strong> is mutual exclusion with <strong>ownership</strong>: the locker must unlock.<br>A <strong>semaphore</strong> counts <strong>permits</strong>: any thread may signal.<br>Binary semaphore ≠ mutex — the ownership rule is the difference.<br>Use mutex to protect state; use semaphore to signal events or bound a resource pool.</p>
+</blockquote>
+<h2 id="deadlock">Deadlock</h2>
+<ul>
+<li>Four conditions (all required): mutual exclusion, hold-and-wait, no preemption, <strong>circular wait</strong>.</li>
+<li>Practical fix: global lock ordering (break circular wait), or <code>std::scoped_lock(m1, m2)</code> which locks atomically.</li>
+<li>Livelock: everyone retries politely forever. Starvation: someone never wins.</li>
+</ul>
+<h2 id="virtual-memory-csapp-ch-9">Virtual memory (CS:APP ch. 9)</h2>
+<ul>
+<li>Each process sees a private, contiguous address space; the MMU maps <strong>virtual pages → physical frames</strong> via page tables.</li>
+<li><strong>TLB</strong> caches translations; miss → page-table walk; not-present → <strong>page fault</strong> → OS loads from disk/zero page.</li>
+<li>Benefits: isolation, overcommit, <code>mmap</code>, copy-on-write <code>fork</code>, shared libraries mapped once.</li>
+<li>Thrashing: working set exceeds RAM — the system pages instead of computing.</li>
+</ul>
+<h2 id="scheduling-ladder">Scheduling ladder</h2>
+<p>FIFO (convoy effect) → SJF/STCF (optimal turnaround, needs clairvoyance, starves) → RR (great response, bad turnaround) → <strong>MLFQ</strong> (learns from behaviour: use full slice → demote; priority boost fixes starvation). Linux CFS/EEVDF: least virtual runtime runs next.</p>
+<h2 id="deadlock-in-four-words">Deadlock in four words</h2>
+<p>Mutual exclusion, hold-and-wait, no preemption, <strong>circular wait</strong> — break one (practical: global lock ordering, or <code>std::scoped_lock</code>). Livelock = moving but stuck; starvation = system moves, you don&#39;t.</p>
+<h2 id="storage-quick-hits">Storage quick hits</h2>
+<ul>
+<li><strong>Inode</strong> = file metadata + block pointers; a directory maps names → inode numbers; hard link = same inode, symlink = path in a file.</li>
+<li><strong>Journaling</strong> = WAL for metadata: intent → commit → checkpoint; replay on crash.</li>
+<li><strong>Page replacement</strong>: LRU (temporal locality) approximated by <strong>clock/second-chance</strong>; FIFO suffers Belady&#39;s anomaly, LRU can&#39;t (stack property).</li>
+<li><strong>IPC</strong>: pipes (stream, backpressure), unix sockets (two-way), shared memory (fast, bring your own semaphore), signals (flag only — handlers do almost nothing).</li>
+</ul>
+<h2 id="scheduling-in-one-paragraph">Scheduling in one paragraph</h2>
+<p>Preemptive schedulers time-slice runnable threads across cores (Linux CFS: fairness by virtual runtime). Blocked ≠ runnable: a thread waiting on I/O or a lock costs almost nothing — which is why thread-per-connection dies from memory and context switches, not CPU.</p>
+<h2 id="drill-questions">Drill questions</h2>
+<ol>
+<li>Producer-consumer with a bounded buffer: which primitives and where exactly do they go?</li>
+<li>Why must <code>cv.wait</code> take the predicate (or sit in a while loop)?</li>
+<li>Two threads increment a shared int 1M times each without sync — what&#39;s the range of outcomes and why?</li>
+<li>What actually happens on a page fault, step by step?</li>
+<li>Why is a context switch between threads of one process cheaper than between processes? <em>(no page-table/TLB switch)</em></li>
+<li>When is <code>detach()</code> acceptable? What bug does forgetting <code>join()</code> cause?</li>
+</ol>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="ipc.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">IPC — Pipes, Shared Memory, Signals</span></a><span></span></nav>
+</main>
+<aside class="toc"><div class="toc-title">On this page</div><ul><li class="toc-d1"><a href="#process-vs-thread">Process vs thread</a></li><li class="toc-d1"><a href="#three-ways-to-serve-many-clients-csapp-ch-12">Three ways to serve many clients (CS:APP ch. 12)</a></li><li class="toc-d1"><a href="#c-threading-toolbox">C++ threading toolbox</a></li><li class="toc-d1"><a href="#mutex-vs-semaphore-the-essay-in-four-lines">Mutex vs semaphore — the essay in four lines</a></li><li class="toc-d1"><a href="#deadlock">Deadlock</a></li><li class="toc-d1"><a href="#virtual-memory-csapp-ch-9">Virtual memory (CS:APP ch. 9)</a></li><li class="toc-d1"><a href="#scheduling-ladder">Scheduling ladder</a></li><li class="toc-d1"><a href="#deadlock-in-four-words">Deadlock in four words</a></li><li class="toc-d1"><a href="#storage-quick-hits">Storage quick hits</a></li><li class="toc-d1"><a href="#scheduling-in-one-paragraph">Scheduling in one paragraph</a></li><li class="toc-d1"><a href="#drill-questions">Drill questions</a></li></ul></aside>
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

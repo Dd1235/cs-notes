@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Layer 2 — Switching, VLANs, STP · Computer Networks</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#3E6B63">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link is-active" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">Computer Networks</a><div class="side-group"><div class="side-label">Notes</div><ul><li><a class="side-link" href="url-to-page.html">What Happens When You Type a URL</a></li><li><a class="side-link" href="tcp-vs-udp.html">TCP vs UDP — The Deep Dive</a></li><li><a class="side-link" href="sockets-and-zero-copy.html">Sockets, Kernel Structures &amp; Zero-Copy</a></li><li><a class="side-link" href="io-multiplexing.html">I/O Multiplexing — select, poll, epoll</a></li><li><a class="side-link" href="flow-vs-congestion.html">Flow Control vs Congestion Control</a></li></ul></div><div class="side-group"><div class="side-label">Addressing & Routing</div><ul><li><a class="side-link" href="ip-subnetting.html">IP Addressing &amp; Subnetting</a></li><li><a class="side-link is-active" href="l2-switching.html">Layer 2 — Switching, VLANs, STP</a></li><li><a class="side-link" href="routing.html">Routing — Longest Prefix, OSPF, BGP</a></li></ul></div><div class="side-group"><div class="side-label">Web Protocols</div><ul><li><a class="side-link" href="tls.html">TLS — Handshake &amp; Certificates</a></li><li><a class="side-link" href="dns-deep-dive.html">DNS — Records, Resolution, Caching</a></li><li><a class="side-link" href="http-evolution.html">HTTP/1.1 → 2 → 3</a></li></ul></div><div class="side-group"><div class="side-label">Revision</div><ul><li><a class="side-link" href="refresher.html">Rapid Refresher<span class="badge">&#9733;</span></a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">Computer Networks</a></div>
+  <div class="page-head">
+    <div class="page-kicker">Computer Networks</div>
+    <h1 class="page-title">Layer 2 — Switching, VLANs, STP</h1>
+    <div class="page-meta">2 min read &middot; source: <code>cn/l2_switching.md</code></div>
+  </div>
+  <article class="prose"><blockquote>
+<p>Below IP there&#39;s a whole world of MAC addresses, and it&#39;s Arista&#39;s home turf. Three mechanisms: learn, segment, don&#39;t loop.</p>
+</blockquote>
+<h3 id="how-a-switch-learns-flood-learn">How a switch learns (flood &amp; learn)</h3>
+<p>A switch keeps a <strong>MAC table</strong>: MAC → port. On every incoming frame it (1) records <em>source MAC → this port</em> (learning), (2) forwards by destination: known → that port only; unknown or broadcast → <strong>flood</strong> everywhere except the ingress port. Entries age out (~5 min).</p>
+<p><strong>Analogy:</strong> a mailroom clerk who notes which desk each person&#39;s outgoing mail comes from — after a while, deliveries stop being &quot;shout into the room&quot; and become direct drops.</p>
+<ul>
+<li>Hub vs switch: hub floods always (one collision domain); a switch gives each port its own collision domain.</li>
+<li>A switch is transparent — hosts never know it&#39;s there. ARP (who-has-this-IP, from the <a href="url-to-page.html">URL journey</a>) is what <em>hosts</em> do; MAC learning is what <em>switches</em> do. Interviewers love conflating them — keep them separate.</li>
+</ul>
+<h3 id="vlans-one-switch-many-networks">VLANs — one switch, many networks</h3>
+<p>A VLAN carves one physical switch into multiple isolated <strong>broadcast domains</strong>: port 1–8 = VLAN 10 (engineering), 9–16 = VLAN 20 (finance). Frames between switches carry an <strong>802.1Q tag</strong> (12-bit VLAN ID) on <strong>trunk ports</strong>; <strong>access ports</strong> are untagged, single-VLAN.</p>
+<p>Crossing VLANs requires a <strong>router</strong> (or L3 switch) — VLANs are L2 walls; IP is the door. Benefits: blast-radius control for broadcasts, security segmentation, no rewiring to move a user.</p>
+<h3 id="spanning-tree-dont-loop">Spanning Tree — don&#39;t loop</h3>
+<p>Two switches cabled twice (for redundancy) = a <strong>loop</strong>, and Ethernet frames have <strong>no TTL</strong>: one broadcast circulates forever, amplifying — a <strong>broadcast storm</strong> that melts the network in seconds.</p>
+<p><strong>STP (802.1D)</strong> fixes it: switches elect a <strong>root</strong> (lowest bridge ID), compute shortest paths to it, and <strong>block</strong> every redundant port — the topology becomes a tree (spanning tree, literally). Link dies → blocked port unblocks (~seconds; RSTP makes it fast). The price of loop-freedom: blocked links carry nothing — modern datacenters often prefer L3 designs partly to reclaim that capacity.</p>
+<h3 id="drill">Drill</h3>
+<ol>
+<li>Host A pings host B through a fresh switch — narrate every flood, ARP, and MAC-table entry from silence to steady state.</li>
+<li>Two PCs on different VLANs, same switch, same IP subnet — can they talk? <em>(No — no L2 path, and no router will route within one subnet.)</em></li>
+<li>Why does Ethernet need STP when IP survives loops fine? <em>(IP has TTL; frames don&#39;t.)</em></li>
+</ol>
+<p><em>Prime <a href="../companies/arista.html">Arista</a> territory — they build these boxes.</em></p>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="ip-subnetting.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">IP Addressing &amp; Subnetting</span></a><a class="pn-card pn-next" href="routing.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">Routing — Longest Prefix, OSPF, BGP</span></a></nav>
+</main>
+<aside class="toc"><div class="toc-title">On this page</div><ul><li class="toc-d2"><a href="#how-a-switch-learns-flood-learn">How a switch learns (flood &amp; learn)</a></li><li class="toc-d2"><a href="#vlans-one-switch-many-networks">VLANs — one switch, many networks</a></li><li class="toc-d2"><a href="#spanning-tree-dont-loop">Spanning Tree — don&#39;t loop</a></li><li class="toc-d2"><a href="#drill">Drill</a></li></ul></aside>
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

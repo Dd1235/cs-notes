@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What Happens When You Type a URL · Computer Networks</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script type="module">
+import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+mermaid.initialize({
+  startOnLoad: true,
+  theme: 'base',
+  themeVariables: {
+    fontFamily: 'Inter, sans-serif',
+    fontSize: '14px',
+    primaryColor: '#F1E8D7',
+    primaryTextColor: '#2E2A21',
+    primaryBorderColor: '#8B8170',
+    lineColor: '#57503F',
+    secondaryColor: '#FDFAF3',
+    tertiaryColor: '#FBF6EA',
+    clusterBkg: '#FBF6EA',
+    clusterBorder: '#E2D8C3',
+    actorBkg: '#F1E8D7',
+    actorBorder: '#8B8170',
+    actorTextColor: '#2E2A21',
+    actorLineColor: '#B8AD97',
+    signalColor: '#57503F',
+    signalTextColor: '#2E2A21',
+    labelBoxBkgColor: '#F1E8D7',
+    labelTextColor: '#2E2A21',
+    loopTextColor: '#57503F',
+    noteBkgColor: '#FBF3DC',
+    noteBorderColor: '#D9B36C',
+    noteTextColor: '#57503F',
+    activationBkgColor: '#EFE6D2',
+    activationBorderColor: '#8B8170',
+    edgeLabelBackground: '#F7F1E4'
+  }
+});
+</script>
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#3E6B63">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link is-active" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">Computer Networks</a><div class="side-group"><div class="side-label">Notes</div><ul><li><a class="side-link is-active" href="url-to-page.html">What Happens When You Type a URL</a></li><li><a class="side-link" href="tcp-vs-udp.html">TCP vs UDP — The Deep Dive</a></li><li><a class="side-link" href="sockets-and-zero-copy.html">Sockets, Kernel Structures &amp; Zero-Copy</a></li><li><a class="side-link" href="io-multiplexing.html">I/O Multiplexing — select, poll, epoll</a></li><li><a class="side-link" href="flow-vs-congestion.html">Flow Control vs Congestion Control</a></li></ul></div><div class="side-group"><div class="side-label">Addressing & Routing</div><ul><li><a class="side-link" href="ip-subnetting.html">IP Addressing &amp; Subnetting</a></li><li><a class="side-link" href="l2-switching.html">Layer 2 — Switching, VLANs, STP</a></li><li><a class="side-link" href="routing.html">Routing — Longest Prefix, OSPF, BGP</a></li></ul></div><div class="side-group"><div class="side-label">Web Protocols</div><ul><li><a class="side-link" href="tls.html">TLS — Handshake &amp; Certificates</a></li><li><a class="side-link" href="dns-deep-dive.html">DNS — Records, Resolution, Caching</a></li><li><a class="side-link" href="http-evolution.html">HTTP/1.1 → 2 → 3</a></li></ul></div><div class="side-group"><div class="side-label">Revision</div><ul><li><a class="side-link" href="refresher.html">Rapid Refresher<span class="badge">&#9733;</span></a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">Computer Networks</a></div>
+  <div class="page-head">
+    <div class="page-kicker">Computer Networks</div>
+    <h1 class="page-title">What Happens When You Type a URL</h1>
+    <div class="page-meta">4 min read &middot; source: <code>cn/0.md</code></div>
+  </div>
+  <article class="prose"><ul>
+<li>&quot;google.com&quot; enter</li>
+<li>url? visit : search</li>
+<li>determine which protocol and which port to connect to</li>
+<li>http unencrypted on port 80? or https encrypted on port 443?</li>
+<li>you have not typed in http or https. browsers used to assume that it will be http by default which caused many man in the middle attacks</li>
+<li>&quot;http strict-transport-security&quot;, its a list that browser keeps in cache, the websites that force clients to only use https</li>
+<li>if in list use https else use http (unsecure)</li>
+<li>&quot;google.com&quot; is in the list, so its https</li>
+<li>if it was not in the list, tcp connection through port 80 different from this port 443 connection</li>
+<li>it could be something else, if you typed &quot;mailto:...&quot;, then email app would be opened.</li>
+<li>for a file server you can&#39;t just type &quot;myserver.com&quot;, you need to tell the browser something like &quot;s<a href="ftp://myserver.com">ftp://myserver.com</a>&quot;</li>
+<li>&quot;ssh://&quot; -&gt; ssh goes to port 22</li>
+<li>&quot;dns&quot; : domain name system</li>
+<li>domain: google.com, protocol: https, port: 443, ip : ?</li>
+<li>browser cache? hosts? nope</li>
+<li>DoH enabled? dns over https, dns is a udp service listening on port 53, so anyone can know which domains you are going to, so dns requests are visible to your isp. What is the differnce between dns over tls and dns over https?</li>
+<li>if you use DoH, you network provider sees no difference between dns requests and other traffic</li>
+<li>could be DoT etc. this has a different dedicated port</li>
+<li>assume its disabled , and its standard dns lookup 53</li>
+<li>send a udp user datagram, to my default dns provider, which is configured on my router.</li>
+<li>you can change it to be 1.1.1.1 which is cloudflare dns, or 8.8.8.8 which is by google</li>
+<li>udp request? create an ip packet</li>
+<li>in layer 3, aa (my mac) | 3333 (random source port) | 10.0.0.2 (my ip) | dns | 1.1.1.1 | 53 | ?? (mac of my gateway/router)</li>
+<li>encapsulate into a frame, layer 2 thing, what is the mac address? it is not in my subnet, cannot send it locally, cannot know its mac address</li>
+<li>dont know where to send it? send to gateway. usually send to router if you don&#39;t know</li>
+<li>my router mac address I know is ff, so send it there, I know its ip is 10.0.0.1</li>
+<li>ip is used for routing across networks, mac is used for delivery on the current local network segment</li>
+<li>ARP: address resolution protocol, your machine broadcasts who has this ip? every device hears it and owner replies</li>
+<li>so at every hop, destination ip is googles, but mac changes at every hop</li>
+<li>I don&#39;t ask what the mac address of 8.8.8.8 is, I ask the mac address of my next hop</li>
+<li>at the router, I can&#39;t send this packet as it is. I use <em>NAT</em> and change the source IP address to the public IP. Add an entry to my nat table that 44.1.2.4-&gt;3333 should be 10.0.0.2-&gt;3333</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Internal Connection</th>
+<th>External Connection</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>192.168.1.10:8000 (phone)</td>
+<td>117.201.45.80:62001</td>
+</tr>
+<tr>
+<td>192.168.1.20:8000 (laptop)</td>
+<td>117.201.45.80:62002</td>
+</tr>
+</tbody></table>
+<ul>
+<li>now lets establish the tcp connection</li>
+<li>three way handshake, 4.1.2.3 at port 443</li>
+<li>I dont know the mac address since 4.1.2.3 is not in my subset</li>
+<li>Send it to my gateway ie my router</li>
+<li>again private ip -&gt; publich ip, add to nat table</li>
+<li>3 way handshake say happened.</li>
+<li>if my client has a proxy, if https, destination is going to be address of the proxy, not the google</li>
+<li>assume we establish one tcp connection, we may estabilsh 5 other, how browser does pipelining</li>
+<li>TLS 1.3, establish a public key and a private key, diffie hellman, send in the publick key and the merged key</li>
+<li>ALPN application-layer protocol negotiation. extension that I support http2 and what not.</li>
+<li>if its chrome it could be using quic protocol</li>
+<li>send back the hello, server hello/ change cipher/ fin</li>
+<li>generates the symmetric key</li>
+<li>http/2 uses streams</li>
+<li>compress into binary format, get/index.html</li>
+<li>content-type html sent back</li>
+</ul>
+<h3 id="the-whole-journey-in-one-picture">The whole journey, in one picture</h3>
+<div class="diagram"><pre class="mermaid">graph TD
+    URL[&quot;type google.com + Enter&quot;] --&gt; P{&quot;URL or search?&quot;}
+    P --&gt; HSTS{&quot;in HSTS list?&quot;}
+    HSTS -- yes --&gt; HTTPS[&quot;https, port 443&quot;]
+    HSTS -- no --&gt; HTTP[&quot;http, port 80 (insecure)&quot;]
+    HTTPS --&gt; DNS{&quot;IP cached?&lt;br/&gt;browser / OS / hosts&quot;}
+    DNS -- no --&gt; RES[&quot;UDP :53 to resolver (1.1.1.1)&lt;br/&gt;→ root → TLD → authoritative&quot;]
+    DNS -- yes --&gt; TCP
+    RES --&gt; TCP[&quot;TCP 3-way handshake&lt;br/&gt;(ARP for gateway MAC, NAT at router)&quot;]
+    TCP --&gt; TLS[&quot;TLS 1.3 handshake&lt;br/&gt;Diffie-Hellman → symmetric key, ALPN picks h2&quot;]
+    TLS --&gt; REQ[&quot;HTTP/2 GET /index.html&quot;]
+    REQ --&gt; RENDER[&quot;response → parse → render&quot;]</pre></div>
+</article>
+  <nav class="prevnext"><span></span><a class="pn-card pn-next" href="tcp-vs-udp.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">TCP vs UDP — The Deep Dive</span></a></nav>
+</main>
+
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

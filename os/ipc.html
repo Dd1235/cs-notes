@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IPC — Pipes, Shared Memory, Signals · Operating Systems</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#77682E">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link is-active" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">Operating Systems</a><div class="side-group"><div class="side-label">Notes</div><ul><li><a class="side-link" href="multithreading-cpp.html">Multithreading in C++</a></li><li><a class="side-link" href="semaphore-vs-mutex.html">Semaphore vs Mutex</a></li><li><a class="side-link" href="csapp-ch12.html">Concurrent Programming — CS:APP Ch. 12</a></li><li><a class="side-link" href="csapp-ch9.html">Virtual Memory — CS:APP Ch. 9</a></li></ul></div><div class="side-group"><div class="side-label">Processes & Scheduling</div><ul><li><a class="side-link" href="processes.html">Processes — Lifecycle, fork &amp; Friends</a></li><li><a class="side-link" href="scheduling.html">CPU Scheduling — FIFO to MLFQ</a></li></ul></div><div class="side-group"><div class="side-label">Locks & Memory</div><ul><li><a class="side-link" href="locks-internals.html">How Locks Actually Work</a></li><li><a class="side-link" href="deadlock.html">Deadlock</a></li><li><a class="side-link" href="page-replacement.html">Page Replacement — FIFO, LRU, Clock</a></li></ul></div><div class="side-group"><div class="side-label">Files & IPC</div><ul><li><a class="side-link" href="filesystems.html">Filesystems — Inodes &amp; Journaling</a></li><li><a class="side-link is-active" href="ipc.html">IPC — Pipes, Shared Memory, Signals</a></li></ul></div><div class="side-group"><div class="side-label">Revision</div><ul><li><a class="side-link" href="refresher.html">Rapid Refresher<span class="badge">&#9733;</span></a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">Operating Systems</a></div>
+  <div class="page-head">
+    <div class="page-kicker">Operating Systems</div>
+    <h1 class="page-title">IPC — Pipes, Shared Memory, Signals</h1>
+    <div class="page-meta">2 min read &middot; source: <code>os/ipc.md</code></div>
+  </div>
+  <article class="prose"><blockquote>
+<p>Processes are isolated on purpose; IPC is the set of doors the kernel cuts into the walls. Know each door&#39;s shape and when you&#39;d use it.</p>
+</blockquote>
+<h3 id="the-menu">The menu</h3>
+<table>
+<thead>
+<tr>
+<th>Mechanism</th>
+<th>What it is</th>
+<th>Best for</th>
+<th>Gotcha</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Pipe</strong> `</td>
+<td>`</td>
+<td>one-way byte stream, kernel buffer</td>
+<td>parent↔child, shell pipelines</td>
+</tr>
+<tr>
+<td><strong>Named pipe (FIFO)</strong></td>
+<td>pipe with a filesystem name</td>
+<td>unrelated processes, same host</td>
+<td>still one-way, blocking opens</td>
+</tr>
+<tr>
+<td><strong>Unix domain socket</strong></td>
+<td>socket API, kernel-local</td>
+<td>two-way, multiple clients (Docker, Postgres, X11)</td>
+<td>more setup than a pipe</td>
+</tr>
+<tr>
+<td><strong>Shared memory</strong> (<code>mmap</code>/shm)</td>
+<td>same physical pages in both address spaces</td>
+<td>highest bandwidth, zero copies</td>
+<td><strong>you</strong> bring the synchronization</td>
+</tr>
+<tr>
+<td><strong>Message queue</strong></td>
+<td>kernel-managed discrete messages</td>
+<td>structured, prioritized messages</td>
+<td>size limits, less used now</td>
+</tr>
+<tr>
+<td><strong>Signal</strong></td>
+<td>async one-bit poke (SIGKILL, SIGTERM…)</td>
+<td>notifications, kill, Ctrl-C</td>
+<td>almost nothing is safe inside a handler</td>
+</tr>
+</tbody></table>
+<h3 id="the-two-philosophies">The two philosophies</h3>
+<p>Everything above is either <strong>message passing</strong> (pipes/sockets/queues — kernel copies data, kernel provides the safety) or <strong>shared state</strong> (shm — no copies, no safety). The trade is <em>exactly</em> the threads-vs-processes trade in miniature: convenience+isolation vs speed+footguns. Shared memory + <a href="semaphore-vs-mutex.html">semaphores</a> is the classic pairing — the fastest door and the least supervised.</p>
+<h3 id="pipes-mechanically">Pipes mechanically</h3>
+<p><code>pipe(fd)</code> gives <code>fd[0]</code> read / <code>fd[1]</code> write; <code>fork()</code>; each side closes the end it doesn&#39;t use. Shell <code>a | b</code> = pipe + two forks + <code>dup2</code> stdout/stdin + exec. Bounded kernel buffer (~64 KB) means a full pipe <strong>blocks the writer</strong> — free backpressure, and the reason <code>yes | head</code> terminates: <code>head</code> exits, <code>yes</code> gets <strong>SIGPIPE</strong>.</p>
+<h3 id="signals-in-three-sentences">Signals in three sentences</h3>
+<p>A signal is the kernel setting a flag; delivery runs your handler between instructions, whenever the process is next scheduled. Handlers may only call async-signal-safe functions — no <code>printf</code>, no <code>malloc</code> (deadlock risk if interrupted mid-malloc). The grown-up pattern: handler sets a <code>volatile sig_atomic_t</code> flag; the main loop notices — or <code>signalfd</code>/self-pipe to feed signals into your <a href="../cn/io-multiplexing.html">epoll loop</a>.</p>
+<p><strong>Analogy:</strong> a signal is a sticky note slapped on your monitor mid-keystroke; you glance, finish the keystroke, deal with it. Writing an essay on the sticky note (complex handler logic) is how bugs happen.</p>
+<h3 id="drill">Drill</h3>
+<ol>
+<li>Implement <code>a | b</code> in C: which FDs does each process close and why does leaving the write end open hang the reader?</li>
+<li>Two processes share an mmap&#39;d counter — what breaks without a semaphore, and where does the semaphore live? <em>(In the shared region.)</em></li>
+<li>Why is SIGKILL unblockable and why do containers send SIGTERM first?</li>
+</ol>
+<p>Reference: pipes/FIFOs in <a href="https://pages.cs.wisc.edu/~remzi/OSTEP/cpu-api.pdf" target="_blank" rel="noopener">OSTEP ch 5</a>; FD tables in <a href="csapp-ch12.html">CS:APP ch 12 notes</a>.</p>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="filesystems.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">Filesystems — Inodes &amp; Journaling</span></a><a class="pn-card pn-next" href="refresher.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">Rapid Refresher</span></a></nav>
+</main>
+<aside class="toc"><div class="toc-title">On this page</div><ul><li class="toc-d2"><a href="#the-menu">The menu</a></li><li class="toc-d2"><a href="#the-two-philosophies">The two philosophies</a></li><li class="toc-d2"><a href="#pipes-mechanically">Pipes mechanically</a></li><li class="toc-d2"><a href="#signals-in-three-sentences">Signals in three sentences</a></li><li class="toc-d2"><a href="#drill">Drill</a></li></ul></aside>
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

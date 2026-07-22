@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Const-ness &amp; Static Members · OOP &amp; C++</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#8A4E5E">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link is-active" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">OOP & C++</a><div class="side-group"><div class="side-label">Lecture Notes</div><ul><li><a class="side-link" href="volatile-macros-inline.html">volatile, Macros &amp; inline</a></li><li><a class="side-link" href="references-and-const.html">References &amp; const</a></li><li><a class="side-link" href="function-overloading.html">Function Overloading</a></li><li><a class="side-link" href="dynamic-memory.html">Dynamic Memory Management</a></li><li><a class="side-link" href="classes-and-objects.html">Classes &amp; Objects</a></li><li><a class="side-link" href="constructors.html">Constructors &amp; Information Hiding</a></li><li><a class="side-link" href="copy-semantics.html">Copy Constructor &amp; Copy Assignment</a></li><li><a class="side-link is-active" href="constness-and-static.html">Const-ness &amp; Static Members</a></li><li><a class="side-link" href="friend-functions.html">Friend Functions &amp; Friend Classes</a></li><li><a class="side-link" href="operator-overloading.html">Operator Overloading</a></li><li><a class="side-link" href="inheritance.html">Inheritance &amp; Overriding</a></li><li><a class="side-link" href="multiple-private-inheritance.html">Multiple &amp; Private Inheritance</a></li><li><a class="side-link" href="virtual-functions.html">Virtual Functions &amp; Dynamic Binding</a></li><li><a class="side-link" href="vtables-and-const-cast.html">Virtual Pointer Tables &amp; const_cast</a></li><li><a class="side-link" href="cpp-casts.html">C++ Casts</a></li><li><a class="side-link" href="exceptions.html">Exceptions &amp; Error Handling</a></li><li><a class="side-link" href="try-catch-and-templates.html">try/catch &amp; Function Templates</a></li><li><a class="side-link" href="class-templates-functors.html">Class Templates &amp; Functors</a></li></ul></div><div class="side-group"><div class="side-label">Extras</div><ul><li><a class="side-link" href="compilation-model.html">The C++ Compilation Model</a></li><li><a class="side-link" href="template-metaprogramming.html">Template Metaprogramming</a></li><li><a class="side-link" href="build-your-own-vector.html">Exercise — Build Your Own Vector</a></li><li><a class="side-link" href="miscellany.html">Miscellany</a></li><li><a class="side-link" href="resources.html">Resources</a></li></ul></div><div class="side-group"><div class="side-label">Topic Notes</div><ul><li><a class="side-link" href="notes-cpp-core.html">C++ Core</a></li><li><a class="side-link" href="notes-cpp-oop.html">C++ OOP</a></li><li><a class="side-link" href="notes-cpp-advanced.html">C++ Advanced</a></li><li><a class="side-link" href="notes-ooad-uml.html">OOAD &amp; UML</a></li><li><a class="side-link" href="notes-design-patterns.html">Design Patterns</a></li><li><a class="side-link" href="notes-testing-sdlc.html">Testing, SDLC &amp; SE</a></li><li><a class="side-link" href="notes-interview-questions.html">Interview Questions</a></li></ul></div><div class="side-group"><div class="side-label">Flashcards</div><ul><li><a class="side-link" href="cards-cpp-core.html">C++ Core Flashcards</a></li><li><a class="side-link" href="cards-oop-lifetime.html">OOP, Lifetime &amp; Memory Flashcards</a></li><li><a class="side-link" href="cards-polymorphism-stl.html">Polymorphism, Casts, Templates &amp; STL Flashcards</a></li><li><a class="side-link" href="cards-ooad-uml.html">OOAD &amp; UML Flashcards</a></li><li><a class="side-link" href="cards-design-patterns.html">Design Patterns Flashcards</a></li><li><a class="side-link" href="cards-testing-sdlc.html">Testing, SDLC &amp; SE Flashcards</a></li><li><a class="side-link" href="cards-interview-drills.html">Interview &amp; Code-Reading Drills</a></li></ul></div><div class="side-group"><div class="side-label">Under the Hood</div><ul><li><a class="side-link" href="memory-layout.html">Memory Layout, Alignment &amp; Padding</a></li></ul></div><div class="side-group"><div class="side-label">Revision</div><ul><li><a class="side-link" href="refresher.html">Rapid Refresher<span class="badge">&#9733;</span></a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">OOP & C++</a></div>
+  <div class="page-head">
+    <div class="page-kicker">OOP & C++</div>
+    <h1 class="page-title">Const-ness &amp; Static Members</h1>
+    <div class="page-meta">3 min read &middot; source: <code>oops_cpp/self_notes/9.md</code></div>
+  </div>
+  <article class="prose"><p>if its a const function its like mytype const _ const this is passed instead of mytype _ const this.</p>
+<p>compiler checks if that function really doesn&#39;t modify data member. const objects can only call const member functions.</p>
+<p>a constant data member cannot be changed even in non constant object. eg id of a student.</p>
+<p>also</p>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;bits/stdc++.h&gt;</span></span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">Base</span> {
+<span class="hljs-keyword">public</span>:
+<span class="hljs-type">const</span> <span class="hljs-type">int</span> x = <span class="hljs-number">5</span>;
+};
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">Child</span> : <span class="hljs-keyword">public</span> Base {
+<span class="hljs-keyword">public</span>:
+<span class="hljs-type">int</span> x = <span class="hljs-number">10</span>;
+};
+
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+
+    Child c;
+
+    cout &lt;&lt; c.x &lt;&lt; <span class="hljs-string">&quot;\n&quot;</span>;         <span class="hljs-comment">// 10</span>
+    cout &lt;&lt; c.Base::x &lt;&lt; <span class="hljs-string">&quot;\n&quot;</span>;   <span class="hljs-comment">// 5</span>
+
+}</code></pre>
+<p>this is name hiding, not overriding.<br>functions can be overridden. variables cannot.</p>
+<pre class="hljs"><code>Base* b = <span class="hljs-keyword">new</span> Child;
+cout &lt;&lt; b-&gt;x;</code></pre>
+<p>this resolved using Base::x because member variable are resolved using the statyc type of hte pointer unlike virtual functions that use runtime dispatch.</p>
+<p>There may be a constant object where there are some data members may be changed. <code>mutable</code> is provided to model logical constness against the default bit-wise constness.</p>
+<p>mutable is applicable to only data member not variables.<br>reference, static, and const data members cannot be declared as mutable.</p>
+<p>even <code>const</code> member functions can modify <code>mutable</code> data members.</p>
+<pre class="hljs"><code><span class="hljs-keyword">class</span> <span class="hljs-title class_">A</span> {
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-keyword">mutable</span> <span class="hljs-type">int</span> cache_hits = <span class="hljs-number">0</span>;
+
+    <span class="hljs-type">int</span> value = <span class="hljs-number">10</span>;
+
+    <span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">get</span><span class="hljs-params">()</span> <span class="hljs-type">const</span> </span>{
+        cache_hits++;
+        <span class="hljs-keyword">return</span> value;
+    }
+};</code></pre>
+<p><code>mutable</code> applies to object constness while <code>static</code> members do not belong to an object at all. so <code>mutable static int x</code> gives error.</p>
+<p><em>static data members</em></p>
+<ul>
+<li>must be defined in global scope. non static data members do not need separate definitions, instantiated with the object.</li>
+<li>static data members are initalized during program startup.</li>
+<li><code>MyClass::x</code> exists as one global variable for the whole program.</li>
+</ul>
+<h3 id="singleton-class">Singleton class</h3>
+<ul>
+<li>can only have one instance</li>
+<li>eg <code>POTUS</code> or <code>Director of IIITB</code></li>
+</ul>
+<p>How to implement a singleton class?</p>
+<ul>
+<li>constructor is private, member function that can invoke the constructor. now <code>catch 22</code>, constructor is private, can&#39;t make object and have member function. So static member function so that instance of object is not needed.</li>
+</ul>
+<pre class="hljs"><code>
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">Printer</span> {
+    <span class="hljs-type">bool</span> blackAndWhite_, bothSided_;
+    <span class="hljs-built_in">Printer</span>(<span class="hljs-type">bool</span> bw = <span class="hljs-literal">false</span>, <span class="hljs-type">bool</span> bs = <span class="hljs-literal">false</span>) : <span class="hljs-built_in">blackAndWhite_</span>(bw), <span class="hljs-built_in">bothSided_</span>(bs) {}
+
+    <span class="hljs-type">static</span> Printer *myPrinter_;
+
+<span class="hljs-keyword">public</span>:
+
+    ~<span class="hljs-built_in">Printer</span>() {
+        cout &lt;&lt; <span class="hljs-string">&quot;Destroying printer\n&quot;</span>;
+    }
+    <span class="hljs-function"><span class="hljs-type">static</span> <span class="hljs-type">const</span> Printer&amp; <span class="hljs-title">printer</span><span class="hljs-params">(<span class="hljs-type">bool</span> bw = <span class="hljs-literal">false</span>, <span class="hljs-type">bool</span> bs = <span class="hljs-literal">false</span>)</span> </span>{
+        <span class="hljs-keyword">if</span> (myPrinter_ == <span class="hljs-literal">nullptr</span>) {
+            myPrinter_ = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Printer</span>(bw, bs);
+        }
+        <span class="hljs-keyword">return</span> *myPrinter_;
+    }
+}</code></pre>
+<p>Caller receives read only reference.</p>
+<p>This makes sure illegal construction is prevent at compile time and memory allocation and construction process isn&#39;t illegally started. Copy constructor problem also taken care of?</p>
+<p>But this singleton is not thread safe either.<br>Byt static Printer instance; is thread safe, compiler internally generates synchronization.</p>
+<p><code>= delete</code> -&gt; function is forbidden to use.</p>
+<p>My singleton also broken by copy problem. Printer::myPrinter_ doesn&#39;t change, but multiple instances can be created.</p>
+<p>Proper singleton</p>
+<pre class="hljs"><code><span class="hljs-keyword">class</span> <span class="hljs-title class_">Printer</span> {
+
+<span class="hljs-keyword">private</span>:
+
+    <span class="hljs-built_in">Printer</span>() {}
+
+    <span class="hljs-type">static</span> Printer* myPrinter_;
+
+<span class="hljs-keyword">public</span>:
+
+    <span class="hljs-built_in">Printer</span>(<span class="hljs-type">const</span> Printer&amp;) = <span class="hljs-keyword">delete</span>;
+    Printer&amp; <span class="hljs-keyword">operator</span>=(<span class="hljs-type">const</span> Printer&amp;) = <span class="hljs-keyword">delete</span>;
+};</code></pre>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="copy-semantics.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">Copy Constructor &amp; Copy Assignment</span></a><a class="pn-card pn-next" href="friend-functions.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">Friend Functions &amp; Friend Classes</span></a></nav>
+</main>
+
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

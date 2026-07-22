@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Design Patterns · OOP &amp; C++</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#8A4E5E">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link is-active" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">OOP & C++</a><div class="side-group"><div class="side-label">Lecture Notes</div><ul><li><a class="side-link" href="volatile-macros-inline.html">volatile, Macros &amp; inline</a></li><li><a class="side-link" href="references-and-const.html">References &amp; const</a></li><li><a class="side-link" href="function-overloading.html">Function Overloading</a></li><li><a class="side-link" href="dynamic-memory.html">Dynamic Memory Management</a></li><li><a class="side-link" href="classes-and-objects.html">Classes &amp; Objects</a></li><li><a class="side-link" href="constructors.html">Constructors &amp; Information Hiding</a></li><li><a class="side-link" href="copy-semantics.html">Copy Constructor &amp; Copy Assignment</a></li><li><a class="side-link" href="constness-and-static.html">Const-ness &amp; Static Members</a></li><li><a class="side-link" href="friend-functions.html">Friend Functions &amp; Friend Classes</a></li><li><a class="side-link" href="operator-overloading.html">Operator Overloading</a></li><li><a class="side-link" href="inheritance.html">Inheritance &amp; Overriding</a></li><li><a class="side-link" href="multiple-private-inheritance.html">Multiple &amp; Private Inheritance</a></li><li><a class="side-link" href="virtual-functions.html">Virtual Functions &amp; Dynamic Binding</a></li><li><a class="side-link" href="vtables-and-const-cast.html">Virtual Pointer Tables &amp; const_cast</a></li><li><a class="side-link" href="cpp-casts.html">C++ Casts</a></li><li><a class="side-link" href="exceptions.html">Exceptions &amp; Error Handling</a></li><li><a class="side-link" href="try-catch-and-templates.html">try/catch &amp; Function Templates</a></li><li><a class="side-link" href="class-templates-functors.html">Class Templates &amp; Functors</a></li></ul></div><div class="side-group"><div class="side-label">Extras</div><ul><li><a class="side-link" href="compilation-model.html">The C++ Compilation Model</a></li><li><a class="side-link" href="template-metaprogramming.html">Template Metaprogramming</a></li><li><a class="side-link" href="build-your-own-vector.html">Exercise — Build Your Own Vector</a></li><li><a class="side-link" href="miscellany.html">Miscellany</a></li><li><a class="side-link" href="resources.html">Resources</a></li></ul></div><div class="side-group"><div class="side-label">Topic Notes</div><ul><li><a class="side-link" href="notes-cpp-core.html">C++ Core</a></li><li><a class="side-link" href="notes-cpp-oop.html">C++ OOP</a></li><li><a class="side-link" href="notes-cpp-advanced.html">C++ Advanced</a></li><li><a class="side-link" href="notes-ooad-uml.html">OOAD &amp; UML</a></li><li><a class="side-link is-active" href="notes-design-patterns.html">Design Patterns</a></li><li><a class="side-link" href="notes-testing-sdlc.html">Testing, SDLC &amp; SE</a></li><li><a class="side-link" href="notes-interview-questions.html">Interview Questions</a></li></ul></div><div class="side-group"><div class="side-label">Flashcards</div><ul><li><a class="side-link" href="cards-cpp-core.html">C++ Core Flashcards</a></li><li><a class="side-link" href="cards-oop-lifetime.html">OOP, Lifetime &amp; Memory Flashcards</a></li><li><a class="side-link" href="cards-polymorphism-stl.html">Polymorphism, Casts, Templates &amp; STL Flashcards</a></li><li><a class="side-link" href="cards-ooad-uml.html">OOAD &amp; UML Flashcards</a></li><li><a class="side-link" href="cards-design-patterns.html">Design Patterns Flashcards</a></li><li><a class="side-link" href="cards-testing-sdlc.html">Testing, SDLC &amp; SE Flashcards</a></li><li><a class="side-link" href="cards-interview-drills.html">Interview &amp; Code-Reading Drills</a></li></ul></div><div class="side-group"><div class="side-label">Under the Hood</div><ul><li><a class="side-link" href="memory-layout.html">Memory Layout, Alignment &amp; Padding</a></li></ul></div><div class="side-group"><div class="side-label">Revision</div><ul><li><a class="side-link" href="refresher.html">Rapid Refresher<span class="badge">&#9733;</span></a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">OOP & C++</a></div>
+  <div class="page-head">
+    <div class="page-kicker">OOP & C++</div>
+    <h1 class="page-title">Design Patterns</h1>
+    <div class="page-meta">5 min read &middot; source: <code>oops_cpp/generated_notes/05_design_patterns.md</code></div>
+  </div>
+  <article class="prose"><h3 id="pattern-mindset">Pattern Mindset</h3>
+<p>A design pattern is a reusable solution shape for a recurring design problem.</p>
+<p>Use patterns to communicate intent and manage change. Do not force a pattern where a simple function or class is enough.</p>
+<p>For interviews, always explain:</p>
+<ul>
+<li>Problem it solves.</li>
+<li>Structure.</li>
+<li>Tradeoff.</li>
+<li>When not to use it.</li>
+</ul>
+<h3 id="quick-map">Quick Map</h3>
+<table>
+<thead>
+<tr>
+<th>Pattern</th>
+<th>Main idea</th>
+<th>Common use</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Iterator</td>
+<td>traverse without exposing representation</td>
+<td>containers, trees, custom collections</td>
+</tr>
+<tr>
+<td>Command</td>
+<td>wrap a request as an object</td>
+<td>undo, queues, logging, GUI actions</td>
+</tr>
+<tr>
+<td>Singleton</td>
+<td>one shared instance</td>
+<td>process-wide config, registry, logger</td>
+</tr>
+<tr>
+<td>Factory Method</td>
+<td>subclass decides product type</td>
+<td>framework hooks, pluggable creation</td>
+</tr>
+<tr>
+<td>Abstract Factory</td>
+<td>create families of related objects</td>
+<td>UI themes, platform families</td>
+</tr>
+<tr>
+<td>Visitor</td>
+<td>add operations over stable object structure</td>
+<td>ASTs, document trees</td>
+</tr>
+</tbody></table>
+<h3 id="iterator">Iterator</h3>
+<p>Intent: provide sequential access to elements without exposing internal representation.</p>
+<pre class="hljs"><code>std::vector&lt;<span class="hljs-type">int</span>&gt; v = {<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>};
+
+<span class="hljs-keyword">for</span> (<span class="hljs-keyword">auto</span> it = v.<span class="hljs-built_in">begin</span>(); it != v.<span class="hljs-built_in">end</span>(); ++it) {
+    std::cout &lt;&lt; *it &lt;&lt; <span class="hljs-string">&#x27;\n&#x27;</span>;
+}</code></pre>
+<p>Benefits:</p>
+<ul>
+<li>Decouples traversal from container internals.</li>
+<li>Enables generic algorithms.</li>
+<li>Multiple traversal strategies can coexist.</li>
+</ul>
+<p>Tradeoffs:</p>
+<ul>
+<li>Iterator invalidation rules matter.</li>
+<li>Mutating a container while iterating can be dangerous.</li>
+</ul>
+<p>Interview angle:</p>
+<ul>
+<li><code>vector</code> iterators can be invalidated by reallocation.</li>
+<li><code>list</code> iterators usually remain valid across unrelated insert/erase.</li>
+<li>Algorithms work on iterator ranges, not containers directly.</li>
+</ul>
+<h3 id="command">Command</h3>
+<p>Intent: represent an action as an object.</p>
+<pre class="hljs"><code><span class="hljs-keyword">class</span> <span class="hljs-title class_">Command</span> {
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-type">void</span> <span class="hljs-title">execute</span><span class="hljs-params">()</span> </span>= <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">virtual</span> ~<span class="hljs-built_in">Command</span>() = <span class="hljs-keyword">default</span>;
+};
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">PasteCommand</span> : <span class="hljs-keyword">public</span> Command {
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">execute</span><span class="hljs-params">()</span> <span class="hljs-keyword">override</span> </span>{
+        <span class="hljs-comment">// paste</span>
+    }
+};</code></pre>
+<p>Uses:</p>
+<ul>
+<li>Undo/redo.</li>
+<li>Task queues.</li>
+<li>Macro recording.</li>
+<li>Logging requests.</li>
+<li>Decoupling UI buttons from operations.</li>
+</ul>
+<p>Tradeoffs:</p>
+<ul>
+<li>More classes/objects.</li>
+<li>State needed for undo can be non-trivial.</li>
+</ul>
+<p>Modern C++ note:</p>
+<ul>
+<li>For simple cases, <code>std::function&lt;void()&gt;</code> can replace a full hierarchy.</li>
+<li>Use a class when the command needs identity, metadata, undo, or serialization.</li>
+</ul>
+<h3 id="singleton">Singleton</h3>
+<p>Intent: ensure exactly one instance and provide global access.</p>
+<pre class="hljs"><code><span class="hljs-keyword">class</span> <span class="hljs-title class_">Logger</span> {
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-function"><span class="hljs-type">static</span> Logger&amp; <span class="hljs-title">instance</span><span class="hljs-params">()</span> </span>{
+        <span class="hljs-type">static</span> Logger logger;
+        <span class="hljs-keyword">return</span> logger;
+    }
+
+    <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">write</span><span class="hljs-params">(std::string_view msg)</span></span>;
+
+    <span class="hljs-built_in">Logger</span>(<span class="hljs-type">const</span> Logger&amp;) = <span class="hljs-keyword">delete</span>;
+    Logger&amp; <span class="hljs-keyword">operator</span>=(<span class="hljs-type">const</span> Logger&amp;) = <span class="hljs-keyword">delete</span>;
+
+<span class="hljs-keyword">private</span>:
+    <span class="hljs-built_in">Logger</span>() = <span class="hljs-keyword">default</span>;
+};</code></pre>
+<p>Benefits:</p>
+<ul>
+<li>Centralizes a truly unique resource.</li>
+<li>Local static initialization is thread-safe in modern C++.</li>
+</ul>
+<p>Tradeoffs:</p>
+<ul>
+<li>Hidden global state.</li>
+<li>Harder testing.</li>
+<li>Lifetime-order issues across globals.</li>
+<li>Can become a dumping ground.</li>
+</ul>
+<p>Interview answer: Singleton is not always bad, but dependency injection is often more testable.</p>
+<h3 id="factory-method">Factory Method</h3>
+<p>Intent: define an interface for object creation while letting subclasses or specific factories decide the concrete product.</p>
+<pre class="hljs"><code><span class="hljs-keyword">class</span> <span class="hljs-title class_">Document</span> {
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-type">void</span> <span class="hljs-title">render</span><span class="hljs-params">()</span> </span>= <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">virtual</span> ~<span class="hljs-built_in">Document</span>() = <span class="hljs-keyword">default</span>;
+};
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">PdfDocument</span> : <span class="hljs-keyword">public</span> Document {
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">render</span><span class="hljs-params">()</span> <span class="hljs-keyword">override</span> </span>{}
+};
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">App</span> {
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-function"><span class="hljs-keyword">virtual</span> std::unique_ptr&lt;Document&gt; <span class="hljs-title">create_document</span><span class="hljs-params">()</span> </span>= <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">virtual</span> ~<span class="hljs-built_in">App</span>() = <span class="hljs-keyword">default</span>;
+};
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">PdfApp</span> : <span class="hljs-keyword">public</span> App {
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-function">std::unique_ptr&lt;Document&gt; <span class="hljs-title">create_document</span><span class="hljs-params">()</span> <span class="hljs-keyword">override</span> </span>{
+        <span class="hljs-keyword">return</span> std::<span class="hljs-built_in">make_unique</span>&lt;PdfDocument&gt;();
+    }
+};</code></pre>
+<p>Uses:</p>
+<ul>
+<li>Frameworks where base code calls a creation hook.</li>
+<li>Product type depends on subclass or runtime choice.</li>
+<li>Creation logic should not be spread across client code.</li>
+</ul>
+<p>Tradeoffs:</p>
+<ul>
+<li>More indirection.</li>
+<li>Can be overkill when a simple constructor call is enough.</li>
+</ul>
+<h3 id="abstract-factory">Abstract Factory</h3>
+<p>Intent: create families of related objects without naming their concrete classes.</p>
+<pre class="hljs"><code><span class="hljs-keyword">class</span> <span class="hljs-title class_">Button</span> {
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-type">void</span> <span class="hljs-title">draw</span><span class="hljs-params">()</span> </span>= <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">virtual</span> ~<span class="hljs-built_in">Button</span>() = <span class="hljs-keyword">default</span>;
+};
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">Checkbox</span> {
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-type">void</span> <span class="hljs-title">draw</span><span class="hljs-params">()</span> </span>= <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">virtual</span> ~<span class="hljs-built_in">Checkbox</span>() = <span class="hljs-keyword">default</span>;
+};
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">WidgetFactory</span> {
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-function"><span class="hljs-keyword">virtual</span> std::unique_ptr&lt;Button&gt; <span class="hljs-title">make_button</span><span class="hljs-params">()</span> </span>= <span class="hljs-number">0</span>;
+    <span class="hljs-function"><span class="hljs-keyword">virtual</span> std::unique_ptr&lt;Checkbox&gt; <span class="hljs-title">make_checkbox</span><span class="hljs-params">()</span> </span>= <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">virtual</span> ~<span class="hljs-built_in">WidgetFactory</span>() = <span class="hljs-keyword">default</span>;
+};</code></pre>
+<p>Uses:</p>
+<ul>
+<li>Platform-specific UI components.</li>
+<li>Theme families.</li>
+<li>Related products that must be compatible.</li>
+</ul>
+<p>Tradeoffs:</p>
+<ul>
+<li>Easy to add new product families.</li>
+<li>Harder to add a new product kind because every factory interface changes.</li>
+</ul>
+<p>Factory Method vs Abstract Factory:</p>
+<table>
+<thead>
+<tr>
+<th>Point</th>
+<th>Factory Method</th>
+<th>Abstract Factory</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Creates</td>
+<td>one product type</td>
+<td>family of related products</td>
+</tr>
+<tr>
+<td>Variation</td>
+<td>subclass/factory method</td>
+<td>factory object</td>
+</tr>
+<tr>
+<td>Good when</td>
+<td>one creation decision varies</td>
+<td>compatibility across products matters</td>
+</tr>
+</tbody></table>
+<h3 id="visitor">Visitor</h3>
+<p>Intent: add operations to a stable object structure without modifying each class repeatedly.</p>
+<pre class="hljs"><code><span class="hljs-keyword">class</span> <span class="hljs-title class_">Number</span>;
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">Add</span>;
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">ExprVisitor</span> {
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-type">void</span> <span class="hljs-title">visit</span><span class="hljs-params">(Number&amp;)</span> </span>= <span class="hljs-number">0</span>;
+    <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-type">void</span> <span class="hljs-title">visit</span><span class="hljs-params">(Add&amp;)</span> </span>= <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">virtual</span> ~<span class="hljs-built_in">ExprVisitor</span>() = <span class="hljs-keyword">default</span>;
+};
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">Expr</span> {
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-type">void</span> <span class="hljs-title">accept</span><span class="hljs-params">(ExprVisitor&amp;)</span> </span>= <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">virtual</span> ~<span class="hljs-built_in">Expr</span>() = <span class="hljs-keyword">default</span>;
+};</code></pre>
+<p>Uses:</p>
+<ul>
+<li>AST operations such as type checking, printing, optimization.</li>
+<li>Document trees.</li>
+<li>Object structures where new operations are added more often than new element types.</li>
+</ul>
+<p>Tradeoffs:</p>
+<ul>
+<li>Easy to add new operations.</li>
+<li>Hard to add new element classes because every visitor must change.</li>
+<li>Can expose too much internal structure.</li>
+</ul>
+<p>Visitor vs virtual methods:</p>
+<ul>
+<li>Put behavior as virtual methods when behavior is core to the object.</li>
+<li>Use Visitor when many external operations must run over a stable hierarchy.</li>
+</ul>
+<h3 id="design-pattern-selection">Design Pattern Selection</h3>
+<p>Ask:</p>
+<ul>
+<li>What varies?</li>
+<li>What must stay stable?</li>
+<li>Is this object creation, traversal, behavior encapsulation, or operation extension?</li>
+<li>Would a standard library tool solve it more simply?</li>
+<li>Does the pattern improve testability or harm it?</li>
+</ul>
+<h3 id="checkpoints">Checkpoints</h3>
+<ul>
+<li>Why does Iterator enable generic algorithms?</li>
+<li>What state is needed for undo in Command?</li>
+<li>Why can Singleton hurt tests?</li>
+<li>Factory Method vs Abstract Factory?</li>
+<li>When is Visitor a good fit?</li>
+<li>Which pattern can replace a large switch over leave types?</li>
+<li>Which pattern can model a queue of deferred actions?</li>
+<li>Which pattern helps traverse a custom tree?</li>
+</ul>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="notes-ooad-uml.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">OOAD &amp; UML</span></a><a class="pn-card pn-next" href="notes-testing-sdlc.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">Testing, SDLC &amp; SE</span></a></nav>
+</main>
+<aside class="toc"><div class="toc-title">On this page</div><ul><li class="toc-d2"><a href="#pattern-mindset">Pattern Mindset</a></li><li class="toc-d2"><a href="#quick-map">Quick Map</a></li><li class="toc-d2"><a href="#iterator">Iterator</a></li><li class="toc-d2"><a href="#command">Command</a></li><li class="toc-d2"><a href="#singleton">Singleton</a></li><li class="toc-d2"><a href="#factory-method">Factory Method</a></li><li class="toc-d2"><a href="#abstract-factory">Abstract Factory</a></li><li class="toc-d2"><a href="#visitor">Visitor</a></li><li class="toc-d2"><a href="#design-pattern-selection">Design Pattern Selection</a></li><li class="toc-d2"><a href="#checkpoints">Checkpoints</a></li></ul></aside>
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

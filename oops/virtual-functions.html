@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Virtual Functions &amp; Dynamic Binding · OOP &amp; C++</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script type="module">
+import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+mermaid.initialize({
+  startOnLoad: true,
+  theme: 'base',
+  themeVariables: {
+    fontFamily: 'Inter, sans-serif',
+    fontSize: '14px',
+    primaryColor: '#F1E8D7',
+    primaryTextColor: '#2E2A21',
+    primaryBorderColor: '#8B8170',
+    lineColor: '#57503F',
+    secondaryColor: '#FDFAF3',
+    tertiaryColor: '#FBF6EA',
+    clusterBkg: '#FBF6EA',
+    clusterBorder: '#E2D8C3',
+    actorBkg: '#F1E8D7',
+    actorBorder: '#8B8170',
+    actorTextColor: '#2E2A21',
+    actorLineColor: '#B8AD97',
+    signalColor: '#57503F',
+    signalTextColor: '#2E2A21',
+    labelBoxBkgColor: '#F1E8D7',
+    labelTextColor: '#2E2A21',
+    loopTextColor: '#57503F',
+    noteBkgColor: '#FBF3DC',
+    noteBorderColor: '#D9B36C',
+    noteTextColor: '#57503F',
+    activationBkgColor: '#EFE6D2',
+    activationBorderColor: '#8B8170',
+    edgeLabelBackground: '#F7F1E4'
+  }
+});
+</script>
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#8A4E5E">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link is-active" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">OOP & C++</a><div class="side-group"><div class="side-label">Lecture Notes</div><ul><li><a class="side-link" href="volatile-macros-inline.html">volatile, Macros &amp; inline</a></li><li><a class="side-link" href="references-and-const.html">References &amp; const</a></li><li><a class="side-link" href="function-overloading.html">Function Overloading</a></li><li><a class="side-link" href="dynamic-memory.html">Dynamic Memory Management</a></li><li><a class="side-link" href="classes-and-objects.html">Classes &amp; Objects</a></li><li><a class="side-link" href="constructors.html">Constructors &amp; Information Hiding</a></li><li><a class="side-link" href="copy-semantics.html">Copy Constructor &amp; Copy Assignment</a></li><li><a class="side-link" href="constness-and-static.html">Const-ness &amp; Static Members</a></li><li><a class="side-link" href="friend-functions.html">Friend Functions &amp; Friend Classes</a></li><li><a class="side-link" href="operator-overloading.html">Operator Overloading</a></li><li><a class="side-link" href="inheritance.html">Inheritance &amp; Overriding</a></li><li><a class="side-link" href="multiple-private-inheritance.html">Multiple &amp; Private Inheritance</a></li><li><a class="side-link is-active" href="virtual-functions.html">Virtual Functions &amp; Dynamic Binding</a></li><li><a class="side-link" href="vtables-and-const-cast.html">Virtual Pointer Tables &amp; const_cast</a></li><li><a class="side-link" href="cpp-casts.html">C++ Casts</a></li><li><a class="side-link" href="exceptions.html">Exceptions &amp; Error Handling</a></li><li><a class="side-link" href="try-catch-and-templates.html">try/catch &amp; Function Templates</a></li><li><a class="side-link" href="class-templates-functors.html">Class Templates &amp; Functors</a></li></ul></div><div class="side-group"><div class="side-label">Extras</div><ul><li><a class="side-link" href="compilation-model.html">The C++ Compilation Model</a></li><li><a class="side-link" href="template-metaprogramming.html">Template Metaprogramming</a></li><li><a class="side-link" href="build-your-own-vector.html">Exercise — Build Your Own Vector</a></li><li><a class="side-link" href="miscellany.html">Miscellany</a></li><li><a class="side-link" href="resources.html">Resources</a></li></ul></div><div class="side-group"><div class="side-label">Topic Notes</div><ul><li><a class="side-link" href="notes-cpp-core.html">C++ Core</a></li><li><a class="side-link" href="notes-cpp-oop.html">C++ OOP</a></li><li><a class="side-link" href="notes-cpp-advanced.html">C++ Advanced</a></li><li><a class="side-link" href="notes-ooad-uml.html">OOAD &amp; UML</a></li><li><a class="side-link" href="notes-design-patterns.html">Design Patterns</a></li><li><a class="side-link" href="notes-testing-sdlc.html">Testing, SDLC &amp; SE</a></li><li><a class="side-link" href="notes-interview-questions.html">Interview Questions</a></li></ul></div><div class="side-group"><div class="side-label">Flashcards</div><ul><li><a class="side-link" href="cards-cpp-core.html">C++ Core Flashcards</a></li><li><a class="side-link" href="cards-oop-lifetime.html">OOP, Lifetime &amp; Memory Flashcards</a></li><li><a class="side-link" href="cards-polymorphism-stl.html">Polymorphism, Casts, Templates &amp; STL Flashcards</a></li><li><a class="side-link" href="cards-ooad-uml.html">OOAD &amp; UML Flashcards</a></li><li><a class="side-link" href="cards-design-patterns.html">Design Patterns Flashcards</a></li><li><a class="side-link" href="cards-testing-sdlc.html">Testing, SDLC &amp; SE Flashcards</a></li><li><a class="side-link" href="cards-interview-drills.html">Interview &amp; Code-Reading Drills</a></li></ul></div><div class="side-group"><div class="side-label">Under the Hood</div><ul><li><a class="side-link" href="memory-layout.html">Memory Layout, Alignment &amp; Padding</a></li></ul></div><div class="side-group"><div class="side-label">Revision</div><ul><li><a class="side-link" href="refresher.html">Rapid Refresher<span class="badge">&#9733;</span></a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">OOP & C++</a></div>
+  <div class="page-head">
+    <div class="page-kicker">OOP & C++</div>
+    <h1 class="page-title">Virtual Functions &amp; Dynamic Binding</h1>
+    <div class="page-meta">2 min read &middot; source: <code>oops_cpp/self_notes/14.md</code></div>
+  </div>
+  <article class="prose"><ul>
+<li><p>Staty type of the object is the type declared for the object while writing the code</p>
+</li>
+<li><p>Compiler sees static type</p>
+</li>
+<li><p>Dynamic type is determined by the type of hte objet to which it currently refers. Compiler does not see dynamic type.</p>
+</li>
+</ul>
+<pre class="hljs"><code>Animal* a;
+
+<span class="hljs-keyword">if</span> (x &gt; <span class="hljs-number">0</span>)
+    a = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Dog</span>();
+<span class="hljs-keyword">else</span>
+    a = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Cat</span>();
+
+a-&gt;<span class="hljs-built_in">speak</span>();</code></pre>
+<ul>
+<li>In the above code, static type of a is Animal* but dynamic type of a is Dog* or Cat* depending on the value of x.</li>
+</ul>
+<div class="diagram"><pre class="mermaid">graph LR
+    A[&quot;Animal* a&quot;] --&gt; OBJ[&quot;Dog object&lt;br/&gt;[ vptr | Dog data ]&quot;]
+    OBJ --&gt;|&quot;vptr&quot;| VT[&quot;Dog vtable&quot;]
+    VT --&gt; S1[&quot;slot 0: &amp;Dog::speak&quot;]
+    VT --&gt; S2[&quot;slot 1: &amp;Dog::~Dog&quot;]
+    S1 -.-&gt;|&quot;a-&gt;speak() = two loads + indirect call&quot;| CODE[&quot;Dog::speak() code&quot;]</pre></div>
+<ul>
+<li><p>if the destructor is not virtual in a polymorphic hierarchy, it leads to slicing. Destructor must be declared virtual in the base class.</p>
+</li>
+<li><p>shape -&gt; polygon and closed conics<br>triangle quadrilateral -&gt; polygon<br>ellipse circle -&gt; closed conics</p>
+</li>
+</ul>
+<p>we want to have a polymorphic draw() function for the hierarchy</p>
+<p>0 draw() vritual everywhere, we cannot define the body of draw() in root, as we don&#39;t have an algorithm to draw an arbitrary shape.</p>
+<p>=&gt; pure virtual function, has a signature but not body</p>
+<p>vritual void draw() = 0;</p>
+<ul>
+<li><p>if even a child doesn&#39;t have implementation, simply don&#39;t override it will you get in the inheritance hierarchy where draw() is implemented.</p>
+</li>
+<li><p>Abstract base class - at least one pure virtual class, cannot have an object of this class.</p>
+</li>
+<li><p>for a collection to loop over, say the shapes <code>i &lt; sizeof(arr) / sizeof(Shapes *)</code></p>
+</li>
+<li><p>dispatching based on dynamic type</p>
+</li>
+<li><p>a pure virtual function can still have a body. Because this can be called in a derived class. Can put common code there.</p>
+</li>
+</ul>
+<pre class="hljs"><code>virtual void draw() = 0 {
+    cout &lt;&lt; &quot;Shapes: init brush\n&quot;;
+}
+// now call using Shape::draw() in derived class</code></pre>
+<ul>
+<li>not all compilers have the support for this body. If is it not, just define it outside the class</li>
+</ul>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="multiple-private-inheritance.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">Multiple &amp; Private Inheritance</span></a><a class="pn-card pn-next" href="vtables-and-const-cast.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">Virtual Pointer Tables &amp; const_cast</span></a></nav>
+</main>
+
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The N+1 Query Problem · Database Systems</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#B05730">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link is-active" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">Database Systems</a><div class="side-group"><div class="side-label">Foundations</div><ul><li><a class="side-link" href="acid.html">ACID &amp; Isolation Levels</a></li><li><a class="side-link" href="normalization.html">Normalization</a></li><li><a class="side-link" href="sql.html">SQL Essentials</a></li><li><a class="side-link" href="drop-delete-truncate.html">DROP vs DELETE vs TRUNCATE</a></li></ul></div><div class="side-group"><div class="side-label">Indexing & Storage</div><ul><li><a class="side-link" href="b-plus-trees.html">B+ Trees</a></li><li><a class="side-link" href="unique-indexes.html">Unique Indexes</a></li><li><a class="side-link" href="primary-vs-secondary-index.html">Primary vs Secondary Indexes</a></li><li><a class="side-link" href="write-ahead-logging.html">Write-Ahead Logging</a></li></ul></div><div class="side-group"><div class="side-label">Concurrency</div><ul><li><a class="side-link" href="concurrency-control.html">Concurrency Control Basics</a></li><li><a class="side-link" href="mvcc.html">MVCC in Depth</a></li><li><a class="side-link" href="mvcc-cmu.html">MVCC — CMU Lecture Notes</a></li></ul></div><div class="side-group"><div class="side-label">Scale & Patterns</div><ul><li><a class="side-link" href="sharding.html">Sharding vs Partitioning</a></li><li><a class="side-link is-active" href="n-plus-one-problem.html">The N+1 Query Problem</a></li><li><a class="side-link" href="graph-databases.html">Graph Databases</a></li></ul></div><div class="side-group"><div class="side-label">SQL in Practice</div><ul><li><a class="side-link" href="joins.html">Joins — Semantics &amp; Algorithms</a></li><li><a class="side-link" href="window-functions.html">Window Functions</a></li></ul></div><div class="side-group"><div class="side-label">Distributed Data</div><ul><li><a class="side-link" href="cap-replication.html">CAP &amp; Replication</a></li></ul></div><div class="side-group"><div class="side-label">Revision</div><ul><li><a class="side-link" href="refresher.html">Rapid Refresher<span class="badge">&#9733;</span></a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">Database Systems</a></div>
+  <div class="page-head">
+    <div class="page-kicker">Database Systems</div>
+    <h1 class="page-title">The N+1 Query Problem</h1>
+    <div class="page-meta">2 min read &middot; source: <code>dbms/n+1problem.md</code></div>
+  </div>
+  <article class="prose"><p>The <strong>N+1 query problem</strong> occurs when you execute:</p>
+<pre class="hljs"><code>1 query to fetch N rows
++
+N additional queries for related data</code></pre>
+<p>instead of fetching everything in a small number of queries.</p>
+<p>It&#39;s extremely common in ORMs like Hibernate, Entity Framework, and Django ORM.</p>
+<hr>
+<h3 id="example">Example</h3>
+<p>Tables:</p>
+<pre class="hljs"><code>Users
+-----
+id
+name
+
+Orders
+------
+id
+user_id
+amount</code></pre>
+<p>Suppose you want:</p>
+<pre class="hljs"><code>Order 1 -&gt; Alice
+Order 2 -&gt; Bob
+Order 3 -&gt; Alice</code></pre>
+<hr>
+<h4 id="bad-approach-n1">Bad Approach (N+1)</h4>
+<p>First query:</p>
+<pre class="hljs"><code><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> Orders;</code></pre>
+<p>Returns N orders.</p>
+<p>For each order:</p>
+<pre class="hljs"><code><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> Users <span class="hljs-keyword">WHERE</span> id <span class="hljs-operator">=</span> ?;</code></pre>
+<p>If there are 100 orders:</p>
+<pre class="hljs"><code>1 query for orders
+100 queries for users</code></pre>
+<p>Total:</p>
+<pre class="hljs"><code>101 queries</code></pre>
+<p>This is the N+1 problem.</p>
+<hr>
+<h3 id="why-is-it-bad">Why is it bad?</h3>
+<p>The issue is usually not SQL execution.</p>
+<p>The issue is:</p>
+<pre class="hljs"><code>Network round trips
+Connection overhead
+Query parsing
+Lock acquisition
+Context switching</code></pre>
+<p>100 tiny queries are often much slower than 1 larger query.</p>
+<hr>
+<h3 id="example-in-orm">Example in ORM</h3>
+<pre class="hljs"><code>orders = Order.objects.<span class="hljs-built_in">all</span>()
+
+<span class="hljs-keyword">for</span> order <span class="hljs-keyword">in</span> orders:
+    <span class="hljs-built_in">print</span>(order.user.name)</code></pre>
+<p>Looks innocent.</p>
+<p>Behind the scenes:</p>
+<pre class="hljs"><code><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> Orders;</code></pre>
+<p>Then:</p>
+<pre class="hljs"><code><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> Users <span class="hljs-keyword">WHERE</span> id<span class="hljs-operator">=</span><span class="hljs-number">1</span>;
+<span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> Users <span class="hljs-keyword">WHERE</span> id<span class="hljs-operator">=</span><span class="hljs-number">2</span>;
+<span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> Users <span class="hljs-keyword">WHERE</span> id<span class="hljs-operator">=</span><span class="hljs-number">1</span>;
+...</code></pre>
+<p>Potentially hundreds of queries.</p>
+<hr>
+<h3 id="solution-1-join">Solution 1: JOIN</h3>
+<pre class="hljs"><code><span class="hljs-keyword">SELECT</span>
+    o.id,
+    u.name,
+    o.amount
+<span class="hljs-keyword">FROM</span> Orders o
+<span class="hljs-keyword">JOIN</span> Users u
+<span class="hljs-keyword">ON</span> o.user_id <span class="hljs-operator">=</span> u.id;</code></pre>
+<p>Now:</p>
+<pre class="hljs"><code>1 query</code></pre>
+<p>instead of:</p>
+<pre class="hljs"><code>N+1 queries</code></pre>
+<hr>
+<h3 id="solution-2-eager-loading">Solution 2: Eager Loading</h3>
+<p>ORMs provide:</p>
+<pre class="hljs"><code>Order.objects.select_related(<span class="hljs-string">&quot;user&quot;</span>)</code></pre>
+<p>or</p>
+<pre class="hljs"><code>JOIN FETCH</code></pre>
+<p>which internally generates a JOIN.</p>
+<hr>
+<h3 id="solution-3-batch-fetching">Solution 3: Batch Fetching</h3>
+<p>Instead of:</p>
+<pre class="hljs"><code><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> Users <span class="hljs-keyword">WHERE</span> id<span class="hljs-operator">=</span><span class="hljs-number">1</span>;
+<span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> Users <span class="hljs-keyword">WHERE</span> id<span class="hljs-operator">=</span><span class="hljs-number">2</span>;
+<span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> Users <span class="hljs-keyword">WHERE</span> id<span class="hljs-operator">=</span><span class="hljs-number">3</span>;</code></pre>
+<p>do:</p>
+<pre class="hljs"><code><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span>
+<span class="hljs-keyword">FROM</span> Users
+<span class="hljs-keyword">WHERE</span> id <span class="hljs-keyword">IN</span> (<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>);</code></pre>
+<p>Now:</p>
+<pre class="hljs"><code>2 queries total</code></pre>
+<p>instead of:</p>
+<pre class="hljs"><code>N+1</code></pre>
+<hr>
+<h3 id="real-world-example">Real-world example</h3>
+<p>Imagine a social media feed.</p>
+<p>Fetch:</p>
+<pre class="hljs"><code><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> Posts LIMIT <span class="hljs-number">100</span>;</code></pre>
+<p>Then for each post:</p>
+<pre class="hljs"><code><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> Users <span class="hljs-keyword">WHERE</span> id<span class="hljs-operator">=</span>?;</code></pre>
+<p>For 100 posts:</p>
+<pre class="hljs"><code>101 queries</code></pre>
+<p>A common production performance bug.</p>
+<hr>
+<h3 id="interview-answer">Interview Answer</h3>
+<blockquote>
+<p>The N+1 problem occurs when an application executes one query to fetch N records and then executes an additional query for each record to fetch related data. For N records this results in N+1 database queries, causing excessive round trips and poor performance. It is typically solved using JOINs, eager loading, or batch fetching.</p>
+</blockquote>
+<p>Example:</p>
+<pre class="hljs"><code>1 query: fetch 100 orders
+100 queries: fetch customer for each order
+-----------------------------------------
+101 total queries</code></pre>
+<p>A JOIN can reduce this to:</p>
+<pre class="hljs"><code>1 query</code></pre>
+<p>which is why interviewers often bring it up when discussing ORMs and database performance.</p>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="sharding.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">Sharding vs Partitioning</span></a><a class="pn-card pn-next" href="graph-databases.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">Graph Databases</span></a></nav>
+</main>
+<aside class="toc"><div class="toc-title">On this page</div><ul><li class="toc-d2"><a href="#example">Example</a></li><li class="toc-d2"><a href="#why-is-it-bad">Why is it bad?</a></li><li class="toc-d2"><a href="#example-in-orm">Example in ORM</a></li><li class="toc-d2"><a href="#solution-1-join">Solution 1: JOIN</a></li><li class="toc-d2"><a href="#solution-2-eager-loading">Solution 2: Eager Loading</a></li><li class="toc-d2"><a href="#solution-3-batch-fetching">Solution 3: Batch Fetching</a></li><li class="toc-d2"><a href="#real-world-example">Real-world example</a></li><li class="toc-d2"><a href="#interview-answer">Interview Answer</a></li></ul></aside>
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

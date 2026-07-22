@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>try/catch &amp; Function Templates · OOP &amp; C++</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#8A4E5E">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link is-active" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">OOP & C++</a><div class="side-group"><div class="side-label">Lecture Notes</div><ul><li><a class="side-link" href="volatile-macros-inline.html">volatile, Macros &amp; inline</a></li><li><a class="side-link" href="references-and-const.html">References &amp; const</a></li><li><a class="side-link" href="function-overloading.html">Function Overloading</a></li><li><a class="side-link" href="dynamic-memory.html">Dynamic Memory Management</a></li><li><a class="side-link" href="classes-and-objects.html">Classes &amp; Objects</a></li><li><a class="side-link" href="constructors.html">Constructors &amp; Information Hiding</a></li><li><a class="side-link" href="copy-semantics.html">Copy Constructor &amp; Copy Assignment</a></li><li><a class="side-link" href="constness-and-static.html">Const-ness &amp; Static Members</a></li><li><a class="side-link" href="friend-functions.html">Friend Functions &amp; Friend Classes</a></li><li><a class="side-link" href="operator-overloading.html">Operator Overloading</a></li><li><a class="side-link" href="inheritance.html">Inheritance &amp; Overriding</a></li><li><a class="side-link" href="multiple-private-inheritance.html">Multiple &amp; Private Inheritance</a></li><li><a class="side-link" href="virtual-functions.html">Virtual Functions &amp; Dynamic Binding</a></li><li><a class="side-link" href="vtables-and-const-cast.html">Virtual Pointer Tables &amp; const_cast</a></li><li><a class="side-link" href="cpp-casts.html">C++ Casts</a></li><li><a class="side-link" href="exceptions.html">Exceptions &amp; Error Handling</a></li><li><a class="side-link is-active" href="try-catch-and-templates.html">try/catch &amp; Function Templates</a></li><li><a class="side-link" href="class-templates-functors.html">Class Templates &amp; Functors</a></li></ul></div><div class="side-group"><div class="side-label">Extras</div><ul><li><a class="side-link" href="compilation-model.html">The C++ Compilation Model</a></li><li><a class="side-link" href="template-metaprogramming.html">Template Metaprogramming</a></li><li><a class="side-link" href="build-your-own-vector.html">Exercise — Build Your Own Vector</a></li><li><a class="side-link" href="miscellany.html">Miscellany</a></li><li><a class="side-link" href="resources.html">Resources</a></li></ul></div><div class="side-group"><div class="side-label">Topic Notes</div><ul><li><a class="side-link" href="notes-cpp-core.html">C++ Core</a></li><li><a class="side-link" href="notes-cpp-oop.html">C++ OOP</a></li><li><a class="side-link" href="notes-cpp-advanced.html">C++ Advanced</a></li><li><a class="side-link" href="notes-ooad-uml.html">OOAD &amp; UML</a></li><li><a class="side-link" href="notes-design-patterns.html">Design Patterns</a></li><li><a class="side-link" href="notes-testing-sdlc.html">Testing, SDLC &amp; SE</a></li><li><a class="side-link" href="notes-interview-questions.html">Interview Questions</a></li></ul></div><div class="side-group"><div class="side-label">Flashcards</div><ul><li><a class="side-link" href="cards-cpp-core.html">C++ Core Flashcards</a></li><li><a class="side-link" href="cards-oop-lifetime.html">OOP, Lifetime &amp; Memory Flashcards</a></li><li><a class="side-link" href="cards-polymorphism-stl.html">Polymorphism, Casts, Templates &amp; STL Flashcards</a></li><li><a class="side-link" href="cards-ooad-uml.html">OOAD &amp; UML Flashcards</a></li><li><a class="side-link" href="cards-design-patterns.html">Design Patterns Flashcards</a></li><li><a class="side-link" href="cards-testing-sdlc.html">Testing, SDLC &amp; SE Flashcards</a></li><li><a class="side-link" href="cards-interview-drills.html">Interview &amp; Code-Reading Drills</a></li></ul></div><div class="side-group"><div class="side-label">Under the Hood</div><ul><li><a class="side-link" href="memory-layout.html">Memory Layout, Alignment &amp; Padding</a></li></ul></div><div class="side-group"><div class="side-label">Revision</div><ul><li><a class="side-link" href="refresher.html">Rapid Refresher<span class="badge">&#9733;</span></a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">OOP & C++</a></div>
+  <div class="page-head">
+    <div class="page-kicker">OOP & C++</div>
+    <h1 class="page-title">try/catch &amp; Function Templates</h1>
+    <div class="page-meta">3 min read &middot; source: <code>oops_cpp/self_notes/19.md</code></div>
+  </div>
+  <article class="prose"><ul>
+<li>Exceptions thrown will also result in stack frame being cleaned like when return will result in stack frame cleanup</li>
+</ul>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;exception&gt;</span></span>
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">MyException</span> : <span class="hljs-keyword">public</span> exception {};
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">MyClass</span> { ~<span class="hljs-built_in">MyClass</span>() {} };
+
+<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">h</span><span class="hljs-params">()</span></span>{
+
+    MyClass h_a;
+    <span class="hljs-comment">// throw 1;</span>
+    <span class="hljs-comment">// throw 2.5;</span>
+    <span class="hljs-comment">// throw MyException();</span>
+    <span class="hljs-comment">// throw exception();</span>
+    <span class="hljs-comment">// throw MyClass();</span>
+}
+<span class="hljs-comment">// stack unwind, destructor h_a.~MyClass() called</span>
+<span class="hljs-comment">// passes on all exceptions</span>
+
+<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">g</span><span class="hljs-params">()</span></span>{
+    MyClass g_a;
+    <span class="hljs-keyword">try</span> {
+        <span class="hljs-built_in">h</span>();
+        <span class="hljs-type">bool</span> okay = <span class="hljs-literal">true</span>; <span class="hljs-comment">// not executed</span>
+    }
+    <span class="hljs-built_in">catch</span> (<span class="hljs-type">int</span>){
+        ...
+    }<span class="hljs-built_in">catch</span>(<span class="hljs-type">double</span>){
+        ...
+    }<span class="hljs-built_in">catch</span> (...){ <span class="hljs-comment">// default</span>
+        <span class="hljs-keyword">throw</span>; <span class="hljs-comment">// rethrow, the guy that catches this may catch MyException, exception etc. no copy, same object passed on</span>
+    }
+} <span class="hljs-comment">// stack unwind</span></code></pre>
+<ul>
+<li>try block: consolidate areas that might throw exceptions</li>
+<li>tries an exact match, no implicit conversion allowed, can match with the public base class.</li>
+</ul>
+<pre class="hljs"><code><span class="hljs-keyword">class</span> <span class="hljs-title class_">B</span> {};
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">D</span> : <span class="hljs-keyword">public</span> B {};
+
+<span class="hljs-keyword">try</span> {
+    <span class="hljs-keyword">throw</span> D{};
+}
+<span class="hljs-built_in">catch</span> (B b) {
+    cout &lt;&lt; <span class="hljs-string">&quot;Caught B\n&quot;</span>;
+}
+<span class="hljs-built_in">catch</span> (D d) {
+    cout &lt;&lt; <span class="hljs-string">&quot;Caught D\n&quot;</span>;
+}</code></pre>
+<p><code>Caught B</code>, <code>catch(D)</code> is never reached.</p>
+<ul>
+<li><p>more specialized ones have to come earlier. that&#39;s why catch all has to come at the end</p>
+</li>
+<li><p>destructor-savvy</p>
+</li>
+<li><p>unobstrusive</p>
+</li>
+<li><p>precise</p>
+</li>
+<li><p>native and Standard</p>
+</li>
+<li><p>scalable</p>
+</li>
+<li><p>fault tolerant</p>
+</li>
+</ul>
+<p><code>exception</code> is a virtual base class from standard library available to us.</p>
+<p>common exception classes already exist.</p>
+<h2 id="templates">Templates</h2>
+<ul>
+<li>generic programming / meta programming</li>
+<li>write algorithms wo knowing the types of some of the components</li>
+</ul>
+<p>say a max function for int, double, char *, Complex.</p>
+<ul>
+<li>we could do it in overloaded manner. for int and double, it is the same algorithm but different operator</li>
+</ul>
+<pre class="hljs"><code>int Max..{return x &gt; y ? x : y; }
+double Max..{return x &gt; y ? x : y; }
+..</code></pre>
+<p>could use a macro</p>
+<p><code>#define Max(x, y) (((x) &gt; (y)) ? x : y)</code><br>but macros have side effects like with a++ and b++</p>
+<h3 id="function-templates">Function templates</h3>
+<ul>
+<li>describes how a function should be built.</li>
+</ul>
+<pre class="hljs"><code>
+<span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">class</span> <span class="hljs-title class_">T</span>&gt; <span class="hljs-comment">// templatized function</span>
+<span class="hljs-function">T <span class="hljs-title">Max</span><span class="hljs-params">(T x, T y)</span></span>{
+    <span class="hljs-keyword">return</span> x &gt; y ? x : y
+}
+<span class="hljs-keyword">template</span>&lt;&gt; <span class="hljs-comment">// template specialization for char * type</span>
+<span class="hljs-type">char</span> *<span class="hljs-built_in">Max</span>&lt;<span class="hljs-type">char</span> *&gt;(<span class="hljs-type">char</span>* x, <span class="hljs-type">char</span>* y){
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">strcmp</span>(x, y) &gt; <span class="hljs-number">0</span> ? x : y;
+}
+
+iMax = <span class="hljs-built_in">Max</span>&lt;<span class="hljs-type">int</span>&gt;(a, b);
+dMax = <span class="hljs-built_in">Max</span>&lt;<span class="hljs-type">double</span>&gt;(c, d);
+sMax = <span class="hljs-built_in">Max</span>&lt;<span class="hljs-type">char</span> *&gt;(s1, s2); <span class="hljs-comment">// won&#x27;t generate function, will use templaet specialized algorithm</span></code></pre>
+<p>compiler internally generated two overloaded functions. &quot;Macro side effects&quot; problems solved.</p>
+<p>can skip adding the type, and it will infer the types. <code>Max(a,b)</code></p>
+<pre class="hljs"><code><span class="hljs-function"><span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">class</span> T&gt; T <span class="hljs-title">Max</span><span class="hljs-params">(T x, T y)</span></span>;
+<span class="hljs-keyword">template</span>&lt;&gt; <span class="hljs-type">char</span>* <span class="hljs-built_in">Max</span>&lt;<span class="hljs-type">char</span> *&gt;(<span class="hljs-type">char</span> *x, <span class="hljs-type">char</span>* y);
+<span class="hljs-keyword">template</span> &lt;<span class="hljs-keyword">class</span> <span class="hljs-title class_">T</span>, <span class="hljs-type">int</span> size&gt; <span class="hljs-function">Type <span class="hljs-title">Max</span><span class="hljs-params">(T x[size])</span></span>;
+
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>{
+    ...
+    <span class="hljs-built_in">Max</span>&lt;<span class="hljs-type">int</span>, <span class="hljs-number">7</span>&gt;(arr)
+}</code></pre>
+<p>compiler sees T* x<br>cannot so sizeof(x) inside because x is really a pointer.</p>
+<p>To deduce size</p>
+<pre class="hljs"><code>template &lt;typename T, size_t N&gt;
+T Max(const T (&amp;x)[N])
+{
+    T m = x[0];
+
+    for(size_t i = 1; i &lt; N; i++)
+        if(x[i] &gt; m)
+            m = x[i];
+
+    return m;
+}
+
+int main(){
+    int arr[5] = {1,2,3,4,5};
+    cout &lt;&lt; Max(arr);
+}</code></pre>
+<p><em>typename</em> keyword:</p>
+<pre class="hljs"><code>template &lt;class T&gt; f(T x){
+    T::name * p;
+}</code></pre>
+<p>is T::name a type and p is a pointer to that type? or both are variables and this is a multiplication?</p>
+<p>it would be interpretted as multiplication unless <code>typename T::name * p;</code></p>
+<ul>
+<li>keywords class and typename have almost same meaning in a template parameter. Tell compiler that an expression is a type expression.</li>
+</ul>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="exceptions.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">Exceptions &amp; Error Handling</span></a><a class="pn-card pn-next" href="class-templates-functors.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">Class Templates &amp; Functors</span></a></nav>
+</main>
+
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Page Replacement — FIFO, LRU, Clock · Operating Systems</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#77682E">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link is-active" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">Operating Systems</a><div class="side-group"><div class="side-label">Notes</div><ul><li><a class="side-link" href="multithreading-cpp.html">Multithreading in C++</a></li><li><a class="side-link" href="semaphore-vs-mutex.html">Semaphore vs Mutex</a></li><li><a class="side-link" href="csapp-ch12.html">Concurrent Programming — CS:APP Ch. 12</a></li><li><a class="side-link" href="csapp-ch9.html">Virtual Memory — CS:APP Ch. 9</a></li></ul></div><div class="side-group"><div class="side-label">Processes & Scheduling</div><ul><li><a class="side-link" href="processes.html">Processes — Lifecycle, fork &amp; Friends</a></li><li><a class="side-link" href="scheduling.html">CPU Scheduling — FIFO to MLFQ</a></li></ul></div><div class="side-group"><div class="side-label">Locks & Memory</div><ul><li><a class="side-link" href="locks-internals.html">How Locks Actually Work</a></li><li><a class="side-link" href="deadlock.html">Deadlock</a></li><li><a class="side-link is-active" href="page-replacement.html">Page Replacement — FIFO, LRU, Clock</a></li></ul></div><div class="side-group"><div class="side-label">Files & IPC</div><ul><li><a class="side-link" href="filesystems.html">Filesystems — Inodes &amp; Journaling</a></li><li><a class="side-link" href="ipc.html">IPC — Pipes, Shared Memory, Signals</a></li></ul></div><div class="side-group"><div class="side-label">Revision</div><ul><li><a class="side-link" href="refresher.html">Rapid Refresher<span class="badge">&#9733;</span></a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">Operating Systems</a></div>
+  <div class="page-head">
+    <div class="page-kicker">Operating Systems</div>
+    <h1 class="page-title">Page Replacement — FIFO, LRU, Clock</h1>
+    <div class="page-meta">2 min read &middot; source: <code>os/page_replacement.md</code></div>
+  </div>
+  <article class="prose"><blockquote>
+<p>Memory is full and a page fault needs a frame: who gets evicted? The policy zoo, plus the one weird anomaly they love to ask.</p>
+</blockquote>
+<h3 id="the-setup">The setup</h3>
+<p>Demand paging brings pages in on first touch (<a href="csapp-ch9.html">CS:APP ch 9</a> has the fault path). When RAM is full, eviction policy determines the miss rate — and misses cost a disk trip, ~100,000× a RAM hit. Policy quality is not a rounding error.</p>
+<h3 id="the-policies">The policies</h3>
+<ul>
+<li><strong>Optimal (MIN)</strong> — evict the page used furthest in the future. Unimplementable (needs a crystal ball); exists as the benchmark.</li>
+<li><strong>FIFO</strong> — evict the oldest-loaded. Dumb: age ≠ uselessness (your shell&#39;s pages are old <em>and</em> hot).</li>
+<li><strong>Random</strong> — surprisingly not terrible; no state.</li>
+<li><strong>LRU</strong> — evict least-recently-<em>used</em>: uses history as prophecy (recent past ≈ near future = <strong>temporal locality</strong>). Problem: true LRU needs a timestamp per touch — too expensive in hardware.</li>
+<li><strong>Clock (second chance)</strong> — the shippable LRU approximation: pages in a ring, one <strong>reference bit</strong> each (set by hardware on touch). The hand sweeps: bit=1 → clear it, move on (&quot;second chance&quot;); bit=0 → evict. Add the <strong>dirty bit</strong>: prefer evicting clean pages (no write-back needed).</li>
+</ul>
+<p><strong>Analogy:</strong> LRU is a wardrobe rule — donate the shirt you haven&#39;t worn longest. Clock is the lazy version: sticky-note every worn shirt; sweep occasionally, unstickered shirts get donated.</p>
+<h3 id="beladys-anomaly-the-trap-question">Belady&#39;s anomaly (the trap question)</h3>
+<p>For <strong>FIFO</strong>, adding <em>more frames</em> can cause <em>more</em> faults (reference string 1,2,3,4,1,2,5,1,2,3,4,5: 9 faults with 3 frames, <strong>10</strong> with 4). LRU is immune — it&#39;s a <strong>stack algorithm</strong>: the pages held with k frames are always a subset of those with k+1. &quot;Why is LRU immune?&quot; — that subset property is the answer.</p>
+<h3 id="when-lru-itself-fails">When LRU itself fails</h3>
+<p>Sequential scan of a huge file floods the cache with use-once pages (why databases manage their own buffer pools and Linux has separate active/inactive lists). Working set &gt; RAM → <strong>thrashing</strong>: the system pages instead of computing; admit fewer processes or buy RAM.</p>
+<p>Reference: <a href="https://pages.cs.wisc.edu/~remzi/OSTEP/vm-beyondphys-policy.pdf" target="_blank" rel="noopener">OSTEP ch 22 — Swapping: Policies</a>.</p>
+<h3 id="drill">Drill</h3>
+<ol>
+<li>Run string 7,0,1,2,0,3,0,4 through FIFO and LRU with 3 frames — count faults.</li>
+<li>Why prefer evicting clean pages? What&#39;s the cost asymmetry?</li>
+<li>Postgres scans a 100 GB table once on a 16 GB machine — what happens to a naive LRU cache, and what do real systems do? <em>(Scan-resistant policies / ring buffers.)</em></li>
+</ol>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="deadlock.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">Deadlock</span></a><a class="pn-card pn-next" href="filesystems.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">Filesystems — Inodes &amp; Journaling</span></a></nav>
+</main>
+<aside class="toc"><div class="toc-title">On this page</div><ul><li class="toc-d2"><a href="#the-setup">The setup</a></li><li class="toc-d2"><a href="#the-policies">The policies</a></li><li class="toc-d2"><a href="#beladys-anomaly-the-trap-question">Belady&#39;s anomaly (the trap question)</a></li><li class="toc-d2"><a href="#when-lru-itself-fails">When LRU itself fails</a></li><li class="toc-d2"><a href="#drill">Drill</a></li></ul></aside>
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

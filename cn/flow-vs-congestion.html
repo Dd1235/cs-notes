@@ -1,0 +1,479 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flow Control vs Congestion Control · Computer Networks</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script type="module">
+import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+mermaid.initialize({
+  startOnLoad: true,
+  theme: 'base',
+  themeVariables: {
+    fontFamily: 'Inter, sans-serif',
+    fontSize: '14px',
+    primaryColor: '#F1E8D7',
+    primaryTextColor: '#2E2A21',
+    primaryBorderColor: '#8B8170',
+    lineColor: '#57503F',
+    secondaryColor: '#FDFAF3',
+    tertiaryColor: '#FBF6EA',
+    clusterBkg: '#FBF6EA',
+    clusterBorder: '#E2D8C3',
+    actorBkg: '#F1E8D7',
+    actorBorder: '#8B8170',
+    actorTextColor: '#2E2A21',
+    actorLineColor: '#B8AD97',
+    signalColor: '#57503F',
+    signalTextColor: '#2E2A21',
+    labelBoxBkgColor: '#F1E8D7',
+    labelTextColor: '#2E2A21',
+    loopTextColor: '#57503F',
+    noteBkgColor: '#FBF3DC',
+    noteBorderColor: '#D9B36C',
+    noteTextColor: '#57503F',
+    activationBkgColor: '#EFE6D2',
+    activationBorderColor: '#8B8170',
+    edgeLabelBackground: '#F7F1E4'
+  }
+});
+</script>
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#3E6B63">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link is-active" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">Computer Networks</a><div class="side-group"><div class="side-label">Notes</div><ul><li><a class="side-link" href="url-to-page.html">What Happens When You Type a URL</a></li><li><a class="side-link" href="tcp-vs-udp.html">TCP vs UDP — The Deep Dive</a></li><li><a class="side-link" href="sockets-and-zero-copy.html">Sockets, Kernel Structures &amp; Zero-Copy</a></li><li><a class="side-link" href="io-multiplexing.html">I/O Multiplexing — select, poll, epoll</a></li><li><a class="side-link is-active" href="flow-vs-congestion.html">Flow Control vs Congestion Control</a></li></ul></div><div class="side-group"><div class="side-label">Addressing & Routing</div><ul><li><a class="side-link" href="ip-subnetting.html">IP Addressing &amp; Subnetting</a></li><li><a class="side-link" href="l2-switching.html">Layer 2 — Switching, VLANs, STP</a></li><li><a class="side-link" href="routing.html">Routing — Longest Prefix, OSPF, BGP</a></li></ul></div><div class="side-group"><div class="side-label">Web Protocols</div><ul><li><a class="side-link" href="tls.html">TLS — Handshake &amp; Certificates</a></li><li><a class="side-link" href="dns-deep-dive.html">DNS — Records, Resolution, Caching</a></li><li><a class="side-link" href="http-evolution.html">HTTP/1.1 → 2 → 3</a></li></ul></div><div class="side-group"><div class="side-label">Revision</div><ul><li><a class="side-link" href="refresher.html">Rapid Refresher<span class="badge">&#9733;</span></a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">Computer Networks</a></div>
+  <div class="page-head">
+    <div class="page-kicker">Computer Networks</div>
+    <h1 class="page-title">Flow Control vs Congestion Control</h1>
+    <div class="page-meta">6 min read &middot; source: <code>cn/4.md</code></div>
+  </div>
+  <article class="prose"><p>This is one of the most common networking interview topics. A lot of candidates memorize buzzwords like &quot;sliding window&quot; and &quot;slow start&quot; but can&#39;t explain <strong>why they exist</strong>.</p>
+<p>The key is:</p>
+<blockquote>
+<p><strong>Flow control protects the receiver.</strong></p>
+<p><strong>Congestion control protects the network.</strong></p>
+</blockquote>
+<p>Those are completely different problems.</p>
+<hr>
+<h2 id="big-picture">Big Picture</h2>
+<p>Imagine:</p>
+<pre class="hljs"><code>Laptop
+   |
+   |
+Internet
+   |
+   |
+Server</code></pre>
+<div class="diagram"><pre class="mermaid">graph LR
+    S[&quot;Server (sender)&quot;] --&gt;|&quot;sends min(rwnd, cwnd)&quot;| N[&quot;Network&lt;br/&gt;routers, queues&quot;]
+    N --&gt; L[&quot;Laptop (receiver)&lt;br/&gt;bounded buffer&quot;]
+    L -.-&gt;|&quot;rwnd advertised in every ACK&lt;br/&gt;— flow control&quot;| S
+    N -.-&gt;|&quot;loss / delay inferred → cwnd&lt;br/&gt;— congestion control&quot;| S</pre></div>
+<p>Two questions:</p>
+<h4 id="can-the-receiver-keep-up">Can the receiver keep up?</h4>
+<pre class="hljs"><code>Server sending:
+1 GB/s
+
+Laptop processing:
+10 MB/s</code></pre>
+<p>This is a <strong>receiver problem</strong>.</p>
+<p>Flow control.</p>
+<hr>
+<h4 id="can-the-network-keep-up">Can the network keep up?</h4>
+<pre class="hljs"><code>1 million users</code></pre>
+<p>all sending traffic through a router.</p>
+<p>Router buffer fills:</p>
+<pre class="hljs"><code>packet drop
+packet drop
+packet drop</code></pre>
+<p>This is a <strong>network problem</strong>.</p>
+<p>Congestion control.</p>
+<hr>
+<h2 id="flow-control">Flow Control</h2>
+<p>Protects the receiver.</p>
+<p>Suppose:</p>
+<pre class="hljs"><code>Server:
+very fast
+
+Client:
+very slow</code></pre>
+<p>Client has:</p>
+<pre class="hljs"><code>Receive Buffer</code></pre>
+<p>say:</p>
+<pre class="hljs"><code>64 KB</code></pre>
+<hr>
+<p>Without flow control:</p>
+<pre class="hljs"><code>Server
+ ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+Client Buffer</code></pre>
+<p>buffer fills.</p>
+<p>Then:</p>
+<pre class="hljs"><code>overflow</code></pre>
+<p>data loss.</p>
+<hr>
+<p>TCP Solution</p>
+<p>Receiver tells sender:</p>
+<pre class="hljs"><code>I can currently accept X more bytes.</code></pre>
+<p>This is called:</p>
+<h4 id="receive-window">Receive Window</h4>
+<p>or</p>
+<h4 id="advertised-window">Advertised Window</h4>
+<p>often written:</p>
+<pre class="hljs"><code>rwnd</code></pre>
+<hr>
+<p>Example</p>
+<p>Client buffer:</p>
+<pre class="hljs"><code>64 KB</code></pre>
+<p>Currently occupied:</p>
+<pre class="hljs"><code>48 KB</code></pre>
+<p>Free:</p>
+<pre class="hljs"><code>16 KB</code></pre>
+<p>Client sends ACK:</p>
+<pre class="hljs"><code>ACK=5000
+Window=16000</code></pre>
+<p>Meaning:</p>
+<blockquote>
+<p>I have room for 16KB.</p>
+</blockquote>
+<hr>
+<p>Sender cannot exceed that.</p>
+<hr>
+<h2 id="sliding-window">Sliding Window</h2>
+<p>Core interview concept.</p>
+<p>Suppose sender can have:</p>
+<pre class="hljs"><code>5 packets</code></pre>
+<p>outstanding.</p>
+<pre class="hljs"><code>[1][2][3][4][5]</code></pre>
+<p>sent.</p>
+<hr>
+<p>ACK for packet 1 arrives.</p>
+<p>Window slides:</p>
+<pre class="hljs"><code>[2][3][4][5][6]</code></pre>
+<p>Hence:</p>
+<h4 id="sliding-window-protocol">Sliding Window Protocol</h4>
+<hr>
+<p>Without it:</p>
+<pre class="hljs"><code>Send packet
+Wait ACK
+Send packet
+Wait ACK</code></pre>
+<p>Very slow.</p>
+<hr>
+<p>With sliding windows:</p>
+<pre class="hljs"><code>Send many packets
+Wait later</code></pre>
+<p>Pipeline stays full.</p>
+<hr>
+<h2 id="congestion-control">Congestion Control</h2>
+<p>Now a different problem.</p>
+<p>Imagine receiver is fine.</p>
+<p>But network looks like:</p>
+<pre class="hljs"><code>A
+ \
+  Router
+ /
+B</code></pre>
+<p>Router can handle:</p>
+<pre class="hljs"><code>100 Mbps</code></pre>
+<p>Users try:</p>
+<pre class="hljs"><code>1000 Mbps</code></pre>
+<p>Packets get dropped.</p>
+<hr>
+<p>Question:</p>
+<p>How does sender know network is overloaded?</p>
+<p>TCP treats:</p>
+<pre class="hljs"><code>packet loss</code></pre>
+<p>as a congestion signal.</p>
+<hr>
+<h2 id="congestion-window">Congestion Window</h2>
+<p>TCP maintains:</p>
+<pre class="hljs"><code>cwnd</code></pre>
+<p>Congestion Window.</p>
+<p>This is:</p>
+<pre class="hljs"><code>How much data
+I believe network can handle.</code></pre>
+<hr>
+<p>Sender may send:</p>
+<pre class="hljs"><code>min(rwnd, cwnd)</code></pre>
+<p>This formula is interview gold.</p>
+<p>Actual send window:</p>
+<pre class="hljs"><code>min(
+receiver capacity,
+network capacity
+)</code></pre>
+<hr>
+<h2 id="example">Example</h2>
+<p>Receiver says:</p>
+<pre class="hljs"><code>rwnd = 100 KB</code></pre>
+<p>Network currently allows:</p>
+<pre class="hljs"><code>cwnd = 20 KB</code></pre>
+<p>Result:</p>
+<pre class="hljs"><code>20 KB</code></pre>
+<p>can be in flight.</p>
+<hr>
+<h2 id="what-is-in-flight">What is &quot;in flight&quot;?</h2>
+<p>Sent but not ACKed.</p>
+<pre class="hljs"><code>Sender
+   ↓
+ Packet
+ Packet
+ Packet
+   ↓
+Receiver
+
+ACK not yet returned</code></pre>
+<p>These packets are &quot;in flight.&quot;</p>
+<hr>
+<h2 id="slow-start">Slow Start</h2>
+<p>Interview favorite.</p>
+<p>New TCP connection:</p>
+<pre class="hljs"><code>Network capacity = ?</code></pre>
+<p>TCP has no clue.</p>
+<p>Could be:</p>
+<pre class="hljs"><code>1 Mbps</code></pre>
+<p>or</p>
+<pre class="hljs"><code>100 Gbps</code></pre>
+<hr>
+<p>TCP starts cautiously.</p>
+<p>Historically:</p>
+<pre class="hljs"><code>cwnd = 1 MSS</code></pre>
+<p>Modern TCP:</p>
+<pre class="hljs"><code>10 MSS</code></pre>
+<p>roughly.</p>
+<hr>
+<p>Suppose:</p>
+<pre class="hljs"><code>1 packet</code></pre>
+<p>sent.</p>
+<p>ACK arrives.</p>
+<p>Increase:</p>
+<pre class="hljs"><code>2 packets</code></pre>
+<p>ACKs arrive.</p>
+<p>Increase:</p>
+<pre class="hljs"><code>4 packets</code></pre>
+<p>Then:</p>
+<pre class="hljs"><code>8
+16
+32
+64</code></pre>
+<p>Exponential growth.</p>
+<hr>
+<p>Why called slow start?</p>
+<p>1980s naming.</p>
+<p>Today it&#39;s actually very aggressive.</p>
+<p>😄</p>
+<hr>
+<h2 id="slow-start-graph">Slow Start Graph</h2>
+<pre class="hljs"><code>1
+2
+4
+8
+16
+32
+64</code></pre>
+<p>Exponential.</p>
+<hr>
+<h2 id="when-does-slow-start-stop">When Does Slow Start Stop?</h2>
+<p>A threshold:</p>
+<pre class="hljs"><code>ssthresh</code></pre>
+<p>Slow Start Threshold.</p>
+<p>Once reached:</p>
+<pre class="hljs"><code>Switch mode</code></pre>
+<hr>
+<h2 id="congestion-avoidance">Congestion Avoidance</h2>
+<p>Instead of doubling:</p>
+<pre class="hljs"><code>64
+65
+66
+67
+68</code></pre>
+<p>grow slowly.</p>
+<p>Linear growth.</p>
+<hr>
+<p>This is called:</p>
+<h4 id="additive-increase">Additive Increase</h4>
+<hr>
+<h2 id="packet-loss">Packet Loss</h2>
+<p>Suppose:</p>
+<pre class="hljs"><code>64
+65
+66
+67</code></pre>
+<p>Then packet drop.</p>
+<p>Network says:</p>
+<pre class="hljs"><code>Too much traffic.</code></pre>
+<hr>
+<p>TCP reacts.</p>
+<p>Classic TCP:</p>
+<h4 id="multiplicative-decrease">Multiplicative Decrease</h4>
+<pre class="hljs"><code>cwnd = cwnd / 2</code></pre>
+<p>Example:</p>
+<pre class="hljs"><code>64
+↓
+32</code></pre>
+<hr>
+<p>This gives famous:</p>
+<h4 id="aimd">AIMD</h4>
+<p>Additive Increase</p>
+<p>Multiplicative Decrease</p>
+<hr>
+<p>Interview phrase:</p>
+<blockquote>
+<p>TCP uses AIMD to converge toward fair bandwidth sharing.</p>
+</blockquote>
+<hr>
+<h2 id="how-does-tcp-detect-loss">How Does TCP Detect Loss?</h2>
+<p>Two major ways.</p>
+<hr>
+<h3 id="timeout">Timeout</h3>
+<p>Packet sent.</p>
+<p>No ACK.</p>
+<p>Wait.</p>
+<p>Wait.</p>
+<p>Wait.</p>
+<p>Timeout.</p>
+<pre class="hljs"><code>Packet lost.</code></pre>
+<hr>
+<p>Very expensive.</p>
+<hr>
+<h3 id="triple-duplicate-ack">Triple Duplicate ACK</h3>
+<p>Much more important.</p>
+<p>Suppose sender sent:</p>
+<pre class="hljs"><code>1
+2
+3
+4
+5</code></pre>
+<p>Packet 3 lost.</p>
+<p>Receiver gets:</p>
+<pre class="hljs"><code>1
+2
+4
+5</code></pre>
+<hr>
+<p>TCP delivers in order.</p>
+<p>So receiver repeatedly says:</p>
+<pre class="hljs"><code>ACK 3
+ACK 3
+ACK 3</code></pre>
+<p>Meaning:</p>
+<pre class="hljs"><code>Still waiting for byte 3.</code></pre>
+<hr>
+<p>Three duplicate ACKs:</p>
+<pre class="hljs"><code>ACK3
+ACK3
+ACK3</code></pre>
+<p>Sender infers:</p>
+<pre class="hljs"><code>Packet 3 probably lost.</code></pre>
+<hr>
+<h2 id="fast-retransmit">Fast Retransmit</h2>
+<p>Immediately retransmit.</p>
+<p>No timeout needed.</p>
+<p>Huge performance improvement.</p>
+<hr>
+<h2 id="fast-recovery">Fast Recovery</h2>
+<p>Instead of:</p>
+<pre class="hljs"><code>Reset to 1</code></pre>
+<p>which is expensive,</p>
+<p>TCP assumes:</p>
+<pre class="hljs"><code>Network mostly okay.</code></pre>
+<p>Reduce window somewhat and continue.</p>
+<hr>
+<h2 id="why-does-tcp-need-congestion-control">Why Does TCP Need Congestion Control?</h2>
+<p>Imagine 100 senders.</p>
+<p>Without congestion control:</p>
+<pre class="hljs"><code>Everyone sends faster
+↓
+Router drops more packets
+↓
+Everyone retransmits
+↓
+More packets
+↓
+More congestion</code></pre>
+<p>Network collapse.</p>
+<p>This happened on the early Internet.</p>
+<hr>
+<h2 id="interview-question">Interview Question</h2>
+<p>What is the difference between flow control and congestion control?</p>
+<p>Perfect answer:</p>
+<table>
+<thead>
+<tr>
+<th>Flow Control</th>
+<th>Congestion Control</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Protect receiver</td>
+<td>Protect network</td>
+</tr>
+<tr>
+<td>Receiver driven</td>
+<td>Sender driven</td>
+</tr>
+<tr>
+<td>Uses rwnd</td>
+<td>Uses cwnd</td>
+</tr>
+<tr>
+<td>Prevent buffer overflow</td>
+<td>Prevent router overload</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="window-formula">Window Formula</h2>
+<p>Most important equation:</p>
+<p>\text{Send Window}=\min(\text{rwnd},\text{cwnd})</p>
+<p>Meaning:</p>
+<p>Sender cannot exceed:</p>
+<ul>
+<li>receiver capacity (<code>rwnd</code>)</li>
+<li>network capacity (<code>cwnd</code>)</li>
+</ul>
+<hr>
+<h2 id="modern-tcp">Modern TCP</h2>
+<p>Interviewers may ask:</p>
+<h4 id="is-tcp-still-aimd-today">Is TCP still AIMD today?</h4>
+<p>Mostly yes conceptually.</p>
+<p>But modern variants include:</p>
+<ul>
+<li>TCP Reno</li>
+<li>TCP New Reno</li>
+<li>TCP Cubic (Linux default)</li>
+<li>BBR (Google)</li>
+</ul>
+<hr>
+<h4 id="what-is-bbr">What is BBR?</h4>
+<p>Traditional TCP:</p>
+<pre class="hljs"><code>Loss =&gt; congestion</code></pre>
+<p>BBR:</p>
+<pre class="hljs"><code>Measure bandwidth
+Measure RTT
+Estimate bottleneck</code></pre>
+<p>Instead of waiting for loss.</p>
+<p>Google uses it heavily.</p>
+<hr>
+<h2 id="30-second-interview-answer">30-Second Interview Answer</h2>
+<blockquote>
+<p>Flow control prevents overwhelming the receiver using the advertised receive window (rwnd). Congestion control prevents overwhelming the network using the congestion window (cwnd). TCP uses a sliding window and can have up to min(rwnd, cwnd) bytes in flight. Congestion control starts with slow start, grows exponentially, transitions to congestion avoidance with additive increase, and reacts to packet loss using multiplicative decrease, fast retransmit, and fast recovery.</p>
+</blockquote>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="io-multiplexing.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">I/O Multiplexing — select, poll, epoll</span></a><a class="pn-card pn-next" href="ip-subnetting.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">IP Addressing &amp; Subnetting</span></a></nav>
+</main>
+<aside class="toc"><div class="toc-title">On this page</div><ul><li class="toc-d1"><a href="#big-picture">Big Picture</a></li><li class="toc-d1"><a href="#flow-control">Flow Control</a></li><li class="toc-d1"><a href="#sliding-window">Sliding Window</a></li><li class="toc-d1"><a href="#congestion-control">Congestion Control</a></li><li class="toc-d1"><a href="#congestion-window">Congestion Window</a></li><li class="toc-d1"><a href="#example">Example</a></li><li class="toc-d1"><a href="#what-is-in-flight">What is &quot;in flight&quot;?</a></li><li class="toc-d1"><a href="#slow-start">Slow Start</a></li><li class="toc-d1"><a href="#slow-start-graph">Slow Start Graph</a></li><li class="toc-d1"><a href="#when-does-slow-start-stop">When Does Slow Start Stop?</a></li><li class="toc-d1"><a href="#congestion-avoidance">Congestion Avoidance</a></li><li class="toc-d1"><a href="#packet-loss">Packet Loss</a></li><li class="toc-d1"><a href="#how-does-tcp-detect-loss">How Does TCP Detect Loss?</a></li><li class="toc-d2"><a href="#timeout">Timeout</a></li><li class="toc-d2"><a href="#triple-duplicate-ack">Triple Duplicate ACK</a></li><li class="toc-d1"><a href="#fast-retransmit">Fast Retransmit</a></li><li class="toc-d1"><a href="#fast-recovery">Fast Recovery</a></li><li class="toc-d1"><a href="#why-does-tcp-need-congestion-control">Why Does TCP Need Congestion Control?</a></li><li class="toc-d1"><a href="#interview-question">Interview Question</a></li><li class="toc-d1"><a href="#window-formula">Window Formula</a></li><li class="toc-d1"><a href="#modern-tcp">Modern TCP</a></li><li class="toc-d1"><a href="#30-second-interview-answer">30-Second Interview Answer</a></li></ul></aside>
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

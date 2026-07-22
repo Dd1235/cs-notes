@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>C++ Core Flashcards · OOP &amp; C++</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#8A4E5E">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link is-active" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">OOP & C++</a><div class="side-group"><div class="side-label">Lecture Notes</div><ul><li><a class="side-link" href="volatile-macros-inline.html">volatile, Macros &amp; inline</a></li><li><a class="side-link" href="references-and-const.html">References &amp; const</a></li><li><a class="side-link" href="function-overloading.html">Function Overloading</a></li><li><a class="side-link" href="dynamic-memory.html">Dynamic Memory Management</a></li><li><a class="side-link" href="classes-and-objects.html">Classes &amp; Objects</a></li><li><a class="side-link" href="constructors.html">Constructors &amp; Information Hiding</a></li><li><a class="side-link" href="copy-semantics.html">Copy Constructor &amp; Copy Assignment</a></li><li><a class="side-link" href="constness-and-static.html">Const-ness &amp; Static Members</a></li><li><a class="side-link" href="friend-functions.html">Friend Functions &amp; Friend Classes</a></li><li><a class="side-link" href="operator-overloading.html">Operator Overloading</a></li><li><a class="side-link" href="inheritance.html">Inheritance &amp; Overriding</a></li><li><a class="side-link" href="multiple-private-inheritance.html">Multiple &amp; Private Inheritance</a></li><li><a class="side-link" href="virtual-functions.html">Virtual Functions &amp; Dynamic Binding</a></li><li><a class="side-link" href="vtables-and-const-cast.html">Virtual Pointer Tables &amp; const_cast</a></li><li><a class="side-link" href="cpp-casts.html">C++ Casts</a></li><li><a class="side-link" href="exceptions.html">Exceptions &amp; Error Handling</a></li><li><a class="side-link" href="try-catch-and-templates.html">try/catch &amp; Function Templates</a></li><li><a class="side-link" href="class-templates-functors.html">Class Templates &amp; Functors</a></li></ul></div><div class="side-group"><div class="side-label">Extras</div><ul><li><a class="side-link" href="compilation-model.html">The C++ Compilation Model</a></li><li><a class="side-link" href="template-metaprogramming.html">Template Metaprogramming</a></li><li><a class="side-link" href="build-your-own-vector.html">Exercise — Build Your Own Vector</a></li><li><a class="side-link" href="miscellany.html">Miscellany</a></li><li><a class="side-link" href="resources.html">Resources</a></li></ul></div><div class="side-group"><div class="side-label">Topic Notes</div><ul><li><a class="side-link" href="notes-cpp-core.html">C++ Core</a></li><li><a class="side-link" href="notes-cpp-oop.html">C++ OOP</a></li><li><a class="side-link" href="notes-cpp-advanced.html">C++ Advanced</a></li><li><a class="side-link" href="notes-ooad-uml.html">OOAD &amp; UML</a></li><li><a class="side-link" href="notes-design-patterns.html">Design Patterns</a></li><li><a class="side-link" href="notes-testing-sdlc.html">Testing, SDLC &amp; SE</a></li><li><a class="side-link" href="notes-interview-questions.html">Interview Questions</a></li></ul></div><div class="side-group"><div class="side-label">Flashcards</div><ul><li><a class="side-link is-active" href="cards-cpp-core.html">C++ Core Flashcards</a></li><li><a class="side-link" href="cards-oop-lifetime.html">OOP, Lifetime &amp; Memory Flashcards</a></li><li><a class="side-link" href="cards-polymorphism-stl.html">Polymorphism, Casts, Templates &amp; STL Flashcards</a></li><li><a class="side-link" href="cards-ooad-uml.html">OOAD &amp; UML Flashcards</a></li><li><a class="side-link" href="cards-design-patterns.html">Design Patterns Flashcards</a></li><li><a class="side-link" href="cards-testing-sdlc.html">Testing, SDLC &amp; SE Flashcards</a></li><li><a class="side-link" href="cards-interview-drills.html">Interview &amp; Code-Reading Drills</a></li></ul></div><div class="side-group"><div class="side-label">Under the Hood</div><ul><li><a class="side-link" href="memory-layout.html">Memory Layout, Alignment &amp; Padding</a></li></ul></div><div class="side-group"><div class="side-label">Revision</div><ul><li><a class="side-link" href="refresher.html">Rapid Refresher<span class="badge">&#9733;</span></a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">OOP & C++</a></div>
+  <div class="page-head">
+    <div class="page-kicker">OOP & C++</div>
+    <h1 class="page-title">C++ Core Flashcards</h1>
+    <div class="page-meta">6 min read &middot; source: <code>oops_cpp/flashcards/01_cpp_core.md</code></div>
+  </div>
+  <article class="prose"><h3 id="c001">C001</h3>
+<p>Tags: cpp, build</p>
+<p>Prompt: List the four main stages of the C++ build pipeline.</p>
+<p>Answer: Preprocessing expands includes/macros/conditionals; compilation turns each translation unit into object code; assembly emits machine instructions; linking combines object files/libraries and resolves symbols.</p>
+<h3 id="c002">C002</h3>
+<p>Tags: cpp, build, headers</p>
+<p>Prompt: What is a translation unit?</p>
+<p>Answer: One source file after preprocessing, including all headers textually included into it. The compiler compiles translation units independently.</p>
+<h3 id="c003">C003</h3>
+<p>Tags: cpp, headers</p>
+<p>Prompt: What belongs in a header vs a <code>.cpp</code> file?</p>
+<p>Answer: Headers usually contain declarations, type definitions, inline definitions, templates, and include guards. <code>.cpp</code> files contain non-template function/object definitions that should exist once.</p>
+<h3 id="c004">C004</h3>
+<p>Tags: cpp, odr</p>
+<p>Prompt: What is the One Definition Rule?</p>
+<p>Answer: A program should have exactly one definition of each non-inline entity across the linked program. Identical inline and template definitions may appear in multiple translation units.</p>
+<h3 id="c005">C005</h3>
+<p>Tags: cpp, linkage</p>
+<p>Prompt: Match each linkage construct: <code>extern int x;</code>, file-scope <code>static</code>, anonymous namespace, <code>extern &quot;C&quot;</code>.</p>
+<p>Answer: <code>extern int x;</code> declares a variable defined elsewhere. File-scope <code>static</code> gives internal linkage. Anonymous namespace is the modern internal-linkage mechanism for names in a translation unit. <code>extern &quot;C&quot;</code> disables C++ name mangling for C interoperability.</p>
+<h3 id="c006">C006</h3>
+<p>Tags: cpp, headers</p>
+<p>Prompt: Why should non-template function definitions generally not be put in headers?</p>
+<p>Answer: Including the header in multiple translation units creates multiple definitions at link time unless the function is <code>inline</code> and all definitions are identical.</p>
+<h3 id="c007">C007</h3>
+<p>Tags: cpp, templates, headers</p>
+<p>Prompt: Why are template definitions usually placed in headers?</p>
+<p>Answer: The compiler needs the full template body at the use site to instantiate code for the concrete template arguments.</p>
+<h3 id="c008">C008</h3>
+<p>Tags: cpp, mangling</p>
+<p>Prompt: Why does C++ use name mangling?</p>
+<p>Answer: C++ supports overloading, so linker symbols encode type/signature information to distinguish functions such as <code>f(int)</code> and <code>f(double)</code>.</p>
+<h3 id="c009">C009</h3>
+<p>Tags: cpp, memory</p>
+<p>Prompt: Name typical process memory regions and what they store.</p>
+<p>Answer: Text/code stores instructions; read-only data stores string literals/constants; data stores initialized globals/statics; BSS stores zero-initialized globals/statics; heap stores dynamic allocations; stack stores call frames and automatic locals.</p>
+<h3 id="c010">C010</h3>
+<p>Tags: cpp, lifetime</p>
+<p>Prompt: What is the lifetime of a local automatic variable, a static local variable, and a heap object?</p>
+<p>Answer: Automatic local: from declaration execution to scope exit. Static local: initialized once and lives until program termination. Heap object: from construction via <code>new</code>/allocator until destroyed/freed by the owner.</p>
+<h3 id="c011">C011</h3>
+<p>Tags: cpp, arrays</p>
+<p>Prompt: What does &quot;array decay&quot; mean?</p>
+<p>Answer: In many expressions, an array converts to a pointer to its first element. After decay, size information is lost, so <code>sizeof(parameter_array)</code> inside a function usually measures pointer size, not array length.</p>
+<h3 id="c012">C012</h3>
+<p>Tags: cpp, containers</p>
+<p>Prompt: Prefer which standard type for each need: fixed-size sequence, dynamic contiguous sequence, text, raw byte buffer ownership.</p>
+<p>Answer: <code>std::array&lt;T, N&gt;</code>, <code>std::vector&lt;T&gt;</code>, <code>std::string</code>, and <code>std::vector&lt;std::byte&gt;</code> or a smart pointer.</p>
+<h3 id="c013">C013</h3>
+<p>Tags: cpp, algorithms</p>
+<p>Prompt: What are the key preconditions/complexities for <code>sort</code>, <code>find</code>, and <code>binary_search</code>?</p>
+<p>Answer: <code>std::sort</code> needs random-access iterators and is usually <code>O(n log n)</code>. <code>std::find</code> is linear. <code>std::binary_search</code> needs a sorted range and is logarithmic comparisons.</p>
+<h3 id="c014">C014</h3>
+<p>Tags: cpp, const</p>
+<p>Prompt: Fill in: <code>const</code> means __; <code>constexpr</code> means __; <code>volatile</code> means __.</p>
+<p>Answer: <code>const</code> means not modifiable through that name. <code>constexpr</code> means evaluable at compile time when inputs allow. <code>volatile</code> means the value may change outside normal program flow; it is not a thread-synchronization primitive.</p>
+<h3 id="c015">C015</h3>
+<p>Tags: cpp, const, pointers</p>
+<p>Prompt: Decode <code>const int* p</code>, <code>int* const p</code>, and <code>const int* const p</code>.</p>
+<p>Answer: <code>const int* p</code>: pointer can move, pointee cannot be modified through <code>p</code>. <code>int* const p</code>: pointer cannot move, pointee can be modified. <code>const int* const p</code>: neither pointer nor pointee can be modified through <code>p</code>.</p>
+<h3 id="c016">C016</h3>
+<p>Tags: cpp, macros</p>
+<p>Prompt: Why is <code>#define SQUARE(x) ((x) * (x))</code> unsafe for <code>SQUARE(i++)</code>?</p>
+<p>Answer: The macro textually substitutes <code>i++</code> twice, so <code>i</code> is incremented twice and the expression has surprising side effects.</p>
+<h3 id="c017">C017</h3>
+<p>Tags: cpp, inline</p>
+<p>Prompt: In modern C++, what does <code>inline</code> primarily mean?</p>
+<p>Answer: It permits multiple identical definitions across translation units. It does not force the compiler to inline machine code.</p>
+<h3 id="c018">C018</h3>
+<p>Tags: cpp, references</p>
+<p>Prompt: Pointer vs reference: list three practical differences.</p>
+<p>Answer: A pointer can be null, can be rebound, and requires explicit dereference. A reference is normally a non-null alias, cannot be rebound, and is cleaner for required parameters.</p>
+<h3 id="c019">C019</h3>
+<p>Tags: cpp, references, lifetime</p>
+<p>Prompt: When is return-by-reference safe, and what is the classic bad example?</p>
+<p>Answer: Safe only when the referred object outlives the call, such as returning <code>v[0]</code> from a vector passed by reference. Bad: returning a reference to a local variable.</p>
+<h3 id="c020">C020</h3>
+<p>Tags: cpp, parameters</p>
+<p>Prompt: When would you pass a parameter as <code>T</code>, <code>T&amp;</code>, <code>const T&amp;</code>, or <code>T*</code>?</p>
+<p>Answer: <code>T</code> for cheap copies or ownership-independent values; <code>T&amp;</code> for required mutable argument; <code>const T&amp;</code> for required read-only large objects; <code>T*</code> for optional/maybe-null or pointer semantics.</p>
+<h3 id="c021">C021</h3>
+<p>Tags: cpp, functions</p>
+<p>Prompt: What is the rule for default arguments?</p>
+<p>Answer: Defaults are filled by the caller at compile time, must appear from right to left, and should usually be written in the declaration rather than repeated in definitions.</p>
+<h3 id="c022">C022</h3>
+<p>Tags: cpp, overloading</p>
+<p>Prompt: Order common overload-resolution preference levels.</p>
+<p>Answer: Exact match, promotion, standard conversion, user-defined conversion, variadic fallback.</p>
+<h3 id="c023">C023</h3>
+<p>Tags: cpp, dynamic-memory</p>
+<p>Prompt: Contrast <code>new</code>/<code>delete</code> with <code>malloc</code>/<code>free</code>.</p>
+<p>Answer: <code>new</code> allocates and constructs; <code>delete</code> destroys and deallocates. <code>malloc</code> only allocates raw bytes and returns <code>void*</code>; <code>free</code> only releases bytes and does not call destructors.</p>
+<h3 id="c024">C024</h3>
+<p>Tags: cpp, dynamic-memory</p>
+<p>Prompt: Which pairs must match: <code>malloc</code>, <code>new</code>, <code>new[]</code>, raw <code>operator new</code>?</p>
+<p>Answer: <code>malloc</code> with <code>free</code>; <code>new</code> with <code>delete</code>; <code>new[]</code> with <code>delete[]</code>; raw <code>operator new</code> with <code>operator delete</code> after manually constructing/destructing as needed.</p>
+<h3 id="c025">C025</h3>
+<p>Tags: cpp, undefined-behavior</p>
+<p>Prompt: Name eight common sources of undefined behavior.</p>
+<p>Answer: Out-of-bounds access, use-after-free, double delete, null dereference, returning reference to local, signed integer overflow, data race, and reading uninitialized storage.</p>
+<h3 id="c026">C026</h3>
+<p>Tags: cpp, stdlib</p>
+<p>Prompt: Why is <code>std::vector</code> usually preferred over a raw dynamic array?</p>
+<p>Answer: It owns memory via RAII, tracks size/capacity, handles construction/destruction, supports bounds-checked access via <code>at</code>, and integrates with algorithms through iterators.</p>
+<h3 id="c027">C027</h3>
+<p>Tags: cpp, namespaces</p>
+<p>Prompt: Why should <code>using namespace std;</code> not be placed in headers?</p>
+<p>Answer: It pollutes every translation unit that includes the header, creates name conflicts, and silently changes overload/name lookup for users.</p>
+<h3 id="c028">C028</h3>
+<p>Tags: cpp, scope-lifetime</p>
+<p>Prompt: Scope vs lifetime: what is the difference?</p>
+<p>Answer: Scope is where a name is visible in source code. Lifetime is when the object/storage exists at runtime. They often overlap but are not the same.</p>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="notes-interview-questions.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">Interview Questions</span></a><a class="pn-card pn-next" href="cards-oop-lifetime.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">OOP, Lifetime &amp; Memory Flashcards</span></a></nav>
+</main>
+<aside class="toc"><div class="toc-title">On this page</div><ul><li class="toc-d2"><a href="#c001">C001</a></li><li class="toc-d2"><a href="#c002">C002</a></li><li class="toc-d2"><a href="#c003">C003</a></li><li class="toc-d2"><a href="#c004">C004</a></li><li class="toc-d2"><a href="#c005">C005</a></li><li class="toc-d2"><a href="#c006">C006</a></li><li class="toc-d2"><a href="#c007">C007</a></li><li class="toc-d2"><a href="#c008">C008</a></li><li class="toc-d2"><a href="#c009">C009</a></li><li class="toc-d2"><a href="#c010">C010</a></li><li class="toc-d2"><a href="#c011">C011</a></li><li class="toc-d2"><a href="#c012">C012</a></li><li class="toc-d2"><a href="#c013">C013</a></li><li class="toc-d2"><a href="#c014">C014</a></li><li class="toc-d2"><a href="#c015">C015</a></li><li class="toc-d2"><a href="#c016">C016</a></li><li class="toc-d2"><a href="#c017">C017</a></li><li class="toc-d2"><a href="#c018">C018</a></li><li class="toc-d2"><a href="#c019">C019</a></li><li class="toc-d2"><a href="#c020">C020</a></li><li class="toc-d2"><a href="#c021">C021</a></li><li class="toc-d2"><a href="#c022">C022</a></li><li class="toc-d2"><a href="#c023">C023</a></li><li class="toc-d2"><a href="#c024">C024</a></li><li class="toc-d2"><a href="#c025">C025</a></li><li class="toc-d2"><a href="#c026">C026</a></li><li class="toc-d2"><a href="#c027">C027</a></li><li class="toc-d2"><a href="#c028">C028</a></li></ul></aside>
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

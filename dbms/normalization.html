@@ -1,0 +1,566 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Normalization · Database Systems</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#B05730">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link is-active" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">Database Systems</a><div class="side-group"><div class="side-label">Foundations</div><ul><li><a class="side-link" href="acid.html">ACID &amp; Isolation Levels</a></li><li><a class="side-link is-active" href="normalization.html">Normalization</a></li><li><a class="side-link" href="sql.html">SQL Essentials</a></li><li><a class="side-link" href="drop-delete-truncate.html">DROP vs DELETE vs TRUNCATE</a></li></ul></div><div class="side-group"><div class="side-label">Indexing & Storage</div><ul><li><a class="side-link" href="b-plus-trees.html">B+ Trees</a></li><li><a class="side-link" href="unique-indexes.html">Unique Indexes</a></li><li><a class="side-link" href="primary-vs-secondary-index.html">Primary vs Secondary Indexes</a></li><li><a class="side-link" href="write-ahead-logging.html">Write-Ahead Logging</a></li></ul></div><div class="side-group"><div class="side-label">Concurrency</div><ul><li><a class="side-link" href="concurrency-control.html">Concurrency Control Basics</a></li><li><a class="side-link" href="mvcc.html">MVCC in Depth</a></li><li><a class="side-link" href="mvcc-cmu.html">MVCC — CMU Lecture Notes</a></li></ul></div><div class="side-group"><div class="side-label">Scale & Patterns</div><ul><li><a class="side-link" href="sharding.html">Sharding vs Partitioning</a></li><li><a class="side-link" href="n-plus-one-problem.html">The N+1 Query Problem</a></li><li><a class="side-link" href="graph-databases.html">Graph Databases</a></li></ul></div><div class="side-group"><div class="side-label">SQL in Practice</div><ul><li><a class="side-link" href="joins.html">Joins — Semantics &amp; Algorithms</a></li><li><a class="side-link" href="window-functions.html">Window Functions</a></li></ul></div><div class="side-group"><div class="side-label">Distributed Data</div><ul><li><a class="side-link" href="cap-replication.html">CAP &amp; Replication</a></li></ul></div><div class="side-group"><div class="side-label">Revision</div><ul><li><a class="side-link" href="refresher.html">Rapid Refresher<span class="badge">&#9733;</span></a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">Database Systems</a></div>
+  <div class="page-head">
+    <div class="page-kicker">Database Systems</div>
+    <h1 class="page-title">Normalization</h1>
+    <div class="page-meta">9 min read &middot; source: <code>dbms/normalization.md</code></div>
+  </div>
+  <article class="prose"><ul>
+<li><p>data integrity (eg customer id with two dob)</p>
+</li>
+<li><p>normalized tables are protected from insertion, update, and deletion anamolies.</p>
+</li>
+<li><p>a functional dependency is a constraint between two sets of attributes in a relation.</p>
+</li>
+<li><p>trivial fd, non trivial fd, ffd, partial fd, transitive fd</p>
+</li>
+<li><p>Superkey - set of all keys that determine a row</p>
+</li>
+<li><p>Candidate key - minimal superkey</p>
+</li>
+<li><p>primary keyi s a candidate unique (unique not null)</p>
+</li>
+<li><p>alternate key : all candidate keys which are not pk</p>
+</li>
+<li><p>foreign key - point to pk of another table.</p>
+</li>
+<li><p>composite key - combination of two or more columns</p>
+</li>
+<li><p>partial dependencies only arise on composite canddiate key which violate 2nf</p>
+</li>
+<li><p>surrogate key, aurogenerated on natural comb</p>
+</li>
+</ul>
+<p>can find superkey, and candidate key from functional dependencies.</p>
+<p>Canonical cover or minimal cover of a set of functional dependencies - each fd has a single attribute on rhs, and minimal set on lhs</p>
+<p>insertion anamoly - certain attributes cannot be inserted without others being present (eg. student-course table student cannot be added unless course is present)</p>
+<p>update anamoly - duplicated data inconsistency, changing course name requires changing it for all students</p>
+<p>deletion anamoly - deleting student enrollment causes course to also be deleted.</p>
+<p>Normalization organizes data to minimize redundancy and avoid anomalies.</p>
+<p>For interviews, it helps to know both the <strong>formal textbook definition</strong> and the <strong>intuition</strong>.</p>
+<hr>
+<h2 id="1nf-first-normal-form">1NF (First Normal Form)</h2>
+<h4 id="textbook-definition">Textbook Definition</h4>
+<p>A relation is in 1NF if:</p>
+<ul>
+<li>All attributes contain atomic (indivisible) values.</li>
+<li>No repeating groups or arrays.</li>
+</ul>
+<h4 id="violates-1nf">Violates 1NF</h4>
+<table>
+<thead>
+<tr>
+<th>StudentID</th>
+<th>Phones</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>9999,8888</td>
+</tr>
+<tr>
+<td>2</td>
+<td>7777</td>
+</tr>
+</tbody></table>
+<p><code>Phones</code> contains multiple values.</p>
+<hr>
+<h4 id="convert-to-1nf">Convert to 1NF</h4>
+<table>
+<thead>
+<tr>
+<th>StudentID</th>
+<th>Phone</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>9999</td>
+</tr>
+<tr>
+<td>1</td>
+<td>8888</td>
+</tr>
+<tr>
+<td>2</td>
+<td>7777</td>
+</tr>
+</tbody></table>
+<h4 id="interview-one-liner">Interview One-Liner</h4>
+<blockquote>
+<p>1NF eliminates repeating groups and requires atomic values.</p>
+</blockquote>
+<hr>
+<h2 id="2nf-second-normal-form">2NF (Second Normal Form)</h2>
+<h4 id="textbook-definition-1">Textbook Definition</h4>
+<p>A relation is in 2NF if:</p>
+<ol>
+<li>It is in 1NF.</li>
+<li>Every non-prime attribute is fully functionally dependent on every candidate key.</li>
+</ol>
+<p>Equivalent:</p>
+<blockquote>
+<p>No partial dependencies.</p>
+</blockquote>
+<hr>
+<h4 id="example">Example</h4>
+<pre class="hljs"><code>Enrollment(
+    StudentID,
+    CourseID,
+    StudentName,
+    Grade
+)</code></pre>
+<p>Candidate Key:</p>
+<pre class="hljs"><code>(StudentID, CourseID)</code></pre>
+<p>FDs:</p>
+<pre class="hljs"><code>(StudentID, CourseID) -&gt; Grade
+StudentID -&gt; StudentName</code></pre>
+<p>Violation:</p>
+<pre class="hljs"><code>StudentID -&gt; StudentName</code></pre>
+<p>depends on only part of the key.</p>
+<hr>
+<h4 id="decomposition">Decomposition</h4>
+<pre class="hljs"><code>Students(
+    StudentID,
+    StudentName
+)
+
+Enrollments(
+    StudentID,
+    CourseID,
+    Grade
+)</code></pre>
+<h4 id="interview-one-liner-1">Interview One-Liner</h4>
+<blockquote>
+<p>2NF removes partial dependencies on composite keys.</p>
+</blockquote>
+<hr>
+<h2 id="3nf-third-normal-form">3NF (Third Normal Form)</h2>
+<h4 id="textbook-definition-2">Textbook Definition</h4>
+<p>A relation is in 3NF if:</p>
+<ol>
+<li>It is in 2NF.</li>
+<li>No transitive dependency of a non-prime attribute on a candidate key.</li>
+</ol>
+<p>Equivalent formal definition:</p>
+<p>For every FD:</p>
+<pre class="hljs"><code>X -&gt; A</code></pre>
+<p>either:</p>
+<ul>
+<li>X is a superkey, or</li>
+<li>A is a prime attribute.</li>
+</ul>
+<hr>
+<h4 id="example-1">Example</h4>
+<pre class="hljs"><code>Employee(
+    EmployeeID,
+    DepartmentID,
+    DepartmentName
+)</code></pre>
+<p>FDs:</p>
+<pre class="hljs"><code>EmployeeID -&gt; DepartmentID
+DepartmentID -&gt; DepartmentName</code></pre>
+<p>Therefore:</p>
+<pre class="hljs"><code>EmployeeID -&gt; DepartmentName</code></pre>
+<p>transitively.</p>
+<p>Violation.</p>
+<hr>
+<h4 id="decomposition-1">Decomposition</h4>
+<pre class="hljs"><code>Employee(
+    EmployeeID,
+    DepartmentID
+)
+
+Department(
+    DepartmentID,
+    DepartmentName
+)</code></pre>
+<h4 id="interview-one-liner-2">Interview One-Liner</h4>
+<blockquote>
+<p>3NF removes transitive dependencies.</p>
+</blockquote>
+<hr>
+<h2 id="bcnf-boyce-codd-normal-form">BCNF (Boyce-Codd Normal Form)</h2>
+<h4 id="textbook-definition-3">Textbook Definition</h4>
+<p>For every FD:</p>
+<pre class="hljs"><code>X -&gt; Y</code></pre>
+<p>X must be a superkey.</p>
+<hr>
+<h4 id="example-2">Example</h4>
+<pre class="hljs"><code>Teaching(
+    Student,
+    Course,
+    Instructor
+)</code></pre>
+<p>FDs:</p>
+<pre class="hljs"><code>(Student, Course) -&gt; Instructor
+Instructor -&gt; Course</code></pre>
+<p>Candidate keys:</p>
+<pre class="hljs"><code>(Student, Course)
+(Student, Instructor)</code></pre>
+<p>Notice:</p>
+<pre class="hljs"><code>Instructor -&gt; Course</code></pre>
+<p>Instructor is not a superkey.</p>
+<p>Violates BCNF.</p>
+<hr>
+<h4 id="why-3nf-allows-it">Why 3NF allows it</h4>
+<p><code>Course</code> is prime (part of a candidate key).</p>
+<p>So 3NF is satisfied.</p>
+<p>BCNF is stricter and rejects it.</p>
+<hr>
+<h4 id="interview-one-liner-3">Interview One-Liner</h4>
+<blockquote>
+<p>In BCNF every determinant must be a candidate key (or superkey).</p>
+</blockquote>
+<hr>
+<h2 id="4nf-fourth-normal-form">4NF (Fourth Normal Form)</h2>
+<h4 id="textbook-definition-4">Textbook Definition</h4>
+<p>A relation is in 4NF if:</p>
+<ol>
+<li>It is in BCNF.</li>
+<li>It contains no non-trivial multivalued dependencies.</li>
+</ol>
+<hr>
+<h4 id="example-3">Example</h4>
+<p>Suppose:</p>
+<pre class="hljs"><code>Student(
+    Student,
+    Language,
+    Hobby
+)</code></pre>
+<p>A student can independently have:</p>
+<pre class="hljs"><code>Languages:
+English
+French
+
+Hobbies:
+Cricket
+Chess</code></pre>
+<p>Stored as:</p>
+<pre class="hljs"><code>Student  Language  Hobby
+A        English   Cricket
+A        English   Chess
+A        French    Cricket
+A        French    Chess</code></pre>
+<p>Problem:</p>
+<pre class="hljs"><code>Student -&gt;-&gt; Language
+Student -&gt;-&gt; Hobby</code></pre>
+<p>(Multivalued dependencies)</p>
+<hr>
+<h4 id="decomposition-2">Decomposition</h4>
+<pre class="hljs"><code>StudentLanguage(
+    Student,
+    Language
+)
+
+StudentHobby(
+    Student,
+    Hobby
+)</code></pre>
+<h4 id="interview-one-liner-4">Interview One-Liner</h4>
+<blockquote>
+<p>4NF removes independent multivalued facts.</p>
+</blockquote>
+<hr>
+<h2 id="5nf-fifth-normal-form">5NF (Fifth Normal Form)</h2>
+<h4 id="textbook-definition-5">Textbook Definition</h4>
+<p>A relation is in 5NF if every join dependency is implied by candidate keys.</p>
+<hr>
+<h4 id="practical-example">Practical Example</h4>
+<p>Rarely asked.</p>
+<p>Imagine:</p>
+<pre class="hljs"><code>Supplier
+Part
+Project</code></pre>
+<p>A table can be losslessly decomposed into:</p>
+<pre class="hljs"><code>Supplier-Part
+Supplier-Project
+Part-Project</code></pre>
+<p>and reconstructed.</p>
+<p>5NF deals with such join dependencies.</p>
+<hr>
+<h4 id="interview-one-liner-5">Interview One-Liner</h4>
+<blockquote>
+<p>5NF removes redundancy caused by join dependencies.</p>
+</blockquote>
+<hr>
+<h2 id="what-most-interviews-actually-expect">What Most Interviews Actually Expect</h2>
+<p>Usually:</p>
+<table>
+<thead>
+<tr>
+<th>NF</th>
+<th>What to Remember</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1NF</td>
+<td>Atomic values</td>
+</tr>
+<tr>
+<td>2NF</td>
+<td>No partial dependency</td>
+</tr>
+<tr>
+<td>3NF</td>
+<td>No transitive dependency</td>
+</tr>
+<tr>
+<td>BCNF</td>
+<td>Every determinant is a superkey</td>
+</tr>
+<tr>
+<td>4NF</td>
+<td>No multivalued dependency</td>
+</tr>
+<tr>
+<td>5NF</td>
+<td>No join dependency</td>
+</tr>
+</tbody></table>
+<p>If asked to normalize a schema in an SDE interview, it is almost always a 1NF → 2NF → 3NF → BCNF problem. 4NF and 5NF are much more common in DBMS theory courses than in software engineering interviews.<br>Yes. A common interview question is something like:</p>
+<blockquote>
+<p>Given the following table, identify the normal form and normalize it to 3NF/BCNF.</p>
+</blockquote>
+<hr>
+<h3 id="starting-schema">Starting Schema</h3>
+<pre class="hljs"><code>OrderDetails(
+    OrderID,
+    CustomerID,
+    CustomerName,
+    CustomerAddress,
+    ProductID,
+    ProductName,
+    UnitPrice,
+    Quantity
+)</code></pre>
+<p>Sample data:</p>
+<table>
+<thead>
+<tr>
+<th>OrderID</th>
+<th>CustomerID</th>
+<th>CustomerName</th>
+<th>CustomerAddress</th>
+<th>ProductID</th>
+<th>ProductName</th>
+<th>UnitPrice</th>
+<th>Quantity</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1001</td>
+<td>C1</td>
+<td>Alice</td>
+<td>Bangalore</td>
+<td>P1</td>
+<td>Laptop</td>
+<td>50000</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1001</td>
+<td>C1</td>
+<td>Alice</td>
+<td>Bangalore</td>
+<td>P2</td>
+<td>Mouse</td>
+<td>1000</td>
+<td>2</td>
+</tr>
+<tr>
+<td>1002</td>
+<td>C2</td>
+<td>Bob</td>
+<td>Hyderabad</td>
+<td>P1</td>
+<td>Laptop</td>
+<td>50000</td>
+<td>1</td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="step-1-find-candidate-key">Step 1: Find Candidate Key</h3>
+<p>Can <code>OrderID</code> uniquely identify a row?</p>
+<p>No.</p>
+<pre class="hljs"><code>1001 appears twice</code></pre>
+<p>Can <code>ProductID</code>?</p>
+<p>No.</p>
+<p>The candidate key is:</p>
+<pre class="hljs"><code>(OrderID, ProductID)</code></pre>
+<hr>
+<h3 id="step-2-find-functional-dependencies">Step 2: Find Functional Dependencies</h3>
+<p>From business rules:</p>
+<pre class="hljs"><code>CustomerID -&gt; CustomerName, CustomerAddress
+
+ProductID -&gt; ProductName, UnitPrice
+
+OrderID -&gt; CustomerID
+
+(OrderID, ProductID) -&gt; Quantity</code></pre>
+<hr>
+<h2 id="check-1nf">Check 1NF</h2>
+<p>Everything is atomic.</p>
+<pre class="hljs"><code>✓ 1NF</code></pre>
+<hr>
+<h2 id="check-2nf">Check 2NF</h2>
+<p>Candidate key:</p>
+<pre class="hljs"><code>(OrderID, ProductID)</code></pre>
+<p>Look for attributes depending on only part of the key.</p>
+<h4 id="product-side">Product side</h4>
+<pre class="hljs"><code>ProductID -&gt; ProductName
+ProductID -&gt; UnitPrice</code></pre>
+<p>Depends only on ProductID.</p>
+<p>Partial dependency.</p>
+<hr>
+<h4 id="order-side">Order side</h4>
+<pre class="hljs"><code>OrderID -&gt; CustomerID</code></pre>
+<p>Depends only on OrderID.</p>
+<p>Partial dependency.</p>
+<hr>
+<p>Therefore:</p>
+<pre class="hljs"><code>✗ Not in 2NF</code></pre>
+<hr>
+<h2 id="remove-partial-dependencies-2nf">Remove Partial Dependencies (2NF)</h2>
+<p>Split product information:</p>
+<pre class="hljs"><code>Products(
+    ProductID,
+    ProductName,
+    UnitPrice
+)</code></pre>
+<p>Split order information:</p>
+<pre class="hljs"><code>Orders(
+    OrderID,
+    CustomerID
+)</code></pre>
+<p>Remaining:</p>
+<pre class="hljs"><code>OrderItems(
+    OrderID,
+    ProductID,
+    Quantity
+)</code></pre>
+<hr>
+<p>Current structure:</p>
+<pre class="hljs"><code>Orders
+OrderItems
+Products</code></pre>
+<hr>
+<h2 id="check-3nf">Check 3NF</h2>
+<p>Consider Orders:</p>
+<pre class="hljs"><code>Orders(
+    OrderID,
+    CustomerID,
+    CustomerName,
+    CustomerAddress
+)</code></pre>
+<p>FDs:</p>
+<pre class="hljs"><code>OrderID -&gt; CustomerID
+
+CustomerID -&gt; CustomerName, CustomerAddress</code></pre>
+<p>This implies:</p>
+<pre class="hljs"><code>OrderID -&gt; CustomerName
+OrderID -&gt; CustomerAddress</code></pre>
+<p>through CustomerID.</p>
+<p>That&#39;s a transitive dependency.</p>
+<hr>
+<p>Therefore:</p>
+<pre class="hljs"><code>✗ Not in 3NF</code></pre>
+<hr>
+<h2 id="remove-transitive-dependency">Remove Transitive Dependency</h2>
+<p>Create:</p>
+<pre class="hljs"><code>Customers(
+    CustomerID,
+    CustomerName,
+    CustomerAddress
+)</code></pre>
+<p>and:</p>
+<pre class="hljs"><code>Orders(
+    OrderID,
+    CustomerID
+)</code></pre>
+<hr>
+<h2 id="final-3nf-schema">Final 3NF Schema</h2>
+<pre class="hljs"><code>Customers(
+    CustomerID,
+    CustomerName,
+    CustomerAddress
+)
+
+Products(
+    ProductID,
+    ProductName,
+    UnitPrice
+)
+
+Orders(
+    OrderID,
+    CustomerID
+)
+
+OrderItems(
+    OrderID,
+    ProductID,
+    Quantity
+)</code></pre>
+<hr>
+<h3 id="how-an-interviewer-expects-you-to-think">How an interviewer expects you to think</h3>
+<p>Usually:</p>
+<h4 id="step-1">Step 1</h4>
+<p>Find candidate key.</p>
+<pre class="hljs"><code>(OrderID, ProductID)</code></pre>
+<hr>
+<h4 id="step-2">Step 2</h4>
+<p>Write FDs.</p>
+<pre class="hljs"><code>OrderID -&gt; CustomerID
+CustomerID -&gt; CustomerName, Address
+ProductID -&gt; ProductName, Price
+(OrderID, ProductID) -&gt; Quantity</code></pre>
+<hr>
+<h4 id="step-3">Step 3</h4>
+<p>Find partial dependencies.</p>
+<pre class="hljs"><code>OrderID -&gt; CustomerID
+ProductID -&gt; ProductName
+ProductID -&gt; Price</code></pre>
+<p>Remove them → 2NF.</p>
+<hr>
+<h4 id="step-4">Step 4</h4>
+<p>Find transitive dependencies.</p>
+<pre class="hljs"><code>OrderID -&gt; CustomerID
+CustomerID -&gt; Name, Address</code></pre>
+<p>Remove them → 3NF.</p>
+<hr>
+<p>This order-management example is probably the most realistic normalization problem you&#39;ll see in SDE interviews because it resembles an actual e-commerce schema and exercises both <strong>partial</strong> and <strong>transitive</strong> dependency removal.</p>
+<p>a foreign key establishes a relationship between two tables.<br>Column Type: The FK column in the child table must have the same data type as the primary key column in the parent table.<br>Referential Integrity: The FK ensures data consistency by either rejecting the change, setting it to NULL, or cascading the changes.<br>Joining Tables: Utilizing the foreign key in SQL queries helps combine related data from multiple tables.</p>
+<p>Denormalization is the process of reducing normalization (typically for performance reasons) by introducing redundant data into one or more tables. While normalization ensures data integrity, denormalization mainly focuses on improving query performance by eliminating complex JOIN operations.</p>
+<p>Benefits and Drawbacks<br>CTEs: With multiple Common Table Expressions, maintaining benefits of a normalized schema can be achieved in a denormalized setup, potentially eliminating the drawbacks.<br>Maintainability: Denormalization can make data harder to manage and keep consistent.<br>Query Performance: Queries may become more efficient, as data required from different normalized tables is now available in a single denormalized table.<br>Storage Efficiency: Queries that access multiple smaller tables require less disk I/O and can fit into the memory more easily than queries accessing a few larger tables.<br>Data Integrity: Redundant data can lead to inconsistencies if not managed properly.<br>Case-by-Case Considerations<br>Lookup Tables: Tables with relatively static data (like Status types or Location information) that are frequently joined with other tables in your system, are strong candidates for denormalization. This can make frequent lookups faster.</p>
+<p>Reporting and Analytics: Systems that are skewed towards read operations over write operations benefit from denormalization. When designing systems for reporting or analytics, it&#39;s common practice to have dedicated read replicas that are denormalized for improved read performance.</p>
+<p>Partitioning: In large systems, denormalization can be used to partition data across different tables or clusters to distribute load. For example, customer data can be segregated into one cluster, and order data into another, linked via denormalization.</p>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="acid.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">ACID &amp; Isolation Levels</span></a><a class="pn-card pn-next" href="sql.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">SQL Essentials</span></a></nav>
+</main>
+<aside class="toc"><div class="toc-title">On this page</div><ul><li class="toc-d1"><a href="#1nf-first-normal-form">1NF (First Normal Form)</a></li><li class="toc-d1"><a href="#2nf-second-normal-form">2NF (Second Normal Form)</a></li><li class="toc-d1"><a href="#3nf-third-normal-form">3NF (Third Normal Form)</a></li><li class="toc-d1"><a href="#bcnf-boyce-codd-normal-form">BCNF (Boyce-Codd Normal Form)</a></li><li class="toc-d1"><a href="#4nf-fourth-normal-form">4NF (Fourth Normal Form)</a></li><li class="toc-d1"><a href="#5nf-fifth-normal-form">5NF (Fifth Normal Form)</a></li><li class="toc-d1"><a href="#what-most-interviews-actually-expect">What Most Interviews Actually Expect</a></li><li class="toc-d2"><a href="#starting-schema">Starting Schema</a></li><li class="toc-d2"><a href="#step-1-find-candidate-key">Step 1: Find Candidate Key</a></li><li class="toc-d2"><a href="#step-2-find-functional-dependencies">Step 2: Find Functional Dependencies</a></li><li class="toc-d1"><a href="#check-1nf">Check 1NF</a></li><li class="toc-d1"><a href="#check-2nf">Check 2NF</a></li><li class="toc-d1"><a href="#remove-partial-dependencies-2nf">Remove Partial Dependencies (2NF)</a></li><li class="toc-d1"><a href="#check-3nf">Check 3NF</a></li><li class="toc-d1"><a href="#remove-transitive-dependency">Remove Transitive Dependency</a></li><li class="toc-d1"><a href="#final-3nf-schema">Final 3NF Schema</a></li><li class="toc-d2"><a href="#how-an-interviewer-expects-you-to-think">How an interviewer expects you to think</a></li></ul></aside>
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>B+ Trees · Database Systems</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script type="module">
+import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+mermaid.initialize({
+  startOnLoad: true,
+  theme: 'base',
+  themeVariables: {
+    fontFamily: 'Inter, sans-serif',
+    fontSize: '14px',
+    primaryColor: '#F1E8D7',
+    primaryTextColor: '#2E2A21',
+    primaryBorderColor: '#8B8170',
+    lineColor: '#57503F',
+    secondaryColor: '#FDFAF3',
+    tertiaryColor: '#FBF6EA',
+    clusterBkg: '#FBF6EA',
+    clusterBorder: '#E2D8C3',
+    actorBkg: '#F1E8D7',
+    actorBorder: '#8B8170',
+    actorTextColor: '#2E2A21',
+    actorLineColor: '#B8AD97',
+    signalColor: '#57503F',
+    signalTextColor: '#2E2A21',
+    labelBoxBkgColor: '#F1E8D7',
+    labelTextColor: '#2E2A21',
+    loopTextColor: '#57503F',
+    noteBkgColor: '#FBF3DC',
+    noteBorderColor: '#D9B36C',
+    noteTextColor: '#57503F',
+    activationBkgColor: '#EFE6D2',
+    activationBorderColor: '#8B8170',
+    edgeLabelBackground: '#F7F1E4'
+  }
+});
+</script>
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#B05730">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link is-active" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">Database Systems</a><div class="side-group"><div class="side-label">Foundations</div><ul><li><a class="side-link" href="acid.html">ACID &amp; Isolation Levels</a></li><li><a class="side-link" href="normalization.html">Normalization</a></li><li><a class="side-link" href="sql.html">SQL Essentials</a></li><li><a class="side-link" href="drop-delete-truncate.html">DROP vs DELETE vs TRUNCATE</a></li></ul></div><div class="side-group"><div class="side-label">Indexing & Storage</div><ul><li><a class="side-link is-active" href="b-plus-trees.html">B+ Trees</a></li><li><a class="side-link" href="unique-indexes.html">Unique Indexes</a></li><li><a class="side-link" href="primary-vs-secondary-index.html">Primary vs Secondary Indexes</a></li><li><a class="side-link" href="write-ahead-logging.html">Write-Ahead Logging</a></li></ul></div><div class="side-group"><div class="side-label">Concurrency</div><ul><li><a class="side-link" href="concurrency-control.html">Concurrency Control Basics</a></li><li><a class="side-link" href="mvcc.html">MVCC in Depth</a></li><li><a class="side-link" href="mvcc-cmu.html">MVCC — CMU Lecture Notes</a></li></ul></div><div class="side-group"><div class="side-label">Scale & Patterns</div><ul><li><a class="side-link" href="sharding.html">Sharding vs Partitioning</a></li><li><a class="side-link" href="n-plus-one-problem.html">The N+1 Query Problem</a></li><li><a class="side-link" href="graph-databases.html">Graph Databases</a></li></ul></div><div class="side-group"><div class="side-label">SQL in Practice</div><ul><li><a class="side-link" href="joins.html">Joins — Semantics &amp; Algorithms</a></li><li><a class="side-link" href="window-functions.html">Window Functions</a></li></ul></div><div class="side-group"><div class="side-label">Distributed Data</div><ul><li><a class="side-link" href="cap-replication.html">CAP &amp; Replication</a></li></ul></div><div class="side-group"><div class="side-label">Revision</div><ul><li><a class="side-link" href="refresher.html">Rapid Refresher<span class="badge">&#9733;</span></a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">Database Systems</a></div>
+  <div class="page-head">
+    <div class="page-kicker">Database Systems</div>
+    <h1 class="page-title">B+ Trees</h1>
+    <div class="page-meta">2 min read &middot; source: <code>dbms/b+tree.md</code></div>
+  </div>
+  <article class="prose"><h3 id="why-not-a-flat-file">Why not a flat file?</h3>
+<p>If you store records in a file sequentially, everything is O(n):</p>
+<ul>
+<li>you cannot insert efficiently in the middle</li>
+<li>an update can overwrite in place only if it stays within the same width</li>
+<li>finding one record is a linear scan</li>
+<li>deleting means writing a new file without that entry/row</li>
+</ul>
+<h3 id="the-b-tree-idea">The B+ tree idea</h3>
+<p>The size of a node is chosen to be approximately the <strong>disk block size</strong>, because the OS reads an entire block at a time — say the block is 4 kB and one row is ~40 B, that&#39;s about <strong>100 rows per node</strong>.</p>
+<ul>
+<li>Every B+ tree is <strong>serialized and stored on disk</strong>; each node contains an offset, and that offset is the pointer.</li>
+<li><strong>Leaf nodes store the actual data</strong> (or pointers to it); <strong>non-leaf nodes hold only routing information</strong> (separator keys).</li>
+<li>Databases care about <strong>disk page reads, not CPU comparisons</strong> — a shallow, wide tree wins even if each node needs a binary search inside.</li>
+</ul>
+<div class="diagram"><pre class="mermaid">graph TD
+    R[&quot;root · keys: 40 | 70&quot;]
+    A[&quot;internal · 10 | 25&quot;]
+    B[&quot;internal · 40 | 55&quot;]
+    C[&quot;internal · 70 | 85&quot;]
+    L1[&quot;leaf 1–9&quot;] --&gt; L2[&quot;leaf 10–24&quot;] --&gt; L3[&quot;leaf 25–39&quot;] --&gt; L4[&quot;leaf 40–54&quot;] --&gt; L5[&quot;leaf 55–69&quot;] --&gt; L6[&quot;leaf 70–84&quot;] --&gt; L7[&quot;leaf 85–99&quot;]
+    R --&gt; A &amp; B &amp; C
+    A --&gt; L1 &amp; L2 &amp; L3
+    B --&gt; L4 &amp; L5
+    C --&gt; L6 &amp; L7</pre></div>
+<p><em>Leaves are linked left-to-right — that chain is what makes range scans cheap.</em></p>
+<h3 id="b-tree-vs-b-tree">B tree vs B+ tree</h3>
+<ul>
+<li>A <strong>B tree</strong> allows data in non-leaf nodes as well.</li>
+<li>A <strong>B+ tree</strong> keeps data <strong>only in leaf nodes</strong> — this helps range queries, because actual records sit in sorted order at the leaf level and the leaf nodes are <strong>linked together</strong>: find the start of the range, then walk the sibling chain.</li>
+<li>Keys-only internal nodes mean a B+ tree offers <strong>higher fanout</strong> than a B tree, which makes the tree very <strong>shallow</strong> — a 3–4 level tree can index billions of rows.</li>
+</ul>
+<h3 id="clustered-vs-unclustered">Clustered vs unclustered</h3>
+<ul>
+<li><strong>PostgreSQL</strong>: heap table + B+ trees. Actual rows live in heap pages <strong>without any ordering</strong>, and the B+ tree is just index storage — an <strong>unclustered index</strong>.</li>
+<li><strong>MySQL (InnoDB) and Oracle</strong> use clustered / index-organized storage: <strong>the B+ tree <em>is</em> the table</strong> — leaves hold the full rows, physically ordered by primary key.</li>
+<li>MongoDB also uses B+ trees (WiredTiger).</li>
+</ul>
+<h3 id="interview-one-liners">Interview one-liners</h3>
+<ul>
+<li>&quot;Why B+ tree over hash index?&quot; — hash gives O(1) point lookups but <strong>no range scans, no ordering, no prefix matches</strong>; B+ gives O(log n) everything.</li>
+<li>&quot;Why is fanout the number that matters?&quot; — tree height = ceil(log_fanout N), and height = number of disk reads per lookup.</li>
+<li>Insert into a full node → <strong>split</strong>, push the middle key up; splits cascading to the root are how the tree grows taller (rarely).</li>
+</ul>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="drop-delete-truncate.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">DROP vs DELETE vs TRUNCATE</span></a><a class="pn-card pn-next" href="unique-indexes.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">Unique Indexes</span></a></nav>
+</main>
+<aside class="toc"><div class="toc-title">On this page</div><ul><li class="toc-d2"><a href="#why-not-a-flat-file">Why not a flat file?</a></li><li class="toc-d2"><a href="#the-b-tree-idea">The B+ tree idea</a></li><li class="toc-d2"><a href="#b-tree-vs-b-tree">B tree vs B+ tree</a></li><li class="toc-d2"><a href="#clustered-vs-unclustered">Clustered vs unclustered</a></li><li class="toc-d2"><a href="#interview-one-liners">Interview one-liners</a></li></ul></aside>
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

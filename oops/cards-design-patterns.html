@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Design Patterns Flashcards · OOP &amp; C++</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#8A4E5E">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link is-active" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">OOP & C++</a><div class="side-group"><div class="side-label">Lecture Notes</div><ul><li><a class="side-link" href="volatile-macros-inline.html">volatile, Macros &amp; inline</a></li><li><a class="side-link" href="references-and-const.html">References &amp; const</a></li><li><a class="side-link" href="function-overloading.html">Function Overloading</a></li><li><a class="side-link" href="dynamic-memory.html">Dynamic Memory Management</a></li><li><a class="side-link" href="classes-and-objects.html">Classes &amp; Objects</a></li><li><a class="side-link" href="constructors.html">Constructors &amp; Information Hiding</a></li><li><a class="side-link" href="copy-semantics.html">Copy Constructor &amp; Copy Assignment</a></li><li><a class="side-link" href="constness-and-static.html">Const-ness &amp; Static Members</a></li><li><a class="side-link" href="friend-functions.html">Friend Functions &amp; Friend Classes</a></li><li><a class="side-link" href="operator-overloading.html">Operator Overloading</a></li><li><a class="side-link" href="inheritance.html">Inheritance &amp; Overriding</a></li><li><a class="side-link" href="multiple-private-inheritance.html">Multiple &amp; Private Inheritance</a></li><li><a class="side-link" href="virtual-functions.html">Virtual Functions &amp; Dynamic Binding</a></li><li><a class="side-link" href="vtables-and-const-cast.html">Virtual Pointer Tables &amp; const_cast</a></li><li><a class="side-link" href="cpp-casts.html">C++ Casts</a></li><li><a class="side-link" href="exceptions.html">Exceptions &amp; Error Handling</a></li><li><a class="side-link" href="try-catch-and-templates.html">try/catch &amp; Function Templates</a></li><li><a class="side-link" href="class-templates-functors.html">Class Templates &amp; Functors</a></li></ul></div><div class="side-group"><div class="side-label">Extras</div><ul><li><a class="side-link" href="compilation-model.html">The C++ Compilation Model</a></li><li><a class="side-link" href="template-metaprogramming.html">Template Metaprogramming</a></li><li><a class="side-link" href="build-your-own-vector.html">Exercise — Build Your Own Vector</a></li><li><a class="side-link" href="miscellany.html">Miscellany</a></li><li><a class="side-link" href="resources.html">Resources</a></li></ul></div><div class="side-group"><div class="side-label">Topic Notes</div><ul><li><a class="side-link" href="notes-cpp-core.html">C++ Core</a></li><li><a class="side-link" href="notes-cpp-oop.html">C++ OOP</a></li><li><a class="side-link" href="notes-cpp-advanced.html">C++ Advanced</a></li><li><a class="side-link" href="notes-ooad-uml.html">OOAD &amp; UML</a></li><li><a class="side-link" href="notes-design-patterns.html">Design Patterns</a></li><li><a class="side-link" href="notes-testing-sdlc.html">Testing, SDLC &amp; SE</a></li><li><a class="side-link" href="notes-interview-questions.html">Interview Questions</a></li></ul></div><div class="side-group"><div class="side-label">Flashcards</div><ul><li><a class="side-link" href="cards-cpp-core.html">C++ Core Flashcards</a></li><li><a class="side-link" href="cards-oop-lifetime.html">OOP, Lifetime &amp; Memory Flashcards</a></li><li><a class="side-link" href="cards-polymorphism-stl.html">Polymorphism, Casts, Templates &amp; STL Flashcards</a></li><li><a class="side-link" href="cards-ooad-uml.html">OOAD &amp; UML Flashcards</a></li><li><a class="side-link is-active" href="cards-design-patterns.html">Design Patterns Flashcards</a></li><li><a class="side-link" href="cards-testing-sdlc.html">Testing, SDLC &amp; SE Flashcards</a></li><li><a class="side-link" href="cards-interview-drills.html">Interview &amp; Code-Reading Drills</a></li></ul></div><div class="side-group"><div class="side-label">Under the Hood</div><ul><li><a class="side-link" href="memory-layout.html">Memory Layout, Alignment &amp; Padding</a></li></ul></div><div class="side-group"><div class="side-label">Revision</div><ul><li><a class="side-link" href="refresher.html">Rapid Refresher<span class="badge">&#9733;</span></a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">OOP & C++</a></div>
+  <div class="page-head">
+    <div class="page-kicker">OOP & C++</div>
+    <h1 class="page-title">Design Patterns Flashcards</h1>
+    <div class="page-meta">4 min read &middot; source: <code>oops_cpp/flashcards/05_design_patterns.md</code></div>
+  </div>
+  <article class="prose"><h3 id="p001">P001</h3>
+<p>Tags: patterns</p>
+<p>Prompt: What is a design pattern?</p>
+<p>Answer: A reusable solution shape for a recurring design problem. It communicates intent and manages change, but should not be forced where simple code suffices.</p>
+<h3 id="p002">P002</h3>
+<p>Tags: patterns, interview</p>
+<p>Prompt: In interviews, what four points should you explain for any pattern?</p>
+<p>Answer: The problem it solves, its structure, its tradeoff, and when not to use it.</p>
+<h3 id="p003">P003</h3>
+<p>Tags: patterns, map</p>
+<p>Prompt: Match pattern to core idea: Iterator, Command, Singleton, Factory Method, Abstract Factory, Visitor.</p>
+<p>Answer: Iterator traverses without exposing representation. Command wraps a request as an object. Singleton provides one shared instance. Factory Method lets subclasses/factories decide one product type. Abstract Factory creates compatible families. Visitor adds operations over a stable object structure.</p>
+<h3 id="p004">P004</h3>
+<p>Tags: iterator</p>
+<p>Prompt: Intent of Iterator?</p>
+<p>Answer: Provide sequential access to elements without exposing the collection&#39;s internal representation.</p>
+<h3 id="p005">P005</h3>
+<p>Tags: iterator, stl</p>
+<p>Prompt: Why does Iterator enable generic algorithms?</p>
+<p>Answer: Algorithms operate on iterator ranges, so they do not need to know the concrete container representation.</p>
+<h3 id="p006">P006</h3>
+<p>Tags: iterator, edge-case</p>
+<p>Prompt: What iterator invalidation issue matters for <code>vector</code>?</p>
+<p>Answer: Reallocation can invalidate all iterators, references, and pointers to elements. Insert/erase can also invalidate from the modification point onward.</p>
+<h3 id="p007">P007</h3>
+<p>Tags: iterator, edge-case</p>
+<p>Prompt: Why are <code>list</code> iterators often more stable than <code>vector</code> iterators?</p>
+<p>Answer: Linked nodes are not moved during unrelated insert/erase, so iterators to other nodes often remain valid.</p>
+<h3 id="p008">P008</h3>
+<p>Tags: command</p>
+<p>Prompt: Intent of Command?</p>
+<p>Answer: Represent an action/request as an object so it can be queued, logged, undone, retried, or decoupled from the invoker.</p>
+<h3 id="p009">P009</h3>
+<p>Tags: command</p>
+<p>Prompt: Common uses of Command?</p>
+<p>Answer: Undo/redo, task queues, macro recording, logging requests, GUI button actions, and decoupling UI from operations.</p>
+<h3 id="p010">P010</h3>
+<p>Tags: command, undo</p>
+<p>Prompt: What state is needed for undo in Command?</p>
+<p>Answer: Enough previous state or inverse-operation data to restore the receiver to its earlier state.</p>
+<h3 id="p011">P011</h3>
+<p>Tags: command, modern-cpp</p>
+<p>Prompt: When can <code>std::function&lt;void()&gt;</code> replace a Command hierarchy?</p>
+<p>Answer: For simple fire-and-forget actions without identity, metadata, serialization, or rich undo state.</p>
+<h3 id="p012">P012</h3>
+<p>Tags: singleton</p>
+<p>Prompt: Intent of Singleton?</p>
+<p>Answer: Ensure exactly one instance and provide controlled global access to it.</p>
+<h3 id="p013">P013</h3>
+<p>Tags: singleton, cpp</p>
+<p>Prompt: Why is function-local static Singleton preferred in modern C++?</p>
+<p>Answer: Initialization is lazy and thread-safe since C++11, and it avoids manual heap allocation/deletion.</p>
+<h3 id="p014">P014</h3>
+<p>Tags: singleton, tradeoff</p>
+<p>Prompt: Singleton tradeoffs?</p>
+<p>Answer: It centralizes a truly unique resource, but creates hidden global state, testing difficulty, lifetime-order issues, and risk of becoming a dumping ground.</p>
+<h3 id="p015">P015</h3>
+<p>Tags: singleton, design</p>
+<p>Prompt: Interview answer: is Singleton always bad?</p>
+<p>Answer: No. It can be appropriate for truly unique process-wide resources, but dependency injection is often more testable and explicit.</p>
+<h3 id="p016">P016</h3>
+<p>Tags: factory-method</p>
+<p>Prompt: Intent of Factory Method?</p>
+<p>Answer: Define an interface/hook for object creation while letting subclasses or concrete factories decide the product class.</p>
+<h3 id="p017">P017</h3>
+<p>Tags: factory-method</p>
+<p>Prompt: When is Factory Method useful?</p>
+<p>Answer: Framework hooks, pluggable creation, runtime/subclass-dependent product choice, and avoiding scattered construction logic.</p>
+<h3 id="p018">P018</h3>
+<p>Tags: factory-method, tradeoff</p>
+<p>Prompt: Factory Method tradeoff?</p>
+<p>Answer: It centralizes variation in creation but adds indirection and can be overkill when a direct constructor is clear.</p>
+<h3 id="p019">P019</h3>
+<p>Tags: abstract-factory</p>
+<p>Prompt: Intent of Abstract Factory?</p>
+<p>Answer: Create families of related/compatible objects without naming their concrete classes.</p>
+<h3 id="p020">P020</h3>
+<p>Tags: abstract-factory</p>
+<p>Prompt: Where is Abstract Factory a natural fit?</p>
+<p>Answer: Platform-specific UI widgets, theme families, device families, or any related products that must be compatible.</p>
+<h3 id="p021">P021</h3>
+<p>Tags: abstract-factory, tradeoff</p>
+<p>Prompt: Abstract Factory is easy to extend along which axis, and hard along which axis?</p>
+<p>Answer: Easy to add new product families. Hard to add a new product kind because every factory interface and concrete factory must change.</p>
+<h3 id="p022">P022</h3>
+<p>Tags: factory-method, abstract-factory</p>
+<p>Prompt: Factory Method vs Abstract Factory?</p>
+<p>Answer: Factory Method varies creation of one product type through a method/subclass. Abstract Factory provides an object that creates a family of related products.</p>
+<h3 id="p023">P023</h3>
+<p>Tags: visitor</p>
+<p>Prompt: Intent of Visitor?</p>
+<p>Answer: Add operations to a stable object structure without repeatedly modifying each element class.</p>
+<h3 id="p024">P024</h3>
+<p>Tags: visitor</p>
+<p>Prompt: Where is Visitor commonly used?</p>
+<p>Answer: ASTs, document trees, interpreters/compilers, expression trees, and stable hierarchies needing many external operations.</p>
+<h3 id="p025">P025</h3>
+<p>Tags: visitor, tradeoff</p>
+<p>Prompt: Visitor tradeoff?</p>
+<p>Answer: Easy to add new operations; hard to add new element types because every visitor interface/implementation must change.</p>
+<h3 id="p026">P026</h3>
+<p>Tags: visitor, design</p>
+<p>Prompt: Visitor vs virtual methods?</p>
+<p>Answer: Use virtual methods when behavior is core to the object. Use Visitor when many external operations must run over a stable hierarchy.</p>
+<h3 id="p027">P027</h3>
+<p>Tags: pattern-selection</p>
+<p>Prompt: Which questions help select a pattern?</p>
+<p>Answer: What varies? What stays stable? Is this creation, traversal, behavior encapsulation, or operation extension? Would a standard library tool be simpler? Does it improve testability?</p>
+<h3 id="p028">P028</h3>
+<p>Tags: pattern-selection</p>
+<p>Prompt: Which pattern can model a queue of deferred actions?</p>
+<p>Answer: Command.</p>
+<h3 id="p029">P029</h3>
+<p>Tags: pattern-selection</p>
+<p>Prompt: Which pattern helps traverse a custom tree?</p>
+<p>Answer: Iterator for traversal; Visitor if the goal is to perform many operations over a stable tree structure.</p>
+<h3 id="p030">P030</h3>
+<p>Tags: pattern-selection, lms</p>
+<p>Prompt: Which pattern helps avoid a large switch over leave type?</p>
+<p>Answer: Strategy/policy objects are the direct design; from the covered pattern set, Factory Method or Abstract Factory can centralize creation of the appropriate policy objects.</p>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="cards-ooad-uml.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">OOAD &amp; UML Flashcards</span></a><a class="pn-card pn-next" href="cards-testing-sdlc.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">Testing, SDLC &amp; SE Flashcards</span></a></nav>
+</main>
+<aside class="toc"><div class="toc-title">On this page</div><ul><li class="toc-d2"><a href="#p001">P001</a></li><li class="toc-d2"><a href="#p002">P002</a></li><li class="toc-d2"><a href="#p003">P003</a></li><li class="toc-d2"><a href="#p004">P004</a></li><li class="toc-d2"><a href="#p005">P005</a></li><li class="toc-d2"><a href="#p006">P006</a></li><li class="toc-d2"><a href="#p007">P007</a></li><li class="toc-d2"><a href="#p008">P008</a></li><li class="toc-d2"><a href="#p009">P009</a></li><li class="toc-d2"><a href="#p010">P010</a></li><li class="toc-d2"><a href="#p011">P011</a></li><li class="toc-d2"><a href="#p012">P012</a></li><li class="toc-d2"><a href="#p013">P013</a></li><li class="toc-d2"><a href="#p014">P014</a></li><li class="toc-d2"><a href="#p015">P015</a></li><li class="toc-d2"><a href="#p016">P016</a></li><li class="toc-d2"><a href="#p017">P017</a></li><li class="toc-d2"><a href="#p018">P018</a></li><li class="toc-d2"><a href="#p019">P019</a></li><li class="toc-d2"><a href="#p020">P020</a></li><li class="toc-d2"><a href="#p021">P021</a></li><li class="toc-d2"><a href="#p022">P022</a></li><li class="toc-d2"><a href="#p023">P023</a></li><li class="toc-d2"><a href="#p024">P024</a></li><li class="toc-d2"><a href="#p025">P025</a></li><li class="toc-d2"><a href="#p026">P026</a></li><li class="toc-d2"><a href="#p027">P027</a></li><li class="toc-d2"><a href="#p028">P028</a></li><li class="toc-d2"><a href="#p029">P029</a></li><li class="toc-d2"><a href="#p030">P030</a></li></ul></aside>
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

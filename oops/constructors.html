@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Constructors &amp; Information Hiding · OOP &amp; C++</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#8A4E5E">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link is-active" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">OOP & C++</a><div class="side-group"><div class="side-label">Lecture Notes</div><ul><li><a class="side-link" href="volatile-macros-inline.html">volatile, Macros &amp; inline</a></li><li><a class="side-link" href="references-and-const.html">References &amp; const</a></li><li><a class="side-link" href="function-overloading.html">Function Overloading</a></li><li><a class="side-link" href="dynamic-memory.html">Dynamic Memory Management</a></li><li><a class="side-link" href="classes-and-objects.html">Classes &amp; Objects</a></li><li><a class="side-link is-active" href="constructors.html">Constructors &amp; Information Hiding</a></li><li><a class="side-link" href="copy-semantics.html">Copy Constructor &amp; Copy Assignment</a></li><li><a class="side-link" href="constness-and-static.html">Const-ness &amp; Static Members</a></li><li><a class="side-link" href="friend-functions.html">Friend Functions &amp; Friend Classes</a></li><li><a class="side-link" href="operator-overloading.html">Operator Overloading</a></li><li><a class="side-link" href="inheritance.html">Inheritance &amp; Overriding</a></li><li><a class="side-link" href="multiple-private-inheritance.html">Multiple &amp; Private Inheritance</a></li><li><a class="side-link" href="virtual-functions.html">Virtual Functions &amp; Dynamic Binding</a></li><li><a class="side-link" href="vtables-and-const-cast.html">Virtual Pointer Tables &amp; const_cast</a></li><li><a class="side-link" href="cpp-casts.html">C++ Casts</a></li><li><a class="side-link" href="exceptions.html">Exceptions &amp; Error Handling</a></li><li><a class="side-link" href="try-catch-and-templates.html">try/catch &amp; Function Templates</a></li><li><a class="side-link" href="class-templates-functors.html">Class Templates &amp; Functors</a></li></ul></div><div class="side-group"><div class="side-label">Extras</div><ul><li><a class="side-link" href="compilation-model.html">The C++ Compilation Model</a></li><li><a class="side-link" href="template-metaprogramming.html">Template Metaprogramming</a></li><li><a class="side-link" href="build-your-own-vector.html">Exercise — Build Your Own Vector</a></li><li><a class="side-link" href="miscellany.html">Miscellany</a></li><li><a class="side-link" href="resources.html">Resources</a></li></ul></div><div class="side-group"><div class="side-label">Topic Notes</div><ul><li><a class="side-link" href="notes-cpp-core.html">C++ Core</a></li><li><a class="side-link" href="notes-cpp-oop.html">C++ OOP</a></li><li><a class="side-link" href="notes-cpp-advanced.html">C++ Advanced</a></li><li><a class="side-link" href="notes-ooad-uml.html">OOAD &amp; UML</a></li><li><a class="side-link" href="notes-design-patterns.html">Design Patterns</a></li><li><a class="side-link" href="notes-testing-sdlc.html">Testing, SDLC &amp; SE</a></li><li><a class="side-link" href="notes-interview-questions.html">Interview Questions</a></li></ul></div><div class="side-group"><div class="side-label">Flashcards</div><ul><li><a class="side-link" href="cards-cpp-core.html">C++ Core Flashcards</a></li><li><a class="side-link" href="cards-oop-lifetime.html">OOP, Lifetime &amp; Memory Flashcards</a></li><li><a class="side-link" href="cards-polymorphism-stl.html">Polymorphism, Casts, Templates &amp; STL Flashcards</a></li><li><a class="side-link" href="cards-ooad-uml.html">OOAD &amp; UML Flashcards</a></li><li><a class="side-link" href="cards-design-patterns.html">Design Patterns Flashcards</a></li><li><a class="side-link" href="cards-testing-sdlc.html">Testing, SDLC &amp; SE Flashcards</a></li><li><a class="side-link" href="cards-interview-drills.html">Interview &amp; Code-Reading Drills</a></li></ul></div><div class="side-group"><div class="side-label">Under the Hood</div><ul><li><a class="side-link" href="memory-layout.html">Memory Layout, Alignment &amp; Padding</a></li></ul></div><div class="side-group"><div class="side-label">Revision</div><ul><li><a class="side-link" href="refresher.html">Rapid Refresher<span class="badge">&#9733;</span></a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">OOP & C++</a></div>
+  <div class="page-head">
+    <div class="page-kicker">OOP & C++</div>
+    <h1 class="page-title">Constructors &amp; Information Hiding</h1>
+    <div class="page-meta">2 min read &middot; source: <code>oops_cpp/self_notes/7.md</code></div>
+  </div>
+  <article class="prose"><ul>
+<li>Information Hiding</li>
+<li>Constructor - compiler itself will call, intialization becomes part of the instantiation.</li>
+<li>Constructor is a member function with thsi pointer</li>
+<li>Had no return type, not even void</li>
+<li>why? constructor is instantiating your object, you already have that object, that compiler has decided on the address at which your object is, you have implicit this pointer, no need of return type.</li>
+</ul>
+<p>Destructor automatically called when object goes out of scope. No need to remember to allocate and deallocate once you have written constructor and destructor. This is called Resource Acquisition Is Initialization (RAII). It is a programming idiom used in C++ to manage resources such as memory, file handles, and network connections. The idea is that resources are acquired during the initialization of an object and released when the object goes out of scope. This helps to ensure that resources are properly managed and prevents memory leaks and other resource-related issues.</p>
+<p>For the destructor there is no descrimination it can semantically do that one object is to be destructed in one way and the other in another way.</p>
+<p>Compiler supplies a free default destructor.<br>Destructor cannot be overloaded</p>
+<p>Compiler generated destructor is usually inline, public, non-virtual<br>Modern C++ preferes unique_ptr<int> because implicit destructor actually calls delete automatically compared to having a raw pointer in your class which won&#39;t be deallocated automatically.</p>
+<p>Always mention ~A() = default; even if you want to just use the default destructor. Helps when inheritance, long code, template metaprogramming etc.</p>
+<p>Lifetime : opening scope of constructor to closing scope of the destructor.</p>
+<p>return executs a stack frame, stack frame deallocates.</p>
+<p>Execution:</p>
+<ul>
+<li>memory allocation and binding (memory value with this pointer)</li>
+<li>constructor call and execution</li>
+<li>object use</li>
+<li>destructor call and execution</li>
+<li>memory deallocation and debinding (memory value with this pointer)</li>
+</ul>
+<p>types of object:</p>
+<ul>
+<li><p>automatic - allocation in stack, memory allocation and deallocation is implicit by the compiler</p>
+</li>
+<li><p>for array of objects, we MUST provide a default constructor. <code>Complex c[3]</code>, even though there is a parameterized constructor, we must provide a default constructor.</p>
+</li>
+<li><p>function don&#39;t know how many times it can be called</p>
+</li>
+<li><p>static objects are known before you start executing the code, so there is a static segment</p>
+</li>
+<li><p>when will it get constructed and destructed? since it is in global scope, we don&#39;t know. Construction of call static objects before main. So all construction of static before main is called. static has a fixed area and we know layout. Order same as written in file. When will they be destroyed? can be used by any function at any time. Destruction of static objects right after main returns.</p>
+</li>
+</ul>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="classes-and-objects.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">Classes &amp; Objects</span></a><a class="pn-card pn-next" href="copy-semantics.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">Copy Constructor &amp; Copy Assignment</span></a></nav>
+</main>
+
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

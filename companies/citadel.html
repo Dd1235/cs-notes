@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Citadel · Company Prep</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#6F5680">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link is-active" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">Company Prep</a><div class="side-group"><div class="side-label">Overview</div><ul><li><a class="side-link" href="overview.html">The Map — Who Tests What</a></li></ul></div><div class="side-group"><div class="side-label">Companies</div><ul><li><a class="side-link" href="arista.html">Arista Networks</a></li><li><a class="side-link" href="intuit.html">Intuit</a></li><li><a class="side-link" href="stripe.html">Stripe</a></li><li><a class="side-link" href="de-shaw.html">D. E. Shaw</a></li><li><a class="side-link" href="rubrik.html">Rubrik</a></li><li><a class="side-link is-active" href="citadel.html">Citadel</a></li></ul></div><div class="side-group"><div class="side-label">PYQ Bank</div><ul><li><a class="side-link" href="pyq-os-memory.html">PYQ — OS: Memory, Paging &amp; Processes</a></li><li><a class="side-link" href="pyq-os-concurrency.html">PYQ — OS: Concurrency &amp; Sync</a></li><li><a class="side-link" href="pyq-networks.html">PYQ — Networks</a></li><li><a class="side-link" href="pyq-oop-design.html">PYQ — OOP &amp; Design</a></li><li><a class="side-link" href="pyq-dbms-sql.html">PYQ — DBMS &amp; SQL</a></li><li><a class="side-link" href="pyq-c-lowlevel.html">PYQ — C &amp; Low-Level</a></li><li><a class="side-link" href="pyq-cloud-ml.html">PYQ — Cloud, Containers &amp; ML</a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">Company Prep</a></div>
+  <div class="page-head">
+    <div class="page-kicker">Company Prep</div>
+    <h1 class="page-title">Citadel</h1>
+    <div class="page-meta">2 min read &middot; source: <code>company_prep/citadel.md</code></div>
+  </div>
+  <article class="prose"><blockquote>
+<p>Hedge fund + market maker (Citadel Securities). The OA is the wall: reported <strong>&gt;85% filter rate</strong>, LC medium-hard→hard under 60–90 proctored minutes. After that: C++ depth and probability.</p>
+</blockquote>
+<h3 id="pipeline">Pipeline</h3>
+<ol>
+<li><strong>HackerRank OA (the decider)</strong> — 2–3 problems, 60–90 min, camera/mic often on. Arrays/strings, hash-frequency, graphs/trees, DP, greedy — standard surface, brutal calibration and edge cases. Some tracks add math/probability MCQs.</li>
+<li><strong>Phone screen(s)</strong> — live coding + rapid-fire fundamentals; probability teasers show up here.</li>
+<li><strong>Onsite/superday</strong> — harder coding, C++ internals, concurrency, sometimes low-latency design discussion; behavioral is direct and short.</li>
+</ol>
+<h3 id="what-they-actually-test">What they actually test</h3>
+<ul>
+<li><strong>Speed with correctness</strong> — full marks need clean handling of edge cases on the first submit; partial credit thinking loses.</li>
+<li><strong>C++ internals</strong> — vtables, move semantics, memory layout, what allocations cost; &quot;low-latency&quot; flavour means knowing <em>why</em> things are slow.</li>
+<li><strong>Probability under pressure</strong> — expected value and conditioning questions delivered conversationally.</li>
+<li><strong>Concurrency literacy</strong> — atomics vs mutexes, false sharing gets mentioned in senior-ish loops.</li>
+</ul>
+<h3 id="revise-on-this-site">Revise on this site</h3>
+<p><a href="../quant/index.html">Quant section — all</a> · <a href="../quant/coins-dice-waiting-times.html">Waiting times</a> · <a href="../quant/random-walks-gamblers-ruin.html">Random walks</a> · <a href="../oops/memory-layout.html">Memory layout &amp; padding</a> · <a href="../oops/vtables-and-const-cast.html">vtables</a> · <a href="../oops/virtual-functions.html">Virtual functions</a> · <a href="../os/multithreading-cpp.html">Multithreading in C++</a> · <a href="../os/locks-internals.html">Locks internals</a></p>
+<h3 id="practice-prompts-representative-paraphrased">Practice prompts (representative, paraphrased)</h3>
+<ol>
+<li>Timed set: two LC-hard problems in 70 minutes, no looking anything up, camera on — simulate the pressure, not just the topics.</li>
+<li>&quot;You flip a fair coin until you get two heads in a row; I pay you the number of flips&quot; — fair price? (Then: sell me the HT version.)</li>
+<li>What happens, allocation by allocation, when you <code>push_back</code> into a vector of strings 1M times? How do you make it fast?</li>
+<li><code>std::atomic</code> counter vs mutex-guarded counter — when does each win, and what is false sharing?</li>
+</ol>
+<h3 id="sources">Sources</h3>
+<p><a href="https://www.interviewquery.com/interview-guides/citadel-software-engineer" target="_blank" rel="noopener">Interview Query guide</a> · <a href="https://techscreen.app/articles/citadel-technical-interview-process-2026" target="_blank" rel="noopener">TechScreen insider guide</a> · <a href="https://www.techprep.app/blog/citadel-interview-process" target="_blank" rel="noopener">TechPrep process breakdown</a> · <a href="https://www.quantt.co.uk/resources/citadel-interview" target="_blank" rel="noopener">Quantt Citadel guide</a></p>
+<p><em>Last reviewed: July 2026.</em></p>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="rubrik.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">Rubrik</span></a><a class="pn-card pn-next" href="pyq-os-memory.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">PYQ — OS: Memory, Paging &amp; Processes</span></a></nav>
+</main>
+<aside class="toc"><div class="toc-title">On this page</div><ul><li class="toc-d2"><a href="#pipeline">Pipeline</a></li><li class="toc-d2"><a href="#what-they-actually-test">What they actually test</a></li><li class="toc-d2"><a href="#revise-on-this-site">Revise on this site</a></li><li class="toc-d2"><a href="#practice-prompts-representative-paraphrased">Practice prompts (representative, paraphrased)</a></li><li class="toc-d2"><a href="#sources">Sources</a></li></ul></aside>
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

@@ -1,0 +1,477 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Interview Questions · OOP &amp; C++</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#8A4E5E">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link is-active" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">OOP & C++</a><div class="side-group"><div class="side-label">Lecture Notes</div><ul><li><a class="side-link" href="volatile-macros-inline.html">volatile, Macros &amp; inline</a></li><li><a class="side-link" href="references-and-const.html">References &amp; const</a></li><li><a class="side-link" href="function-overloading.html">Function Overloading</a></li><li><a class="side-link" href="dynamic-memory.html">Dynamic Memory Management</a></li><li><a class="side-link" href="classes-and-objects.html">Classes &amp; Objects</a></li><li><a class="side-link" href="constructors.html">Constructors &amp; Information Hiding</a></li><li><a class="side-link" href="copy-semantics.html">Copy Constructor &amp; Copy Assignment</a></li><li><a class="side-link" href="constness-and-static.html">Const-ness &amp; Static Members</a></li><li><a class="side-link" href="friend-functions.html">Friend Functions &amp; Friend Classes</a></li><li><a class="side-link" href="operator-overloading.html">Operator Overloading</a></li><li><a class="side-link" href="inheritance.html">Inheritance &amp; Overriding</a></li><li><a class="side-link" href="multiple-private-inheritance.html">Multiple &amp; Private Inheritance</a></li><li><a class="side-link" href="virtual-functions.html">Virtual Functions &amp; Dynamic Binding</a></li><li><a class="side-link" href="vtables-and-const-cast.html">Virtual Pointer Tables &amp; const_cast</a></li><li><a class="side-link" href="cpp-casts.html">C++ Casts</a></li><li><a class="side-link" href="exceptions.html">Exceptions &amp; Error Handling</a></li><li><a class="side-link" href="try-catch-and-templates.html">try/catch &amp; Function Templates</a></li><li><a class="side-link" href="class-templates-functors.html">Class Templates &amp; Functors</a></li></ul></div><div class="side-group"><div class="side-label">Extras</div><ul><li><a class="side-link" href="compilation-model.html">The C++ Compilation Model</a></li><li><a class="side-link" href="template-metaprogramming.html">Template Metaprogramming</a></li><li><a class="side-link" href="build-your-own-vector.html">Exercise — Build Your Own Vector</a></li><li><a class="side-link" href="miscellany.html">Miscellany</a></li><li><a class="side-link" href="resources.html">Resources</a></li></ul></div><div class="side-group"><div class="side-label">Topic Notes</div><ul><li><a class="side-link" href="notes-cpp-core.html">C++ Core</a></li><li><a class="side-link" href="notes-cpp-oop.html">C++ OOP</a></li><li><a class="side-link" href="notes-cpp-advanced.html">C++ Advanced</a></li><li><a class="side-link" href="notes-ooad-uml.html">OOAD &amp; UML</a></li><li><a class="side-link" href="notes-design-patterns.html">Design Patterns</a></li><li><a class="side-link" href="notes-testing-sdlc.html">Testing, SDLC &amp; SE</a></li><li><a class="side-link is-active" href="notes-interview-questions.html">Interview Questions</a></li></ul></div><div class="side-group"><div class="side-label">Flashcards</div><ul><li><a class="side-link" href="cards-cpp-core.html">C++ Core Flashcards</a></li><li><a class="side-link" href="cards-oop-lifetime.html">OOP, Lifetime &amp; Memory Flashcards</a></li><li><a class="side-link" href="cards-polymorphism-stl.html">Polymorphism, Casts, Templates &amp; STL Flashcards</a></li><li><a class="side-link" href="cards-ooad-uml.html">OOAD &amp; UML Flashcards</a></li><li><a class="side-link" href="cards-design-patterns.html">Design Patterns Flashcards</a></li><li><a class="side-link" href="cards-testing-sdlc.html">Testing, SDLC &amp; SE Flashcards</a></li><li><a class="side-link" href="cards-interview-drills.html">Interview &amp; Code-Reading Drills</a></li></ul></div><div class="side-group"><div class="side-label">Under the Hood</div><ul><li><a class="side-link" href="memory-layout.html">Memory Layout, Alignment &amp; Padding</a></li></ul></div><div class="side-group"><div class="side-label">Revision</div><ul><li><a class="side-link" href="refresher.html">Rapid Refresher<span class="badge">&#9733;</span></a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">OOP & C++</a></div>
+  <div class="page-head">
+    <div class="page-kicker">OOP & C++</div>
+    <h1 class="page-title">Interview Questions</h1>
+    <div class="page-meta">9 min read &middot; source: <code>oops_cpp/generated_notes/07_interview_questions.md</code></div>
+  </div>
+  <article class="prose"><p>Use these for active recall. Try to answer in 60-120 seconds, then write a small snippet where relevant.</p>
+<h3 id="c-core">C++ Core</h3>
+<ol>
+<li><p>What is a translation unit?</p>
+<ul>
+<li>A source file after preprocessing, including all headers pulled in. Each translation unit is compiled separately.</li>
+</ul>
+</li>
+<li><p>Why are templates usually defined in headers?</p>
+<ul>
+<li>The compiler needs the full template definition when instantiating it for a specific type.</li>
+</ul>
+</li>
+<li><p>What is the One Definition Rule?</p>
+<ul>
+<li>An entity must have exactly one definition across the program, with special allowances for identical inline/template definitions.</li>
+</ul>
+</li>
+<li><p>What does <code>static</code> mean at file scope?</p>
+<ul>
+<li>Internal linkage. The name is visible only inside that translation unit.</li>
+</ul>
+</li>
+<li><p>What does <code>static</code> mean inside a function?</p>
+<ul>
+<li>The variable has program lifetime but block scope.</li>
+</ul>
+</li>
+<li><p>Explain <code>const int* p</code>, <code>int* const p</code>, and <code>const int* const p</code>.</p>
+<ul>
+<li>Pointer to const int, const pointer to int, const pointer to const int.</li>
+</ul>
+</li>
+<li><p>Is <code>const int x = runtime_value;</code> allowed?</p>
+<ul>
+<li>Yes. <code>const</code> means read-only after initialization, not necessarily compile-time.</li>
+</ul>
+</li>
+<li><p>Why is <code>constexpr</code> stronger than <code>const</code>?</p>
+<ul>
+<li><code>constexpr</code> requires compile-time evaluability when used in constant contexts.</li>
+</ul>
+</li>
+<li><p>What does <code>std::move</code> do?</p>
+<ul>
+<li>It casts to an rvalue reference. The actual move happens only if a move constructor or move <code>operator=</code> is selected.</li>
+</ul>
+</li>
+<li><p>Why avoid raw owning pointers?</p>
+<ul>
+<li>Ownership and cleanup become error-prone. RAII types express ownership and clean up automatically.</li>
+</ul>
+</li>
+</ol>
+<h3 id="oop-and-lifetime">OOP and Lifetime</h3>
+<ol>
+<li><p>What is RAII?</p>
+<ul>
+<li>Tie resource lifetime to object lifetime. Constructor acquires, destructor releases.</li>
+</ul>
+</li>
+<li><p>Rule of 3, Rule of 5, Rule of 0?</p>
+<ul>
+<li>If managing a resource manually, define copy/destructor operations; with moves, define five. Better: use RAII members and define none.</li>
+</ul>
+</li>
+<li><p>Copy constructor vs copy <code>operator=</code>?</p>
+<ul>
+<li>Copy constructor creates a new object. Copy <code>operator=</code> changes an existing object.</li>
+</ul>
+</li>
+<li><p>Why prefer initializer lists?</p>
+<ul>
+<li>They construct members directly and are required for const/reference members.</li>
+</ul>
+</li>
+<li><p>Why should a base class destructor be virtual?</p>
+<ul>
+<li>If deleting derived objects through base pointers, the derived destructor must run.</li>
+</ul>
+</li>
+<li><p>What is object slicing?</p>
+<ul>
+<li>Passing/copying a derived object by value into a base object loses the derived part.</li>
+</ul>
+</li>
+<li><p>What is the difference between overloading and overriding?</p>
+<ul>
+<li>Overloading selects among same-name functions with different parameters. Overriding replaces virtual base behavior in a derived class.</li>
+</ul>
+</li>
+<li><p>When is inheritance wrong?</p>
+<ul>
+<li>When the relationship is not substitutable or when composition would express ownership/use more clearly.</li>
+</ul>
+</li>
+<li><p>Why use <code>override</code>?</p>
+<ul>
+<li>The compiler verifies that a derived function actually overrides a virtual base function.</li>
+</ul>
+</li>
+<li><p>What is a pure virtual function?</p>
+<ul>
+<li>A virtual function declared with <code>= 0</code>; it makes the class abstract unless implemented in a derived class.</li>
+</ul>
+</li>
+</ol>
+<h3 id="polymorphism-and-casting">Polymorphism and Casting</h3>
+<ol>
+<li><p>How does virtual dispatch usually work?</p>
+<ul>
+<li>A polymorphic object has a hidden vptr pointing to a vtable. A virtual call uses the vtable to select the runtime function.</li>
+</ul>
+</li>
+<li><p>What is static binding?</p>
+<ul>
+<li>Compile-time binding, used for non-virtual calls and overload resolution.</li>
+</ul>
+</li>
+<li><p>What is dynamic binding?</p>
+<ul>
+<li>Runtime dispatch through virtual functions.</li>
+</ul>
+</li>
+<li><p>When use <code>dynamic_cast</code>?</p>
+<ul>
+<li>For checked downcasting across polymorphic types when redesign cannot avoid it.</li>
+</ul>
+</li>
+<li><p>Why is <code>reinterpret_cast</code> dangerous?</p>
+<ul>
+<li>It treats bits as another type with almost no safety checks.</li>
+</ul>
+</li>
+<li><p>What is the diamond problem?</p>
+<ul>
+<li>A derived class receives duplicate base subobjects through two inheritance paths.</li>
+</ul>
+</li>
+<li><p>What does virtual inheritance solve?</p>
+<ul>
+<li>It shares one common base subobject in a diamond hierarchy.</li>
+</ul>
+</li>
+</ol>
+<h3 id="exceptions">Exceptions</h3>
+<ol>
+<li><p>What happens during stack unwinding?</p>
+<ul>
+<li>Destructors of fully constructed local objects run while an exception propagates.</li>
+</ul>
+</li>
+<li><p>Why catch exceptions by const reference?</p>
+<ul>
+<li>Avoids slicing and copying while preserving dynamic type.</li>
+</ul>
+</li>
+<li><p>What is the strong exception guarantee?</p>
+<ul>
+<li>Operation either succeeds or leaves state unchanged.</li>
+</ul>
+</li>
+<li><p>Should destructors throw?</p>
+<ul>
+<li>Generally no. Throwing during unwinding can terminate the program.</li>
+</ul>
+</li>
+<li><p>What does <code>noexcept</code> communicate?</p>
+<ul>
+<li>The function is not expected to throw; it also enables optimizations and safer moves.</li>
+</ul>
+</li>
+</ol>
+<h3 id="stl-and-templates">STL and Templates</h3>
+<ol>
+<li><p>Why does <code>std::sort</code> not work on <code>std::list</code>?</p>
+<ul>
+<li><code>std::sort</code> needs random-access iterators; <code>list</code> has bidirectional iterators.</li>
+</ul>
+</li>
+<li><p>Vector vs list?</p>
+<ul>
+<li>Vector has contiguous storage and fast random access. List has stable node insertion/erasure but poor locality and no random access.</li>
+</ul>
+</li>
+<li><p>Ordered map vs unordered map?</p>
+<ul>
+<li><code>map</code> is ordered, usually tree-backed, <code>O(log n)</code>. <code>unordered_map</code> is hash-backed, average <code>O(1)</code>, no order.</li>
+</ul>
+</li>
+<li><p>What is iterator invalidation?</p>
+<ul>
+<li>Operations on a container may make existing iterators/references invalid.</li>
+</ul>
+</li>
+<li><p>What is a functor?</p>
+<ul>
+<li>An object with <code>operator()</code>, usable like a function and capable of storing state.</li>
+</ul>
+</li>
+<li><p>Functor vs function pointer?</p>
+<ul>
+<li>Functor can hold state and is often easier to inline.</li>
+</ul>
+</li>
+<li><p>What is a predicate?</p>
+<ul>
+<li>Callable returning bool, used to customize algorithms such as <code>find_if</code>.</li>
+</ul>
+</li>
+<li><p>Explain erase-remove idiom.</p>
+<ul>
+<li><code>remove_if</code> partitions unwanted elements to the end and returns new logical end; <code>erase</code> physically removes them.</li>
+</ul>
+</li>
+</ol>
+<h3 id="code-reading-traps">Code Reading Traps</h3>
+<h4 id="trap-1-returning-a-reference-to-local">Trap 1: Returning a Reference to Local</h4>
+<pre class="hljs"><code><span class="hljs-function"><span class="hljs-type">int</span>&amp; <span class="hljs-title">bad</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-type">int</span> x = <span class="hljs-number">10</span>;
+    <span class="hljs-keyword">return</span> x;
+}</code></pre>
+<p>Answer: dangling reference. The local dies when the function returns.</p>
+<h4 id="trap-2-missing-virtual-destructor">Trap 2: Missing Virtual Destructor</h4>
+<pre class="hljs"><code><span class="hljs-keyword">struct</span> <span class="hljs-title class_">Base</span> {};
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">Derived</span> : Base {
+    std::vector&lt;<span class="hljs-type">int</span>&gt; v;
+};
+
+Base* p = <span class="hljs-keyword">new</span> Derived;
+<span class="hljs-keyword">delete</span> p;</code></pre>
+<p>Answer: undefined behavior because base destructor is not virtual.</p>
+<h4 id="trap-3-macro-double-evaluation">Trap 3: Macro Double Evaluation</h4>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">define</span> SQR(x) ((x) * (x))</span>
+
+<span class="hljs-type">int</span> i = <span class="hljs-number">3</span>;
+<span class="hljs-type">int</span> y = <span class="hljs-built_in">SQR</span>(i++);</code></pre>
+<p>Answer: increments twice and has unsafe side effects. Use an inline function.</p>
+<h4 id="trap-4-object-slicing">Trap 4: Object Slicing</h4>
+<pre class="hljs"><code><span class="hljs-keyword">struct</span> <span class="hljs-title class_">B</span> { <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-type">void</span> <span class="hljs-title">f</span><span class="hljs-params">()</span></span>; };
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">D</span> : B { <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">f</span><span class="hljs-params">()</span> <span class="hljs-keyword">override</span></span>; };
+
+<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">call</span><span class="hljs-params">(B b)</span> </span>{
+    b.<span class="hljs-built_in">f</span>();
+}</code></pre>
+<p>Answer: passing by value slices <code>D</code> into <code>B</code>; virtual dispatch will not reach <code>D</code>.</p>
+<h4 id="trap-5-stdmove-misunderstanding">Trap 5: <code>std::move</code> Misunderstanding</h4>
+<pre class="hljs"><code><span class="hljs-type">const</span> std::string s = <span class="hljs-string">&quot;abc&quot;</span>;
+std::string t = std::<span class="hljs-built_in">move</span>(s);</code></pre>
+<p>Answer: likely copies because moving from const cannot bind to a typical non-const move constructor.</p>
+<h3 id="de-shaw-style-prompts">DE Shaw-Style Prompts</h3>
+<p>These are meant to test reasoning depth, not memorized definitions.</p>
+<ol>
+<li><p>A function takes <code>const Base&amp;</code> and calls a virtual method. Which type decides the method body: static type or dynamic type?</p>
+<ul>
+<li>Dynamic type, because the call is virtual and made through a base reference.</li>
+</ul>
+</li>
+<li><p>A class owns a raw pointer and defines a destructor but not copy operations. What breaks?</p>
+<ul>
+<li>The compiler-generated copy may copy the pointer value, causing double delete or shared accidental ownership.</li>
+</ul>
+</li>
+<li><p>Why can <code>vector</code> beat <code>list</code> even when inserting in the middle seems expensive?</p>
+<ul>
+<li>Cache locality and lower allocation overhead often dominate theoretical relinking cost.</li>
+</ul>
+</li>
+<li><p>Why can <code>catch (std::exception e)</code> be wrong?</p>
+<ul>
+<li>It copies and slices derived exception objects. Use <code>catch (const std::exception&amp; e)</code>.</li>
+</ul>
+</li>
+<li><p>When would a <code>switch</code> over object type be a design smell?</p>
+<ul>
+<li>When behavior varies by type and new types are expected. Prefer polymorphism or a strategy/policy object.</li>
+</ul>
+</li>
+<li><p>Why is 100 percent statement coverage not enough?</p>
+<ul>
+<li>It may miss branch outcomes, boundary cases, invalid states, and weak assertions.</li>
+</ul>
+</li>
+<li><p>If two classes depend on each other&#39;s private fields, what design issue is likely?</p>
+<ul>
+<li>High coupling and poor encapsulation. Move behavior to the class that owns the data or introduce a clearer collaboration.</li>
+</ul>
+</li>
+<li><p>Why should a public API avoid exposing <code>std::vector</code> internals if representation may change?</p>
+<ul>
+<li>It leaks implementation details and makes future changes source-breaking.</li>
+</ul>
+</li>
+<li><p>What makes a state machine better than scattered boolean flags?</p>
+<ul>
+<li>It names valid states and transitions explicitly, reducing impossible state combinations.</li>
+</ul>
+</li>
+<li><p>What is the first thing to clarify before coding from a vague requirement?</p>
+<ul>
+<li>Observable behavior and acceptance criteria, including edge cases and non-functional constraints.</li>
+</ul>
+</li>
+</ol>
+<h3 id="ooad-and-uml">OOAD and UML</h3>
+<ol>
+<li><p>Abstraction vs encapsulation?</p>
+<ul>
+<li>Abstraction exposes essential behavior. Encapsulation hides implementation details.</li>
+</ul>
+</li>
+<li><p>Aggregation vs composition?</p>
+<ul>
+<li>Aggregation is weak whole-part; part can outlive whole. Composition is owning whole-part; part usually dies with whole.</li>
+</ul>
+</li>
+<li><p>Association vs dependency?</p>
+<ul>
+<li>Association is a structural relationship. Dependency is temporary use.</li>
+</ul>
+</li>
+<li><p>What is high cohesion?</p>
+<ul>
+<li>A module&#39;s responsibilities are closely related.</li>
+</ul>
+</li>
+<li><p>What is low coupling?</p>
+<ul>
+<li>Modules depend on each other through minimal stable interfaces.</li>
+</ul>
+</li>
+<li><p>Use case diagram vs sequence diagram?</p>
+<ul>
+<li>Use case shows actors and goals. Sequence shows time-ordered object interactions.</li>
+</ul>
+</li>
+<li><p>When use a state machine?</p>
+<ul>
+<li>When an object&#39;s valid operations depend on lifecycle state.</li>
+</ul>
+</li>
+<li><p>How would you model many leave types with different rules?</p>
+<ul>
+<li>Use a <code>LeavePolicy</code> interface and concrete policy classes or strategy objects.</li>
+</ul>
+</li>
+</ol>
+<h3 id="design-patterns">Design Patterns</h3>
+<ol>
+<li><p>Iterator intent?</p>
+<ul>
+<li>Traverse elements without exposing container internals.</li>
+</ul>
+</li>
+<li><p>Command intent?</p>
+<ul>
+<li>Encapsulate a request/action as an object.</li>
+</ul>
+</li>
+<li><p>Singleton tradeoff?</p>
+<ul>
+<li>Ensures one instance but creates hidden global state and makes tests harder.</li>
+</ul>
+</li>
+<li><p>Factory Method vs Abstract Factory?</p>
+<ul>
+<li>Factory Method creates one product through an overridable method. Abstract Factory creates families of related products.</li>
+</ul>
+</li>
+<li><p>Visitor tradeoff?</p>
+<ul>
+<li>Easy to add operations, hard to add new element types.</li>
+</ul>
+</li>
+<li><p>Which pattern helps avoid a large switch over leave type?</p>
+<ul>
+<li>Strategy is the most direct, though policy objects may be implemented with factories. From the slide pattern set, Factory can centralize creation of policy objects.</li>
+</ul>
+</li>
+<li><p>Which pattern supports undo?</p>
+<ul>
+<li>Command, with enough saved state to reverse the action.</li>
+</ul>
+</li>
+</ol>
+<h3 id="testing-and-sdlc">Testing and SDLC</h3>
+<ol>
+<li><p>Verification vs validation?</p>
+<ul>
+<li>Verification: building the product right. Validation: building the right product.</li>
+</ul>
+</li>
+<li><p>Black-box vs white-box testing?</p>
+<ul>
+<li>Black-box tests external behavior. White-box uses implementation knowledge.</li>
+</ul>
+</li>
+<li><p>Boundary value analysis?</p>
+<ul>
+<li>Test values at, just below, and just above boundaries where bugs often occur.</li>
+</ul>
+</li>
+<li><p>Statement vs branch coverage?</p>
+<ul>
+<li>Statement coverage checks executed lines/statements. Branch coverage checks decision outcomes.</li>
+</ul>
+</li>
+<li><p>What is regression testing?</p>
+<ul>
+<li>Testing that previously working behavior still works after changes.</li>
+</ul>
+</li>
+<li><p>Severity vs priority?</p>
+<ul>
+<li>Severity is impact. Priority is scheduling urgency.</li>
+</ul>
+</li>
+<li><p>Why are requirements important for tests?</p>
+<ul>
+<li>Tests need expected behavior; requirements provide the oracle.</li>
+</ul>
+</li>
+<li><p>What changes in AI systems?</p>
+<ul>
+<li>Data quality, model drift, evaluation, reproducibility, monitoring, and human review become central.</li>
+</ul>
+</li>
+</ol>
+<h3 id="rapid-fire">Rapid Fire</h3>
+<ul>
+<li>Prefer <code>const T&amp;</code> for large read-only parameters.</li>
+<li>Prefer pass by value for cheap scalar types.</li>
+<li>Prefer <code>unique_ptr</code> for exclusive ownership.</li>
+<li>Prefer <code>shared_ptr</code> only for real shared ownership.</li>
+<li>Prefer composition unless substitutability is clear.</li>
+<li>Prefer RAII over manual cleanup.</li>
+<li>Prefer algorithms over hand-written loops when intent becomes clearer.</li>
+<li>Prefer small interfaces.</li>
+<li>Prefer tests that assert behavior, not implementation details.</li>
+<li>Prefer diagrams that answer a design question; do not draw UML for decoration.</li>
+</ul>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="notes-testing-sdlc.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">Testing, SDLC &amp; SE</span></a><a class="pn-card pn-next" href="cards-cpp-core.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">C++ Core Flashcards</span></a></nav>
+</main>
+<aside class="toc"><div class="toc-title">On this page</div><ul><li class="toc-d2"><a href="#c-core">C++ Core</a></li><li class="toc-d2"><a href="#oop-and-lifetime">OOP and Lifetime</a></li><li class="toc-d2"><a href="#polymorphism-and-casting">Polymorphism and Casting</a></li><li class="toc-d2"><a href="#exceptions">Exceptions</a></li><li class="toc-d2"><a href="#stl-and-templates">STL and Templates</a></li><li class="toc-d2"><a href="#code-reading-traps">Code Reading Traps</a></li><li class="toc-d2"><a href="#de-shaw-style-prompts">DE Shaw-Style Prompts</a></li><li class="toc-d2"><a href="#ooad-and-uml">OOAD and UML</a></li><li class="toc-d2"><a href="#design-patterns">Design Patterns</a></li><li class="toc-d2"><a href="#testing-and-sdlc">Testing and SDLC</a></li><li class="toc-d2"><a href="#rapid-fire">Rapid Fire</a></li></ul></aside>
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Concurrency Control Basics · Database Systems</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#B05730">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link is-active" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">Database Systems</a><div class="side-group"><div class="side-label">Foundations</div><ul><li><a class="side-link" href="acid.html">ACID &amp; Isolation Levels</a></li><li><a class="side-link" href="normalization.html">Normalization</a></li><li><a class="side-link" href="sql.html">SQL Essentials</a></li><li><a class="side-link" href="drop-delete-truncate.html">DROP vs DELETE vs TRUNCATE</a></li></ul></div><div class="side-group"><div class="side-label">Indexing & Storage</div><ul><li><a class="side-link" href="b-plus-trees.html">B+ Trees</a></li><li><a class="side-link" href="unique-indexes.html">Unique Indexes</a></li><li><a class="side-link" href="primary-vs-secondary-index.html">Primary vs Secondary Indexes</a></li><li><a class="side-link" href="write-ahead-logging.html">Write-Ahead Logging</a></li></ul></div><div class="side-group"><div class="side-label">Concurrency</div><ul><li><a class="side-link is-active" href="concurrency-control.html">Concurrency Control Basics</a></li><li><a class="side-link" href="mvcc.html">MVCC in Depth</a></li><li><a class="side-link" href="mvcc-cmu.html">MVCC — CMU Lecture Notes</a></li></ul></div><div class="side-group"><div class="side-label">Scale & Patterns</div><ul><li><a class="side-link" href="sharding.html">Sharding vs Partitioning</a></li><li><a class="side-link" href="n-plus-one-problem.html">The N+1 Query Problem</a></li><li><a class="side-link" href="graph-databases.html">Graph Databases</a></li></ul></div><div class="side-group"><div class="side-label">SQL in Practice</div><ul><li><a class="side-link" href="joins.html">Joins — Semantics &amp; Algorithms</a></li><li><a class="side-link" href="window-functions.html">Window Functions</a></li></ul></div><div class="side-group"><div class="side-label">Distributed Data</div><ul><li><a class="side-link" href="cap-replication.html">CAP &amp; Replication</a></li></ul></div><div class="side-group"><div class="side-label">Revision</div><ul><li><a class="side-link" href="refresher.html">Rapid Refresher<span class="badge">&#9733;</span></a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">Database Systems</a></div>
+  <div class="page-head">
+    <div class="page-kicker">Database Systems</div>
+    <h1 class="page-title">Concurrency Control Basics</h1>
+    <div class="page-meta">1 min read &middot; source: <code>dbms/concurrecy_control.md</code></div>
+  </div>
+  <article class="prose"><h3 id="pessimistic-vs-optimistic">Pessimistic vs optimistic</h3>
+<ul>
+<li><strong>Pessimistic</strong> — assume conflicts will happen: take a <strong>lock</strong> before touching the data (<code>SELECT ... FOR UPDATE</code>, 2PL). Nobody else can interfere while you hold it; the cost is blocking and possible deadlocks.</li>
+<li><strong>Optimistic</strong> — assume conflicts are rare: read freely, and at commit time <strong>validate</strong> that what you read hasn&#39;t changed; if it has, <strong>just roll back and retry</strong>. Often done at the application level with a version column: <code>UPDATE ... SET v = v+1 WHERE id = ? AND v = ?</code> — zero rows updated means someone beat you.</li>
+<li>Rule of thumb: if you can give up some consistency (tolerate retries), go with optimistic — it wins under low contention because nobody ever waits.</li>
+</ul>
+<h3 id="the-integrity-taxonomy">The integrity taxonomy</h3>
+<ol>
+<li><strong>Entity integrity</strong> — every row is uniquely identifiable; achieved using a primary key.</li>
+<li><strong>Referential integrity</strong> — relationships between tables remain valid; foreign keys.</li>
+<li><strong>Domain integrity</strong> — column values are constrained; achieved using <code>NOT NULL</code>, <code>CHECK</code>, <code>DEFAULT</code>, <code>UNIQUE</code>.</li>
+<li><strong>Transactional integrity</strong> — correct even on crash; ACID.</li>
+<li><strong>Data consistency vs integrity</strong> — <em>consistency</em> is about the current data obeying the state (no contradictions right now); <em>integrity</em> is about the standing rules, like &quot;salary must be positive&quot;.</li>
+</ol>
+<h3 id="interview-one-liners">Interview one-liners</h3>
+<ul>
+<li>Pessimistic = lock then work; optimistic = work then check.</li>
+<li>Optimistic control turns conflicts into retries — great for web apps where two users rarely edit the same row; terrible for hot counters.</li>
+<li>MVCC (see its own note) is the storage trick that lets readers skip both: they read a snapshot and never conflict with anyone.</li>
+</ul>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="write-ahead-logging.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">Write-Ahead Logging</span></a><a class="pn-card pn-next" href="mvcc.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">MVCC in Depth</span></a></nav>
+</main>
+<aside class="toc"><div class="toc-title">On this page</div><ul><li class="toc-d2"><a href="#pessimistic-vs-optimistic">Pessimistic vs optimistic</a></li><li class="toc-d2"><a href="#the-integrity-taxonomy">The integrity taxonomy</a></li><li class="toc-d2"><a href="#interview-one-liners">Interview one-liners</a></li></ul></aside>
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

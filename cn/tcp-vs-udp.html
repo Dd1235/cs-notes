@@ -1,0 +1,2003 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TCP vs UDP — The Deep Dive · Computer Networks</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script type="module">
+import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+mermaid.initialize({
+  startOnLoad: true,
+  theme: 'base',
+  themeVariables: {
+    fontFamily: 'Inter, sans-serif',
+    fontSize: '14px',
+    primaryColor: '#F1E8D7',
+    primaryTextColor: '#2E2A21',
+    primaryBorderColor: '#8B8170',
+    lineColor: '#57503F',
+    secondaryColor: '#FDFAF3',
+    tertiaryColor: '#FBF6EA',
+    clusterBkg: '#FBF6EA',
+    clusterBorder: '#E2D8C3',
+    actorBkg: '#F1E8D7',
+    actorBorder: '#8B8170',
+    actorTextColor: '#2E2A21',
+    actorLineColor: '#B8AD97',
+    signalColor: '#57503F',
+    signalTextColor: '#2E2A21',
+    labelBoxBkgColor: '#F1E8D7',
+    labelTextColor: '#2E2A21',
+    loopTextColor: '#57503F',
+    noteBkgColor: '#FBF3DC',
+    noteBorderColor: '#D9B36C',
+    noteTextColor: '#57503F',
+    activationBkgColor: '#EFE6D2',
+    activationBorderColor: '#8B8170',
+    edgeLabelBackground: '#F7F1E4'
+  }
+});
+</script>
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#3E6B63">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link is-active" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">Computer Networks</a><div class="side-group"><div class="side-label">Notes</div><ul><li><a class="side-link" href="url-to-page.html">What Happens When You Type a URL</a></li><li><a class="side-link is-active" href="tcp-vs-udp.html">TCP vs UDP — The Deep Dive</a></li><li><a class="side-link" href="sockets-and-zero-copy.html">Sockets, Kernel Structures &amp; Zero-Copy</a></li><li><a class="side-link" href="io-multiplexing.html">I/O Multiplexing — select, poll, epoll</a></li><li><a class="side-link" href="flow-vs-congestion.html">Flow Control vs Congestion Control</a></li></ul></div><div class="side-group"><div class="side-label">Addressing & Routing</div><ul><li><a class="side-link" href="ip-subnetting.html">IP Addressing &amp; Subnetting</a></li><li><a class="side-link" href="l2-switching.html">Layer 2 — Switching, VLANs, STP</a></li><li><a class="side-link" href="routing.html">Routing — Longest Prefix, OSPF, BGP</a></li></ul></div><div class="side-group"><div class="side-label">Web Protocols</div><ul><li><a class="side-link" href="tls.html">TLS — Handshake &amp; Certificates</a></li><li><a class="side-link" href="dns-deep-dive.html">DNS — Records, Resolution, Caching</a></li><li><a class="side-link" href="http-evolution.html">HTTP/1.1 → 2 → 3</a></li></ul></div><div class="side-group"><div class="side-label">Revision</div><ul><li><a class="side-link" href="refresher.html">Rapid Refresher<span class="badge">&#9733;</span></a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">Computer Networks</a></div>
+  <div class="page-head">
+    <div class="page-kicker">Computer Networks</div>
+    <h1 class="page-title">TCP vs UDP — The Deep Dive</h1>
+    <div class="page-meta">30 min read &middot; source: <code>cn/1.md</code></div>
+  </div>
+  <article class="prose"><p>Layer 7 Application<br>Layer 6 Presentation - utf-8, jpeg, png,<br>Layer 5 Session - session management protocol<br>Layer 4 Transport<br>Layer 3 Network<br>Layer 2 Data link - ehternet/wifi, mac addressses<br>Layer 1 Physical - physical layer, ethernet cable, fiber optic, wifi radio waves</p>
+<h3 id="tcp-transmission-control-protocol">TCP - Transmission Control protocol</h3>
+<p>Pros:</p>
+<ul>
+<li>acknowledgement</li>
+<li>guaranteed delivery</li>
+<li>connection based , need to first establish a conn</li>
+<li>congestion control (packets get delayed as servers and routers get overwhelmed)</li>
+<li>ordered packets, one packet can go through china, one through the pacific and so on.</li>
+</ul>
+<p>Cons:</p>
+<ul>
+<li>larger packets</li>
+<li>need more bandwidth , if you have like 10 Gigabit bandwidth doesnt matter</li>
+<li>slower than UDP</li>
+<li>stateful , if your server can restart and client can continue on then you&#39;re stateless</li>
+<li>server memory (dos) server can stackup on useless conn and use up memory</li>
+</ul>
+<h3 id="udp-user-datagram-protocol">UDP - User Datagram protocol</h3>
+<p>Cons:</p>
+<ul>
+<li>no acknowledgement</li>
+<li>no guaranteed delivery , only checksum</li>
+<li>connectionless (don&#39;t know your client)</li>
+<li>no congestion control</li>
+<li>no ordered packets</li>
+<li>security</li>
+</ul>
+<p>Pros:</p>
+<ul>
+<li>smaller packets</li>
+<li>less bandwidth</li>
+<li>faster than tcp</li>
+<li>stateless</li>
+</ul>
+<h3 id="tcp-internals">TCP internals</h3>
+<p>4 tuple -&gt; two ip, two ports -&gt; unique tcp conversation<br>stream index: 0</p>
+<p>sequence numbers - when I send you the tcp syn, I will send you the intial sequence number, wireshark will zero this out</p>
+<p>I get back an ack with sequence number incremented once.<br>For most SDE/backend interviews, if you know the material below deeply, you&#39;ll be ahead of 90% of candidates.</p>
+<h2 id="1-why-tcp-exists">1. Why TCP exists</h2>
+<p>IP gives:</p>
+<pre class="hljs"><code>Host A ----&gt; Host B</code></pre>
+<p>but does <strong>not guarantee</strong>:</p>
+<ul>
+<li>delivery</li>
+<li>ordering</li>
+<li>duplicate removal</li>
+<li>flow control</li>
+<li>congestion control</li>
+</ul>
+<p>TCP adds all of these.</p>
+<p>Think:</p>
+<pre class="hljs"><code>Application
+    ↓
+TCP
+    ↓
+IP</code></pre>
+<p>TCP&#39;s job:</p>
+<blockquote>
+<p>Turn an unreliable packet network into a reliable ordered byte stream.</p>
+</blockquote>
+<hr>
+<h2 id="2-tcp-is-a-byte-stream">2. TCP is a BYTE STREAM</h2>
+<p>This is extremely important.</p>
+<p>Many people think TCP sends messages.</p>
+<p>It does not.</p>
+<p>Application:</p>
+<pre class="hljs"><code><span class="hljs-built_in">send</span>(<span class="hljs-string">&quot;hello&quot;</span>);
+<span class="hljs-built_in">send</span>(<span class="hljs-string">&quot;world&quot;</span>);</code></pre>
+<p>Receiver might get:</p>
+<pre class="hljs"><code>helloworld</code></pre>
+<p>or</p>
+<pre class="hljs"><code>hel
+loworld</code></pre>
+<p>or</p>
+<pre class="hljs"><code>hello
+world</code></pre>
+<p>TCP guarantees:</p>
+<pre class="hljs"><code>hello arrives before world</code></pre>
+<p>not message boundaries.</p>
+<p>UDP preserves packet boundaries.</p>
+<hr>
+<h2 id="3-tcp-header">3. TCP Header</h2>
+<p>Important fields:</p>
+<pre class="hljs"><code>Source Port
+Destination Port
+
+Sequence Number
+
+Acknowledgement Number
+
+Flags:
+ SYN
+ ACK
+ FIN
+ RST
+
+Window Size
+Checksum</code></pre>
+<p>Interviewers love:</p>
+<ul>
+<li>Sequence Number</li>
+<li>ACK Number</li>
+<li>SYN</li>
+<li>FIN</li>
+<li>Window Size</li>
+</ul>
+<hr>
+<h2 id="4-three-way-handshake">4. Three-Way Handshake</h2>
+<p>Before data can flow:</p>
+<p>Client:</p>
+<pre class="hljs"><code>SYN
+seq = x</code></pre>
+<p>Server:</p>
+<pre class="hljs"><code>SYN ACK
+seq = y
+ack = x+1</code></pre>
+<p>Client:</p>
+<pre class="hljs"><code>ACK
+ack = y+1</code></pre>
+<p>Connection established.</p>
+<div class="diagram"><pre class="mermaid">sequenceDiagram
+    participant C as Client
+    participant S as Server
+    Note over C,S: both sides closed
+    C-&gt;&gt;S: SYN (seq = x)
+    Note right of S: server allocates state&lt;br/&gt;(SYN queue)
+    S-&gt;&gt;C: SYN-ACK (seq = y, ack = x+1)
+    C-&gt;&gt;S: ACK (ack = y+1)
+    Note over C,S: ESTABLISHED — data can flow
+    C-&gt;&gt;S: HTTP request (seq = x+1)</pre></div>
+<hr>
+<h4 id="why-3-and-not-2">Why 3 and not 2?</h4>
+<p>Need both sides to confirm:</p>
+<ol>
+<li>I can hear you.</li>
+<li>You can hear me.</li>
+</ol>
+<p>Otherwise old duplicate packets could create fake connections.</p>
+<hr>
+<h2 id="5-sequence-numbers">5. Sequence Numbers</h2>
+<p>Every byte has a sequence number.</p>
+<p>Suppose:</p>
+<pre class="hljs"><code>seq = 1000</code></pre>
+<p>Send:</p>
+<pre class="hljs"><code>HELLO</code></pre>
+<p>5 bytes.</p>
+<p>Receiver expects:</p>
+<pre class="hljs"><code>1005</code></pre>
+<p>next.</p>
+<hr>
+<p>Example:</p>
+<pre class="hljs"><code>1000 H
+1001 E
+1002 L
+1003 L
+1004 O</code></pre>
+<p>ACK:</p>
+<pre class="hljs"><code>ack = 1005</code></pre>
+<p>means</p>
+<blockquote>
+<p>I&#39;ve received everything up to 1004.</p>
+</blockquote>
+<hr>
+<h2 id="6-acknowledgements">6. Acknowledgements</h2>
+<p>TCP uses cumulative ACKs.</p>
+<p>Received:</p>
+<pre class="hljs"><code>1000-1999</code></pre>
+<p>ACK:</p>
+<pre class="hljs"><code>2000</code></pre>
+<p>means:</p>
+<pre class="hljs"><code>Everything before 2000 arrived.</code></pre>
+<p>Not:</p>
+<pre class="hljs"><code>I only received 1999.</code></pre>
+<hr>
+<h2 id="7-retransmissions">7. Retransmissions</h2>
+<p>Suppose:</p>
+<pre class="hljs"><code>Packet 1 arrives
+Packet 2 lost
+Packet 3 arrives</code></pre>
+<p>Receiver:</p>
+<pre class="hljs"><code>ACK 1000
+ACK 1000
+ACK 1000</code></pre>
+<p>repeatedly.</p>
+<p>Sender sees duplicate ACKs.</p>
+<p>Eventually retransmits missing packet.</p>
+<p>This is how reliability works.</p>
+<hr>
+<h2 id="8-sliding-window">8. Sliding Window</h2>
+<p>TCP doesn&#39;t wait after every packet.</p>
+<p>Terrible:</p>
+<pre class="hljs"><code>send
+wait
+send
+wait</code></pre>
+<p>Instead:</p>
+<pre class="hljs"><code>send 100 packets
+then wait</code></pre>
+<p>Window:</p>
+<pre class="hljs"><code>[sent but unacked]</code></pre>
+<p>Example:</p>
+<pre class="hljs"><code>Window size = 5</code></pre>
+<pre class="hljs"><code>1 2 3 4 5</code></pre>
+<p>ACK for 1 arrives:</p>
+<pre class="hljs"><code>2 3 4 5 6</code></pre>
+<p>window slides.</p>
+<p>Hence:</p>
+<blockquote>
+<p>Sliding Window Protocol</p>
+</blockquote>
+<hr>
+<h2 id="9-flow-control">9. Flow Control</h2>
+<p>Problem:</p>
+<pre class="hljs"><code>Sender = fast
+Receiver = slow</code></pre>
+<p>Receiver buffer:</p>
+<pre class="hljs"><code>64 KB</code></pre>
+<p>If sender keeps blasting data:</p>
+<pre class="hljs"><code>buffer overflow</code></pre>
+<p>Receiver advertises:</p>
+<pre class="hljs"><code>Window Size = 8192</code></pre>
+<p>Meaning:</p>
+<pre class="hljs"><code>I can accept 8KB more.</code></pre>
+<p>Sender obeys.</p>
+<hr>
+<p>Interview answer:</p>
+<blockquote>
+<p>Flow control protects the receiver.</p>
+</blockquote>
+<hr>
+<h2 id="10-congestion-control">10. Congestion Control</h2>
+<p>Additive Increase Multiplicative Decrease.</p>
+<p>Different problem.</p>
+<p>Flow control:</p>
+<pre class="hljs"><code>protect receiver</code></pre>
+<p>Congestion control:</p>
+<pre class="hljs"><code>protect network</code></pre>
+<p>Imagine:</p>
+<pre class="hljs"><code>1 million senders</code></pre>
+<p>all transmitting at full speed.</p>
+<p>Routers melt.</p>
+<p>TCP slows itself down.</p>
+<hr>
+<h2 id="11-congestion-window-cwnd">11. Congestion Window (cwnd)</h2>
+<p>TCP maintains:</p>
+<pre class="hljs"><code>cwnd</code></pre>
+<p>Maximum amount of unacknowledged data.</p>
+<p>Actual sending limit:</p>
+<pre class="hljs"><code>min(cwnd, receiver_window)</code></pre>
+<p>Interviewers love this.</p>
+<hr>
+<h2 id="12-slow-start">12. Slow Start</h2>
+<p>New connection.</p>
+<p>TCP doesn&#39;t know network capacity.</p>
+<p>Starts small:</p>
+<pre class="hljs"><code>1 MSS</code></pre>
+<p>then:</p>
+<pre class="hljs"><code>1
+2
+4
+8
+16
+32
+...</code></pre>
+<p>Exponential growth.</p>
+<p>This is Slow Start.</p>
+<p>The name is historical irony.</p>
+<p>It&#39;s actually very aggressive.</p>
+<hr>
+<h2 id="13-congestion-detection">13. Congestion Detection</h2>
+<p>How does TCP know congestion?</p>
+<p>Usually:</p>
+<pre class="hljs"><code>packet loss</code></pre>
+<p>or</p>
+<pre class="hljs"><code>ECN</code></pre>
+<p>Packet loss traditionally means:</p>
+<pre class="hljs"><code>Router queue overflowed.</code></pre>
+<hr>
+<h2 id="14-fast-retransmit">14. Fast Retransmit</h2>
+<p>Suppose:</p>
+<pre class="hljs"><code>Packet 5 lost
+Packet 6 arrives
+Packet 7 arrives
+Packet 8 arrives</code></pre>
+<p>Receiver sends:</p>
+<pre class="hljs"><code>ACK 5
+ACK 5
+ACK 5</code></pre>
+<p>Three duplicate ACKs.</p>
+<p>Sender immediately retransmits packet 5.</p>
+<p>No timeout needed.</p>
+<hr>
+<p>Interview favorite.</p>
+<hr>
+<h2 id="15-timeout-retransmission">15. Timeout Retransmission</h2>
+<p>Worst case:</p>
+<pre class="hljs"><code>packet disappears</code></pre>
+<p>No ACK arrives.</p>
+<p>Sender waits:</p>
+<pre class="hljs"><code>RTO</code></pre>
+<p>Retransmission Timeout.</p>
+<p>Then resends.</p>
+<hr>
+<h2 id="16-mss">16. MSS</h2>
+<p>Maximum Segment Size.</p>
+<p>Example:</p>
+<pre class="hljs"><code>1500 byte Ethernet MTU
+
+20 byte IP header
+20 byte TCP header</code></pre>
+<p>Leaves:</p>
+<pre class="hljs"><code>1460 bytes</code></pre>
+<p>TCP payload.</p>
+<p>Thus:</p>
+<pre class="hljs"><code>MSS = 1460</code></pre>
+<p>Interviewers often ask MTU vs MSS.</p>
+<hr>
+<h2 id="17-mtu">17. MTU</h2>
+<p>Maximum Transmission Unit.</p>
+<p>Largest IP packet on a link.</p>
+<p>Ethernet:</p>
+<pre class="hljs"><code>1500 bytes</code></pre>
+<p>commonly.</p>
+<p>If packet exceeds MTU:</p>
+<pre class="hljs"><code>fragmentation</code></pre>
+<p>or path MTU discovery.</p>
+<hr>
+<h2 id="18-tcp-connection-teardown">18. TCP Connection Teardown</h2>
+<p>Closing requires four-way handshake.</p>
+<p>Client:</p>
+<pre class="hljs"><code>FIN</code></pre>
+<p>Server:</p>
+<pre class="hljs"><code>ACK</code></pre>
+<p>Later:</p>
+<pre class="hljs"><code>FIN</code></pre>
+<p>Client:</p>
+<pre class="hljs"><code>ACK</code></pre>
+<p>Reason:</p>
+<p>Each direction closes independently.</p>
+<p>TCP is full duplex.</p>
+<div class="diagram"><pre class="mermaid">sequenceDiagram
+    participant C as Client (closes first)
+    participant S as Server
+    C-&gt;&gt;S: FIN
+    S-&gt;&gt;C: ACK
+    Note right of S: server may still send&lt;br/&gt;remaining data (half-close)
+    S-&gt;&gt;C: FIN
+    C-&gt;&gt;S: ACK
+    Note left of C: TIME_WAIT (~2×MSL)&lt;br/&gt;then fully closed</pre></div>
+<hr>
+<h2 id="19-timewait">19. TIME_WAIT</h2>
+<p>Interview classic.</p>
+<p>After closing:</p>
+<pre class="hljs"><code>TIME_WAIT</code></pre>
+<p>often:</p>
+<pre class="hljs"><code>2 × MSL</code></pre>
+<p>Purpose:</p>
+<ul>
+<li>absorb delayed packets</li>
+<li>prevent old packets from corrupting future connections</li>
+</ul>
+<hr>
+<h2 id="20-why-tcp-is-slower-than-udp">20. Why TCP is slower than UDP</h2>
+<p>TCP adds:</p>
+<pre class="hljs"><code>handshake
+ACKs
+retransmissions
+ordering
+flow control
+congestion control</code></pre>
+<p>UDP:</p>
+<pre class="hljs"><code>send and pray</code></pre>
+<p>Much less overhead.</p>
+<hr>
+<h2 id="21-head-of-line-blocking">21. Head-of-Line Blocking</h2>
+<p>Huge modern interview topic.</p>
+<p>Suppose:</p>
+<pre class="hljs"><code>Packet 5 lost
+Packet 6 arrives
+Packet 7 arrives</code></pre>
+<p>TCP delivers:</p>
+<pre class="hljs"><code>nothing after 4</code></pre>
+<p>until packet 5 arrives.</p>
+<p>This is:</p>
+<blockquote>
+<p>Head-of-Line Blocking</p>
+</blockquote>
+<p>One reason QUIC became popular.</p>
+<hr>
+<h2 id="22-tcp-vs-udp">22. TCP vs UDP</h2>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>TCP</th>
+<th>UDP</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Reliable</td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Ordered</td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Connection</td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+<tr>
+<td>ACKs</td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Retransmit</td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Flow Control</td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Congestion Control</td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Streaming</td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Low Latency</td>
+<td>Worse</td>
+<td>Better</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="interview-questions-you-should-definitely-be-able-to-answer">Interview questions you should definitely be able to answer</h2>
+<ol>
+<li>Why is TCP reliable?</li>
+<li>Explain the 3-way handshake.</li>
+<li>Why not 2-way handshake?</li>
+<li>What are sequence numbers?</li>
+<li>What are ACKs?</li>
+<li>What is a sliding window?</li>
+<li>Flow control vs congestion control?</li>
+<li>What is cwnd?</li>
+<li>What is receiver window?</li>
+<li>What is MSS?</li>
+<li>What is MTU?</li>
+<li>What happens when a packet is lost?</li>
+<li>Fast retransmit vs timeout?</li>
+<li>Why is UDP faster?</li>
+<li>What is head-of-line blocking?</li>
+<li>Why does HTTP/3 use QUIC over UDP?</li>
+</ol>
+<h2 id="udp">UDP</h2>
+<ul>
+<li>8 byte header instead of 20 byte like in tcp</li>
+</ul>
+<p>Think of UDP as the postal service version of networking.</p>
+<p>TCP says:</p>
+<blockquote>
+<p>&quot;I will make sure every letter arrives, in order, without duplicates.&quot;</p>
+</blockquote>
+<p>UDP says:</p>
+<blockquote>
+<p>&quot;Here&#39;s the letter. Good luck.&quot;</p>
+</blockquote>
+<p>That sounds simple, but there&#39;s still quite a bit happening under the hood.</p>
+<h2 id="1-application-writes-data">1. Application writes data</h2>
+<p>Suppose your game server does:</p>
+<pre class="hljs"><code>sendto(sockfd, <span class="hljs-string">&quot;hello&quot;</span>, <span class="hljs-number">5</span>, ...);</code></pre>
+<p>The kernel receives 5 bytes:</p>
+<pre class="hljs"><code>h e l l o</code></pre>
+<p>and builds a UDP packet around them.</p>
+<hr>
+<h2 id="2-udp-header-is-added">2. UDP Header is added</h2>
+<p>UDP adds only an 8-byte header:</p>
+<pre class="hljs"><code>0      15 16     31
++--------+--------+
+| SrcPort| DstPort|
++--------+--------+
+| Length |Checksum|
++--------+--------+</code></pre>
+<p>Example:</p>
+<pre class="hljs"><code>Source Port      = 50000
+Destination Port = 53
+Length           = 13
+Checksum         = ...</code></pre>
+<p>where:</p>
+<pre class="hljs"><code>13 = 8 bytes header + 5 bytes data</code></pre>
+<p>Packet now becomes:</p>
+<pre class="hljs"><code>UDP Header
+    src=50000
+    dst=53
+
+Payload:
+    hello</code></pre>
+<hr>
+<h2 id="3-ip-layer-wraps-it">3. IP Layer wraps it</h2>
+<p>UDP itself cannot route packets.</p>
+<p>The IP layer wraps the UDP segment:</p>
+<pre class="hljs"><code>IP Header
+UDP Header
+Payload</code></pre>
+<p>Example:</p>
+<pre class="hljs"><code>Src IP = 192.168.1.10
+Dst IP = 8.8.8.8
+Protocol = 17 (UDP)</code></pre>
+<p>Protocol number 17 tells the receiver:</p>
+<blockquote>
+<p>&quot;This payload belongs to UDP.&quot;</p>
+</blockquote>
+<hr>
+<h2 id="4-find-mac-address-arp">4. Find MAC Address (ARP)</h2>
+<p>The machine now asks:</p>
+<blockquote>
+<p>&quot;How do I reach 8.8.8.8?&quot;</p>
+</blockquote>
+<p>Usually through the router.</p>
+<p>If it doesn&#39;t know the router&#39;s MAC:</p>
+<pre class="hljs"><code>Who has 192.168.1.1?</code></pre>
+<p>Router replies:</p>
+<pre class="hljs"><code>I do.
+MAC = AA:BB:CC:DD:EE:FF</code></pre>
+<p>ARP cache gets updated.</p>
+<hr>
+<h2 id="5-ethernet-frame-created">5. Ethernet Frame Created</h2>
+<p>Network card receives:</p>
+<pre class="hljs"><code>Ethernet Header
+IP Header
+UDP Header
+Payload</code></pre>
+<p>Example:</p>
+<pre class="hljs"><code>Dst MAC = Router MAC
+Src MAC = My MAC</code></pre>
+<p>Frame goes onto the wire.</p>
+<hr>
+<h2 id="6-routers-forward-it">6. Routers Forward It</h2>
+<p>Each router only looks at:</p>
+<pre class="hljs"><code>IP Header</code></pre>
+<p>Specifically:</p>
+<pre class="hljs"><code>Destination IP
+TTL</code></pre>
+<p>The UDP contents are mostly ignored.</p>
+<p>Router:</p>
+<pre class="hljs"><code>Receive frame
+↓
+Remove Ethernet header
+↓
+Inspect IP
+↓
+Choose next hop
+↓
+Create new Ethernet frame
+↓
+Forward</code></pre>
+<p>Notice:</p>
+<h4 id="mac-changes-every-hop">MAC changes every hop</h4>
+<p>but</p>
+<h4 id="sourcedestination-ip-remain-unchanged">Source/Destination IP remain unchanged</h4>
+<p>until the final destination.</p>
+<hr>
+<h2 id="7-receiver-gets-packet">7. Receiver Gets Packet</h2>
+<p>At Google&#39;s DNS server:</p>
+<p>NIC receives frame.</p>
+<p>Kernel strips:</p>
+<pre class="hljs"><code>Ethernet
+IP</code></pre>
+<p>and sees:</p>
+<pre class="hljs"><code>Protocol = UDP</code></pre>
+<p>So it hands payload to UDP.</p>
+<p>UDP sees:</p>
+<pre class="hljs"><code>Destination Port = 53</code></pre>
+<p>and delivers it to the DNS process listening on port 53.</p>
+<hr>
+<h2 id="what-udp-doesnt-do">What UDP DOESN&#39;T Do</h2>
+<p>UDP never:</p>
+<ul>
+<li>acknowledges packets</li>
+<li>retransmits packets</li>
+<li>guarantees ordering</li>
+<li>detects duplicates</li>
+<li>performs congestion control</li>
+<li>maintains a connection</li>
+</ul>
+<p>There is no:</p>
+<pre class="hljs"><code>SYN
+ACK
+FIN</code></pre>
+<p>like TCP.</p>
+<p>No connection state.</p>
+<p>Every packet is independent.</p>
+<hr>
+<h2 id="example-packet-loss">Example: Packet Loss</h2>
+<p>Suppose sender transmits:</p>
+<pre class="hljs"><code>Packet 1
+Packet 2
+Packet 3
+Packet 4</code></pre>
+<p>and Packet 3 disappears.</p>
+<p>Receiver sees:</p>
+<pre class="hljs"><code>1
+2
+4</code></pre>
+<p>UDP simply delivers:</p>
+<pre class="hljs"><code>1
+2
+4</code></pre>
+<p>to the application.</p>
+<p>No complaint.</p>
+<p>No retransmission.</p>
+<p>The application must decide what to do.</p>
+<p>Games often just ignore the loss.</p>
+<p>DNS often retries.</p>
+<p>QUIC implements reliability itself on top of UDP.</p>
+<hr>
+<h2 id="why-use-udp-then">Why Use UDP Then?</h2>
+<p>Because all the TCP machinery costs time.</p>
+<p>TCP must maintain:</p>
+<ul>
+<li>sequence numbers</li>
+<li>ACKs</li>
+<li>retransmission timers</li>
+<li>congestion windows</li>
+<li>receive windows</li>
+<li>connection state</li>
+</ul>
+<p>UDP avoids all of that.</p>
+<p>A UDP send can be roughly:</p>
+<pre class="hljs"><code>Application
+   ↓
+UDP
+   ↓
+IP
+   ↓
+NIC</code></pre>
+<p>Very little bookkeeping.</p>
+<hr>
+<h2 id="a-real-dns-lookup">A Real DNS Lookup</h2>
+<p>When you type:</p>
+<pre class="hljs"><code>nslookup google.com</code></pre>
+<p>typically:</p>
+<pre class="hljs"><code>Client: 192.168.1.10:55000
+Server: 8.8.8.8:53</code></pre>
+<p>UDP packet:</p>
+<pre class="hljs"><code>Src IP: 192.168.1.10
+Dst IP: 8.8.8.8
+
+Src Port: 55000
+Dst Port: 53
+
+Payload:
+    DNS Query</code></pre>
+<p>Google replies:</p>
+<pre class="hljs"><code>Src Port: 53
+Dst Port: 55000</code></pre>
+<p>The kernel uses that destination port to figure out which process originally asked the question.</p>
+<hr>
+<h2 id="why-a-port-number">Why a Port Number?</h2>
+<p>Imagine your laptop has:</p>
+<ul>
+<li>Chrome</li>
+<li>Discord</li>
+<li>Steam</li>
+<li>VS Code</li>
+</ul>
+<p>all sending UDP packets simultaneously.</p>
+<p>The IP address identifies the machine:</p>
+<pre class="hljs"><code>192.168.1.10</code></pre>
+<p>The port identifies the application:</p>
+<pre class="hljs"><code>Chrome   → 50001
+Discord  → 50002
+Steam    → 50003</code></pre>
+<p>The kernel performs a lookup like:</p>
+<pre class="hljs"><code>(destination IP,
+ destination port,
+ protocol)</code></pre>
+<p>to find the correct socket.</p>
+<hr>
+<p>For interviews, the key mental model is:</p>
+<pre class="hljs"><code>Application Data
+      ↓
+UDP Header
+      ↓
+IP Header
+      ↓
+Ethernet Frame
+      ↓
+Wire</code></pre>
+<p>UDP is essentially:</p>
+<blockquote>
+<p>&quot;Add source/destination ports, a checksum, and hand it to IP.&quot;</p>
+</blockquote>
+<p>Everything else, including reliability, ordering, congestion control, and connection management, is somebody else&#39;s problem. 🚀</p>
+<p>UDP is message-oriented or datagram oriented, unlike tcp being byte stream.</p>
+<p>TCP - duplicate acks and fast retransmit.</p>
+<p>TCP connection oritented - it means both sides maintain state. After state they ermember next sequence number, next ack number, receive window, congestion window, timers.</p>
+<p>UDP packets are identified by (local ip, local port)</p>
+<p>This is one of the most common networking interview questions.</p>
+<p>The short version:</p>
+<pre class="hljs"><code>MTU = Maximum size of an IP packet on a link
+
+MSS = Maximum TCP payload in one TCP segment</code></pre>
+<p>MSS is derived from MTU.</p>
+<hr>
+<h2 id="mtu-maximum-transmission-unit">MTU (Maximum Transmission Unit)</h2>
+<p>MTU is a property of the network link.</p>
+<p>For Ethernet, the common value is:</p>
+<pre class="hljs"><code>1500 bytes</code></pre>
+<p>Meaning:</p>
+<pre class="hljs"><code>IP Header
++ TCP/UDP Header
++ Data
+&lt;= 1500 bytes</code></pre>
+<p>must fit into one Ethernet frame.</p>
+<p>If it doesn&#39;t fit:</p>
+<pre class="hljs"><code>2000-byte IP packet</code></pre>
+<p>then either:</p>
+<ul>
+<li>fragmentation happens (bad)</li>
+<li>packet gets dropped and sender learns to use smaller packets</li>
+</ul>
+<hr>
+<p>Example:</p>
+<pre class="hljs"><code>MTU = 1500
+
+IP Header = 20 bytes
+TCP Header = 20 bytes
+
+Remaining payload:
+1500 - 20 - 20
+= 1460 bytes</code></pre>
+<hr>
+<h2 id="mss-maximum-segment-size">MSS (Maximum Segment Size)</h2>
+<p>MSS applies only to TCP.</p>
+<p>It tells:</p>
+<blockquote>
+<p>&quot;What&#39;s the largest chunk of application data I should put in one TCP segment?&quot;</p>
+</blockquote>
+<p>For a normal Ethernet path:</p>
+<pre class="hljs"><code>MTU = 1500
+
+IP Header = 20
+TCP Header = 20
+
+MSS = 1460</code></pre>
+<hr>
+<p>Visualization:</p>
+<pre class="hljs"><code>|&lt;------------ MTU = 1500 -----------&gt;|
+
++----------+-----------+-------------+
+| IP Header|TCP Header | TCP Payload |
+| 20 bytes | 20 bytes  | 1460 bytes  |
++----------+-----------+-------------+</code></pre>
+<p>The payload part is MSS.</p>
+<hr>
+<h2 id="why-does-tcp-care-about-mss">Why does TCP care about MSS?</h2>
+<p>Suppose application writes:</p>
+<pre class="hljs"><code>10000 bytes</code></pre>
+<p>TCP will split:</p>
+<pre class="hljs"><code>1460
+1460
+1460
+1460
+1460
+1460
+1240</code></pre>
+<p>instead of generating huge packets.</p>
+<hr>
+<h2 id="how-does-mss-get-chosen">How does MSS get chosen?</h2>
+<p>During the TCP handshake:</p>
+<pre class="hljs"><code>SYN</code></pre>
+<p>contains an MSS option.</p>
+<p>Example:</p>
+<pre class="hljs"><code>Client:
+MSS = 1460
+
+Server:
+MSS = 1460</code></pre>
+<p>Each side tells the other:</p>
+<blockquote>
+<p>&quot;Please don&#39;t send me TCP payloads larger than this.&quot;</p>
+</blockquote>
+<hr>
+<h2 id="what-about-udp">What about UDP?</h2>
+<p>UDP does not have MSS.</p>
+<p>You can do:</p>
+<pre class="hljs"><code>sendto(..., <span class="hljs-number">5000</span>);</code></pre>
+<p>and create a 5000-byte UDP datagram.</p>
+<p>But then IP may need to fragment it.</p>
+<p>This is one reason large UDP packets are often avoided.</p>
+<hr>
+<h2 id="common-interview-numbers">Common interview numbers</h2>
+<p>Ethernet:</p>
+<pre class="hljs"><code>MTU = 1500</code></pre>
+<p>IPv4:</p>
+<pre class="hljs"><code>IP Header = 20 bytes
+TCP Header = 20 bytes
+
+MSS = 1460</code></pre>
+<p>IPv6:</p>
+<pre class="hljs"><code>IP Header = 40 bytes
+TCP Header = 20 bytes
+
+MSS = 1440</code></pre>
+<hr>
+<h2 id="easy-way-to-remember">Easy way to remember</h2>
+<p>Think of a shipping box 📦.</p>
+<p><strong>MTU</strong> = size of the entire box.</p>
+<pre class="hljs"><code>+-------------------+
+| headers + payload |
++-------------------+</code></pre>
+<p><strong>MSS</strong> = usable space after TCP/IP headers are already occupying part of the box.</p>
+<pre class="hljs"><code>Box size (MTU)
+    -
+Header space
+    =
+Payload space (MSS)</code></pre>
+<p>So in interviews:</p>
+<pre class="hljs"><code>MSS = MTU - IP Header - TCP Header</code></pre>
+<p>(ignoring optional headers).</p>
+<p>That&#39;s the formula people expect you to know.</p>
+<h2 id="http2-and-quic">HTTP/2 and QUIC</h2>
+<ul>
+<li>http is a stateless protocl</li>
+<li>hypertext transfer protocol</li>
+<li>http 1.0 - establish a connection over tcp, then immediately ask for a file, get it, shut down tcp connection</li>
+<li>http 1.1 - pipelining, send over your png file, and other file, multiple requests one after other in a single tcp stream.</li>
+<li>head of line blocking at the http layer. Can work around by opening a bunch of tcp connections.</li>
+<li>http 2 - set up streams on top one tcp connection. each stream is like a tcp connection of its own. allows you to multiplex. multiple requests over one tcp connection.</li>
+<li>each request gets a stream id. Everything is chopped into frames and interleaved on the wire. Each individual image may finish later than the first image in http 1.1 But image 2 starts immediately, css/js don&#39;t wait behind giant images. total page load is much better.</li>
+<li>in http 1.1, 5 mb image, 100 kb cs, 100 kb js, instead of interleaving, in 1.1 the image starts and everything waits.</li>
+<li>there is <code>SETTINGS_MAX_CONCURRENT_STREAMS</code> sent bt the server.</li>
+<li>but tcp is still a byte stream. if packet b is lost, packet c cannot be delivered, until packet b is retransmitted.</li>
+<li>so lost packet can stall every stream, tcp level head of line blocking</li>
+<li>http 3 uses quic andd udp. quic has independent streams. if image stream packet lost only that stream waits. css js html stream can continue.</li>
+</ul>
+<p>Interview summary:</p>
+<p>HTTP/1.1 often needed multiple TCP connections for parallelism.<br>HTTP/2 uses one TCP connection and multiplexes many logical streams via frames.<br>Frames from different streams are interleaved on the wire.<br>Streams are limited by SETTINGS_MAX_CONCURRENT_STREAMS.<br>HTTP/2 removes HTTP-layer HOL blocking but still suffers TCP-level HOL blocking.<br>HTTP/3/QUIC removes that remaining TCP HOL blocking by providing independent streams over UDP.</p>
+<ul>
+<li>quic is the newest transport layer protocol</li>
+</ul>
+<p>For interviews, you don&#39;t need to memorize every RFC. You need to understand <strong>how a browser talks to a server</strong>, why HTTP was designed the way it was, and how modern web applications maintain user state despite HTTP being stateless.</p>
+<hr>
+<h2 id="1-what-is-http">1. What is HTTP?</h2>
+<p><strong>HTTP (HyperText Transfer Protocol)</strong> is an application-layer protocol used by clients and servers to exchange data.</p>
+<p>Typical flow:</p>
+<pre class="hljs"><code>Browser
+   |
+HTTP Request
+   |
+Web Server
+   |
+HTTP Response
+   |
+Browser</code></pre>
+<p>Example:</p>
+<p>Request:</p>
+<pre class="hljs"><code><span class="hljs-keyword">GET</span> <span class="hljs-string">/users/123</span> <span class="hljs-meta">HTTP/1.1</span>
+<span class="hljs-attribute">Host</span><span class="hljs-punctuation">: </span>api.example.com</code></pre>
+<p>Response:</p>
+<pre class="hljs"><code><span class="hljs-meta">HTTP/1.1</span> <span class="hljs-number">200</span> OK
+<span class="hljs-attribute">Content-Type</span><span class="hljs-punctuation">: </span>application/json
+
+<span class="language-json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">&quot;name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Alice&quot;</span>
+<span class="hljs-punctuation">}</span></span></code></pre>
+<hr>
+<h2 id="2-structure-of-http-message">2. Structure of HTTP Message</h2>
+<h3 id="request">Request</h3>
+<pre class="hljs"><code><span class="hljs-keyword">GET</span> <span class="hljs-string">/products/5</span> <span class="hljs-meta">HTTP/1.1</span>
+<span class="hljs-attribute">Host</span><span class="hljs-punctuation">: </span>amazon.com
+<span class="hljs-attribute">Authorization</span><span class="hljs-punctuation">: </span>Bearer xyz
+<span class="hljs-attribute">Cookie</span><span class="hljs-punctuation">: </span>session=abc
+
+<span class="language-ada">&lt;<span class="hljs-keyword">body</span>&gt;</span></code></pre>
+<p>Contains:</p>
+<h4 id="request-line">Request Line</h4>
+<pre class="hljs"><code><span class="hljs-keyword">GET</span> <span class="hljs-string">/products/5</span> <span class="hljs-meta">HTTP/1.1</span></code></pre>
+<ul>
+<li>Method</li>
+<li>Path</li>
+<li>HTTP version</li>
+</ul>
+<h4 id="headers">Headers</h4>
+<p>Metadata:</p>
+<pre class="hljs"><code><span class="hljs-attribute">Host</span>:
+<span class="hljs-attribute">Authorization</span>:
+<span class="hljs-attribute">Content-Type</span>:
+<span class="hljs-attribute">Cookie</span>:
+User-Agent:</code></pre>
+<h4 id="body">Body</h4>
+<p>Usually for:</p>
+<ul>
+<li>POST</li>
+<li>PUT</li>
+<li>PATCH</li>
+</ul>
+<p>Example:</p>
+<pre class="hljs"><code><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">&quot;name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Dedeepya&quot;</span>
+<span class="hljs-punctuation">}</span></code></pre>
+<hr>
+<h3 id="response">Response</h3>
+<pre class="hljs"><code><span class="hljs-meta">HTTP/1.1</span> <span class="hljs-number">200</span> OK
+<span class="hljs-attribute">Content-Type</span><span class="hljs-punctuation">: </span>application/json
+
+<span class="language-json"><span class="hljs-punctuation">{</span>
+   <span class="hljs-attr">&quot;success&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">true</span></span>
+<span class="hljs-punctuation">}</span></span></code></pre>
+<p>Contains:</p>
+<h4 id="status-line">Status Line</h4>
+<pre class="hljs"><code><span class="hljs-meta">HTTP/1.1</span> <span class="hljs-number">200</span> OK</code></pre>
+<h4 id="headers-1">Headers</h4>
+<pre class="hljs"><code>Content-Type
+Content-Length
+Set-Cookie
+Cache-Control</code></pre>
+<h4 id="body-1">Body</h4>
+<p>Actual data.</p>
+<hr>
+<h2 id="3-important-http-methods">3. Important HTTP Methods</h2>
+<h3 id="get">GET</h3>
+<p>Retrieve data.</p>
+<pre class="hljs"><code>GET /users/5</code></pre>
+<p>Example:</p>
+<pre class="hljs"><code>Get profile information
+Get product list
+Get article</code></pre>
+<p>Should NOT modify server state.</p>
+<hr>
+<h3 id="post">POST</h3>
+<p>Create new resource.</p>
+<pre class="hljs"><code>POST /users</code></pre>
+<p>Body:</p>
+<pre class="hljs"><code><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">&quot;name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Alice&quot;</span>
+<span class="hljs-punctuation">}</span></code></pre>
+<p>Creates a new user.</p>
+<hr>
+<h3 id="put">PUT</h3>
+<p>Replace entire resource.</p>
+<pre class="hljs"><code>PUT /users/5</code></pre>
+<pre class="hljs"><code><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">&quot;name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Bob&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;age&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">22</span>
+<span class="hljs-punctuation">}</span></code></pre>
+<p>Think:</p>
+<blockquote>
+<p>&quot;Replace user 5 with this version.&quot;</p>
+</blockquote>
+<hr>
+<h3 id="delete">DELETE</h3>
+<p>Delete resource.</p>
+<pre class="hljs"><code>DELETE /users/5</code></pre>
+<p>Deletes user.</p>
+<hr>
+<h2 id="4-idempotency">4. Idempotency</h2>
+<p>Interview favorite.</p>
+<p>An operation is <strong>idempotent</strong> if performing it multiple times produces the same final result.</p>
+<h4 id="get-1">GET</h4>
+<pre class="hljs"><code>GET /user/5
+GET /user/5
+GET /user/5</code></pre>
+<p>Same result.</p>
+<p>Idempotent ✅</p>
+<hr>
+<h4 id="delete-1">DELETE</h4>
+<pre class="hljs"><code>DELETE /user/5
+DELETE /user/5</code></pre>
+<p>User still ends up deleted.</p>
+<p>Idempotent ✅</p>
+<hr>
+<h4 id="put-1">PUT</h4>
+<pre class="hljs"><code>PUT /user/5
+{
+   &quot;name&quot;:&quot;Alice&quot;
+}</code></pre>
+<p>Repeated:</p>
+<pre class="hljs"><code>PUT /user/5
+{
+   &quot;name&quot;:&quot;Alice&quot;
+}</code></pre>
+<p>Same final state.</p>
+<p>Idempotent ✅</p>
+<hr>
+<h4 id="post-1">POST</h4>
+<pre class="hljs"><code>POST /users</code></pre>
+<p>Repeated:</p>
+<pre class="hljs"><code>POST /users</code></pre>
+<p>May create:</p>
+<pre class="hljs"><code>User 1
+User 2
+User 3</code></pre>
+<p>Not idempotent ❌</p>
+<hr>
+<h2 id="5-http-status-codes">5. HTTP Status Codes</h2>
+<h4 id="2xx-success">2xx Success</h4>
+<pre class="hljs"><code>200 OK
+201 Created
+204 No Content</code></pre>
+<hr>
+<h4 id="3xx-redirect">3xx Redirect</h4>
+<pre class="hljs"><code>301 Moved Permanently
+302 Found
+304 Not Modified</code></pre>
+<hr>
+<h4 id="4xx-client-errors">4xx Client Errors</h4>
+<pre class="hljs"><code>400 Bad Request
+401 Unauthorized
+403 Forbidden
+404 Not Found
+429 Too Many Requests</code></pre>
+<p>Interview distinction:</p>
+<h4 id="401">401</h4>
+<p>Not authenticated.</p>
+<pre class="hljs"><code>Login first.</code></pre>
+<h4 id="403">403</h4>
+<p>Authenticated but no permission.</p>
+<pre class="hljs"><code>You are not admin.</code></pre>
+<hr>
+<h4 id="5xx-server-errors">5xx Server Errors</h4>
+<pre class="hljs"><code>500 Internal Server Error
+502 Bad Gateway
+503 Service Unavailable
+504 Gateway Timeout</code></pre>
+<hr>
+<h2 id="6-statelessness">6. Statelessness</h2>
+<p>Most important HTTP concept.</p>
+<p>HTTP is <strong>stateless</strong>.</p>
+<p>Meaning:</p>
+<p>Request 1:</p>
+<pre class="hljs"><code>GET /profile</code></pre>
+<p>Request 2:</p>
+<pre class="hljs"><code>GET /orders</code></pre>
+<p>The server does not automatically remember that these requests came from the same user.</p>
+<p>Every request is independent.</p>
+<hr>
+<p>Why?</p>
+<p>Makes servers:</p>
+<ul>
+<li>simple</li>
+<li>scalable</li>
+<li>easy to load balance</li>
+</ul>
+<p>Any server can handle any request.</p>
+<hr>
+<h2 id="7-then-how-do-websites-remember-me">7. Then How Do Websites Remember Me?</h2>
+<p>Using:</p>
+<ul>
+<li>Cookies</li>
+<li>Sessions</li>
+<li>Tokens</li>
+</ul>
+<hr>
+<h2 id="8-cookies">8. Cookies</h2>
+<p>Small key-value data stored by browser.</p>
+<p>Server sends:</p>
+<pre class="hljs"><code><span class="hljs-attribute">Set-Cookie</span><span class="hljs-punctuation">: </span>session_id=abc123</code></pre>
+<p>Browser stores it.</p>
+<p>Future requests:</p>
+<pre class="hljs"><code><span class="hljs-attribute">Cookie</span><span class="hljs-punctuation">: </span>session_id=abc123</code></pre>
+<p>Browser automatically attaches it.</p>
+<hr>
+<p>Example</p>
+<p>Login:</p>
+<pre class="hljs"><code>POST /login</code></pre>
+<p>Server:</p>
+<pre class="hljs"><code><span class="hljs-attribute">Set-Cookie</span><span class="hljs-punctuation">: </span>session=xyz</code></pre>
+<p>Later:</p>
+<pre class="hljs"><code>GET /profile
+<span class="hljs-attribute">Cookie</span><span class="hljs-punctuation">: </span>session=xyz</code></pre>
+<p>Server identifies you.</p>
+<hr>
+<h2 id="9-sessions">9. Sessions</h2>
+<p>A session is server-side state.</p>
+<p>Server stores:</p>
+<pre class="hljs"><code>session xyz
+   -&gt; user id 123</code></pre>
+<p>Browser only stores:</p>
+<pre class="hljs"><code>session=xyz</code></pre>
+<p>Flow:</p>
+<pre class="hljs"><code>Browser
+  |
+session=xyz
+  |
+Server
+  |
+lookup xyz
+  |
+user 123</code></pre>
+<hr>
+<p>Interview answer:</p>
+<h4 id="cookie-vs-session">Cookie vs Session</h4>
+<p>Cookie:</p>
+<pre class="hljs"><code>Stored in browser</code></pre>
+<p>Session:</p>
+<pre class="hljs"><code>Stored on server</code></pre>
+<p>Cookie often contains:</p>
+<pre class="hljs"><code>session id</code></pre>
+<p>used to retrieve session.</p>
+<hr>
+<h2 id="10-jwt-token-authentication">10. JWT / Token Authentication</h2>
+<p>Modern APIs often avoid sessions.</p>
+<p>After login:</p>
+<p>Server returns token:</p>
+<pre class="hljs"><code>eyJhbGciOi...</code></pre>
+<p>Client stores token.</p>
+<p>Future:</p>
+<pre class="hljs"><code><span class="hljs-attribute">Authorization</span><span class="hljs-punctuation">: </span>Bearer token</code></pre>
+<p>Server validates token.</p>
+<p>No session lookup required.</p>
+<hr>
+<p>Advantages:</p>
+<ul>
+<li>stateless</li>
+<li>works well for microservices</li>
+</ul>
+<hr>
+<h2 id="11-keep-alive">11. Keep-Alive</h2>
+<p>Without keep-alive:</p>
+<pre class="hljs"><code>TCP connection
+Request
+Response
+Close
+
+TCP connection
+Request
+Response
+Close</code></pre>
+<p>For every request:</p>
+<ul>
+<li>TCP handshake</li>
+<li>teardown</li>
+</ul>
+<p>Expensive.</p>
+<hr>
+<p>With Keep-Alive:</p>
+<pre class="hljs"><code>TCP connection
+
+Request1
+Response1
+
+Request2
+Response2
+
+Request3
+Response3</code></pre>
+<p>Same TCP connection reused.</p>
+<p>Much faster.</p>
+<hr>
+<p>Interview question:</p>
+<h4 id="why-keep-alive">Why keep-alive?</h4>
+<p>Reduces:</p>
+<ul>
+<li>TCP handshakes</li>
+<li>latency</li>
+<li>CPU overhead</li>
+</ul>
+<p>Improves throughput.</p>
+<hr>
+<h2 id="12-http11-problem">12. HTTP/1.1 Problem</h2>
+<p>Suppose page contains:</p>
+<pre class="hljs"><code>HTML
+10 images
+5 CSS
+10 JS files</code></pre>
+<p>Many requests.</p>
+<p>HTTP/1.1 suffered from:</p>
+<h4 id="head-of-line-blocking">Head-of-line blocking</h4>
+<p>One request can delay others.</p>
+<hr>
+<h2 id="13-http2">13. HTTP/2</h2>
+<p>Uses a single TCP connection with multiple streams.</p>
+<p>Conceptually:</p>
+<pre class="hljs"><code>Connection
+
+Stream 1 -&gt; image
+Stream 2 -&gt; css
+Stream 3 -&gt; js
+Stream 4 -&gt; api</code></pre>
+<p>Responses interleave.</p>
+<pre class="hljs"><code>img chunk
+css chunk
+js chunk
+img chunk
+api chunk</code></pre>
+<p>Much faster page loading.</p>
+<hr>
+<h2 id="14-rest-basics">14. REST Basics</h2>
+<p>REST = Representational State Transfer</p>
+<p>A style for designing APIs.</p>
+<p>Think:</p>
+<blockquote>
+<p>Resources + HTTP methods</p>
+</blockquote>
+<hr>
+<p>Resource:</p>
+<pre class="hljs"><code>users
+orders
+products</code></pre>
+<p>Endpoints:</p>
+<pre class="hljs"><code>GET    /users
+GET    /users/5
+POST   /users
+PUT    /users/5
+DELETE /users/5</code></pre>
+<hr>
+<p>Bad API:</p>
+<pre class="hljs"><code>/createUser
+/deleteUser
+/getUser</code></pre>
+<p>Not RESTful.</p>
+<hr>
+<p>Good API:</p>
+<pre class="hljs"><code>POST   /users
+GET    /users/5
+DELETE /users/5</code></pre>
+<hr>
+<h2 id="15-rest-principles-interview-level">15. REST Principles (Interview Level)</h2>
+<h4 id="1-client-server-separation">1. Client-Server Separation</h4>
+<p>Frontend and backend independent.</p>
+<hr>
+<h4 id="2-stateless">2. Stateless</h4>
+<p>Each request contains everything needed.</p>
+<hr>
+<h4 id="3-resource-oriented">3. Resource-Oriented</h4>
+<p>Use nouns:</p>
+<pre class="hljs"><code>/users
+/orders
+/products</code></pre>
+<p>not verbs.</p>
+<hr>
+<h4 id="4-standard-http-methods">4. Standard HTTP Methods</h4>
+<pre class="hljs"><code>GET
+POST
+PUT
+DELETE</code></pre>
+<hr>
+<h2 id="common-interview-questions">Common Interview Questions</h2>
+<h4 id="difference-between-cookie-and-session">Difference between Cookie and Session?</h4>
+<p>Cookie:</p>
+<ul>
+<li>Browser side</li>
+</ul>
+<p>Session:</p>
+<ul>
+<li>Server side</li>
+</ul>
+<p>Usually cookie stores session ID.</p>
+<hr>
+<h4 id="why-is-http-stateless">Why is HTTP stateless?</h4>
+<p>Scalability and simplicity.</p>
+<hr>
+<h4 id="why-use-keep-alive">Why use Keep-Alive?</h4>
+<p>Reuse TCP connections and avoid repeated handshakes.</p>
+<hr>
+<h4 id="difference-between-put-and-post">Difference between PUT and POST?</h4>
+<p>POST:</p>
+<pre class="hljs"><code>Create new resource
+Not idempotent</code></pre>
+<p>PUT:</p>
+<pre class="hljs"><code>Replace resource
+Idempotent</code></pre>
+<hr>
+<h4 id="difference-between-401-and-403">Difference between 401 and 403?</h4>
+<p>401:</p>
+<pre class="hljs"><code>Not authenticated</code></pre>
+<p>403:</p>
+<pre class="hljs"><code>Authenticated but not allowed</code></pre>
+<hr>
+<h4 id="how-does-login-work">How does login work?</h4>
+<ol>
+<li>User sends credentials.</li>
+<li>Server validates.</li>
+<li>Server creates session (or JWT).</li>
+<li>Session ID stored in cookie (or JWT stored by client).</li>
+<li>Future requests identify user.</li>
+</ol>
+<p>Those come up surprisingly often in backend rounds.</p>
+<h2 id="http-3">HTTP 3</h2>
+<p>These are exactly the topics that separate &quot;I know HTTP&quot; from &quot;I understand how large-scale web systems work.&quot;</p>
+<hr>
+<h2 id="1-http-caching">1. HTTP Caching</h2>
+<p>Imagine loading YouTube.</p>
+<p>Without caching:</p>
+<pre class="hljs"><code>Browser
+   |
+GET logo.png
+   |
+Server
+   |
+logo.png</code></pre>
+<p>every page load.</p>
+<p>Wasteful.</p>
+<p>Instead:</p>
+<pre class="hljs"><code><span class="hljs-attribute">Cache-Control</span><span class="hljs-punctuation">: </span>max-age=3600</code></pre>
+<p>means:</p>
+<blockquote>
+<p>You may reuse this response for the next hour.</p>
+</blockquote>
+<p>Browser stores it locally.</p>
+<p>Next request:</p>
+<pre class="hljs"><code>Browser
+   |
+(check cache)
+   |
+logo.png found</code></pre>
+<p>No network request.</p>
+<hr>
+<h3 id="cache-control">Cache-Control</h3>
+<p>Common directives:</p>
+<pre class="hljs"><code><span class="hljs-attribute">Cache-Control</span><span class="hljs-punctuation">: </span>max-age=3600</code></pre>
+<p>cache for 1 hour.</p>
+<hr>
+<pre class="hljs"><code><span class="hljs-attribute">Cache-Control</span><span class="hljs-punctuation">: </span>no-cache</code></pre>
+<p>Can store, but must validate before using.</p>
+<hr>
+<pre class="hljs"><code><span class="hljs-attribute">Cache-Control</span><span class="hljs-punctuation">: </span>no-store</code></pre>
+<p>Never store.</p>
+<p>Useful for:</p>
+<pre class="hljs"><code>Bank statements
+Medical records</code></pre>
+<hr>
+<h3 id="the-real-problem">The Real Problem</h3>
+<p>Suppose browser cached:</p>
+<pre class="hljs"><code>logo.png</code></pre>
+<p>for 1 year.</p>
+<p>But company changes logo tomorrow.</p>
+<p>How does browser know?</p>
+<hr>
+<h3 id="etag">ETag</h3>
+<p>Server returns:</p>
+<pre class="hljs"><code><span class="hljs-attribute">ETag</span><span class="hljs-punctuation">: </span>&quot;abc123&quot;</code></pre>
+<p>Think:</p>
+<blockquote>
+<p>fingerprint of resource</p>
+</blockquote>
+<p>Browser stores:</p>
+<pre class="hljs"><code>logo.png
+ETag=abc123</code></pre>
+<p>Later:</p>
+<pre class="hljs"><code>GET /logo.png
+
+<span class="hljs-attribute">If-None-Match</span><span class="hljs-punctuation">: </span>&quot;abc123&quot;</code></pre>
+<p>Server compares.</p>
+<p>If unchanged:</p>
+<pre class="hljs"><code>304 Not Modified</code></pre>
+<p>No image sent.</p>
+<p>Just:</p>
+<pre class="hljs"><code>Still valid.
+Use your cached copy.</code></pre>
+<p>Huge bandwidth savings.</p>
+<hr>
+<h3 id="interview-answer">Interview Answer</h3>
+<h4 id="difference-between-max-age-and-etag">Difference between max-age and ETag</h4>
+<p>max-age:</p>
+<pre class="hljs"><code>Time-based caching</code></pre>
+<p>ETag:</p>
+<pre class="hljs"><code>Content-based validation</code></pre>
+<hr>
+<h2 id="2-reverse-proxy">2. Reverse Proxy</h2>
+<p>Most important backend infrastructure component.</p>
+<p>User thinks:</p>
+<pre class="hljs"><code>api.company.com</code></pre>
+<p>is the server.</p>
+<p>Actually:</p>
+<pre class="hljs"><code>Client
+  |
+Nginx
+  |
+Backend Server</code></pre>
+<hr>
+<pre class="hljs"><code>Client
+  |
+Reverse Proxy
+  |
+Backend</code></pre>
+<p>The reverse proxy sits in front.</p>
+<p>Examples:</p>
+<ul>
+<li>Nginx</li>
+<li>Envoy</li>
+<li>HAProxy</li>
+</ul>
+<hr>
+<h3 id="why">Why?</h3>
+<h4 id="ssl-termination">SSL Termination</h4>
+<p>Instead of:</p>
+<pre class="hljs"><code>100 backend servers</code></pre>
+<p>handling TLS,</p>
+<p>Nginx handles TLS.</p>
+<p>Backend receives plain HTTP internally.</p>
+<hr>
+<h4 id="load-balancing">Load Balancing</h4>
+<pre class="hljs"><code>           Backend1
+Client -&gt; Nginx -&gt; Backend2
+           Backend3</code></pre>
+<hr>
+<h4 id="caching">Caching</h4>
+<p>Static files cached at proxy.</p>
+<hr>
+<h4 id="rate-limiting">Rate Limiting</h4>
+<p>Prevent abuse.</p>
+<hr>
+<h4 id="compression">Compression</h4>
+<p>Compress responses before sending.</p>
+<hr>
+<h3 id="interview-definition">Interview Definition</h3>
+<p>A reverse proxy is a server that sits between clients and backend servers and forwards requests while providing features like caching, TLS termination, load balancing, and rate limiting.</p>
+<hr>
+<h2 id="3-load-balancers">3. Load Balancers</h2>
+<p>Suppose:</p>
+<pre class="hljs"><code>1 server</code></pre>
+<p>handles:</p>
+<pre class="hljs"><code>10 requests/sec</code></pre>
+<p>Traffic grows:</p>
+<pre class="hljs"><code>10,000 requests/sec</code></pre>
+<p>One machine cannot cope.</p>
+<p>Add more servers.</p>
+<pre class="hljs"><code>       Server1
+      /
+LB
+      \
+       Server2</code></pre>
+<hr>
+<p>Now:</p>
+<pre class="hljs"><code>Client
+   |
+Load Balancer
+  / | \
+ S1 S2 S3</code></pre>
+<hr>
+<h3 id="round-robin">Round Robin</h3>
+<p>Simplest.</p>
+<pre class="hljs"><code>Req1 -&gt; S1
+Req2 -&gt; S2
+Req3 -&gt; S3
+Req4 -&gt; S1</code></pre>
+<hr>
+<h3 id="least-connections">Least Connections</h3>
+<p>Send request to server with fewest active connections.</p>
+<p>Useful when requests vary in duration.</p>
+<hr>
+<h3 id="consistent-hashing">Consistent Hashing</h3>
+<p>Used when cache locality matters.</p>
+<p>Hash:</p>
+<pre class="hljs"><code>user_id</code></pre>
+<p>to select server.</p>
+<p>Same user tends to hit same server.</p>
+<p>Common in:</p>
+<ul>
+<li>Redis clusters</li>
+<li>CDN routing</li>
+</ul>
+<hr>
+<h2 id="l4-vs-l7-load-balancing">L4 vs L7 Load Balancing</h2>
+<p>Interview favorite.</p>
+<hr>
+<h3 id="layer-4">Layer 4</h3>
+<p>Works at:</p>
+<pre class="hljs"><code>IP
+TCP
+UDP</code></pre>
+<p>Looks only at:</p>
+<pre class="hljs"><code>IP
+Port</code></pre>
+<p>Fast.</p>
+<hr>
+<p>Example:</p>
+<pre class="hljs"><code>TCP packet</code></pre>
+<p>forward without inspecting HTTP.</p>
+<hr>
+<h3 id="layer-7">Layer 7</h3>
+<p>Understands:</p>
+<pre class="hljs"><code>HTTP
+Headers
+Cookies
+URL path</code></pre>
+<p>Can do:</p>
+<pre class="hljs"><code>/api -&gt; backend1
+
+/images -&gt; backend2</code></pre>
+<hr>
+<p>Example:</p>
+<pre class="hljs"><code>GET /images/logo.png</code></pre>
+<p>goes somewhere different from:</p>
+<pre class="hljs"><code>GET /payments</code></pre>
+<hr>
+<h2 id="4-http11-hol-blocking">4. HTTP/1.1 HOL Blocking</h2>
+<p>Suppose:</p>
+<pre class="hljs"><code>Image1
+Image2
+Image3</code></pre>
+<p>over one TCP connection.</p>
+<p>TCP guarantees ordering.</p>
+<p>If packet 5 lost:</p>
+<pre class="hljs"><code>1 2 3 4 X 6 7 8</code></pre>
+<p>TCP holds:</p>
+<pre class="hljs"><code>6 7 8</code></pre>
+<p>until 5 arrives.</p>
+<p>Application sees nothing after 4.</p>
+<p>This is called:</p>
+<h4 id="head-of-line-blocking-1">Head-of-Line Blocking</h4>
+<hr>
+<p>HTTP/2 solved application-level HOL blocking:</p>
+<p>multiple streams.</p>
+<p>But all streams still share:</p>
+<pre class="hljs"><code>one TCP connection</code></pre>
+<p>Loss affects everyone.</p>
+<hr>
+<h2 id="5-why-http2-still-suffers">5. Why HTTP/2 Still Suffers</h2>
+<p>Imagine:</p>
+<pre class="hljs"><code>Stream A -&gt; image
+Stream B -&gt; css
+Stream C -&gt; js</code></pre>
+<p>All multiplexed.</p>
+<p>TCP packet carrying image data lost.</p>
+<p>TCP must preserve order.</p>
+<p>Therefore:</p>
+<pre class="hljs"><code>CSS waits
+JS waits
+Image waits</code></pre>
+<p>even though only image packet was lost.</p>
+<p>This is transport-layer HOL blocking.</p>
+<hr>
+<h2 id="6-http3">6. HTTP/3</h2>
+<p>HTTP/3 runs on:</p>
+<pre class="hljs"><code>QUIC</code></pre>
+<p>instead of TCP.</p>
+<p>Important interview sentence:</p>
+<blockquote>
+<p>HTTP/3 = HTTP semantics over QUIC over UDP.</p>
+</blockquote>
+<hr>
+<p>Stack:</p>
+<p>HTTP/1.1</p>
+<pre class="hljs"><code>HTTP
+TCP
+IP</code></pre>
+<hr>
+<p>HTTP/2</p>
+<pre class="hljs"><code>HTTP/2
+TCP
+IP</code></pre>
+<hr>
+<p>HTTP/3</p>
+<pre class="hljs"><code>HTTP/3
+QUIC
+UDP
+IP</code></pre>
+<hr>
+<h2 id="7-why-udp">7. Why UDP?</h2>
+<p>Because TCP is implemented in kernel.</p>
+<p>Cannot easily modify.</p>
+<p>QUIC:</p>
+<pre class="hljs"><code>Implemented in user space</code></pre>
+<p>Runs over UDP.</p>
+<p>Gives Google freedom to innovate.</p>
+<hr>
+<h2 id="8-quic-streams">8. QUIC Streams</h2>
+<p>Key idea:</p>
+<p>Each stream has independent ordering.</p>
+<hr>
+<p>Imagine:</p>
+<pre class="hljs"><code>Connection
+ ├─ Stream 1 (image)
+ ├─ Stream 2 (css)
+ └─ Stream 3 (js)</code></pre>
+<hr>
+<p>Packet carrying image lost.</p>
+<p>Only:</p>
+<pre class="hljs"><code>Stream 1</code></pre>
+<p>waits.</p>
+<hr>
+<p>CSS continues.</p>
+<p>JS continues.</p>
+<hr>
+<p>This eliminates transport-layer HOL blocking.</p>
+<hr>
+<h2 id="example">Example</h2>
+<p>TCP:</p>
+<pre class="hljs"><code>Packet:
+1 2 3 X 5 6</code></pre>
+<p>Need:</p>
+<pre class="hljs"><code>1 2 3 4 5 6</code></pre>
+<p>before delivering.</p>
+<p>Everyone waits.</p>
+<hr>
+<p>QUIC:</p>
+<pre class="hljs"><code>Stream A:
+1 2 X 4
+
+Stream B:
+1 2 3 4</code></pre>
+<p>Stream B can continue.</p>
+<p>Only Stream A pauses.</p>
+<hr>
+<h2 id="9-quic-reliability">9. QUIC Reliability</h2>
+<p>People hear UDP and think:</p>
+<pre class="hljs"><code>No reliability</code></pre>
+<p>Wrong.</p>
+<p>QUIC reimplements:</p>
+<ul>
+<li>sequence numbers</li>
+<li>ACKs</li>
+<li>retransmissions</li>
+<li>congestion control</li>
+</ul>
+<p>inside QUIC itself.</p>
+<p>Effectively:</p>
+<pre class="hljs"><code>Reliable TCP-like transport</code></pre>
+<p>built atop UDP.</p>
+<hr>
+<h2 id="10-faster-handshake">10. Faster Handshake</h2>
+<p>TCP + TLS 1.3:</p>
+<pre class="hljs"><code>TCP handshake
+TLS handshake</code></pre>
+<p>multiple RTTs.</p>
+<hr>
+<p>QUIC combines them.</p>
+<p>Connection setup often:</p>
+<pre class="hljs"><code>1 RTT</code></pre>
+<p>or even</p>
+<pre class="hljs"><code>0 RTT</code></pre>
+<p>for returning clients.</p>
+<hr>
+<h2 id="11-connection-migration">11. Connection Migration</h2>
+<p>Suppose:</p>
+<p>Phone switches:</p>
+<pre class="hljs"><code>WiFi
+   -&gt;
+5G</code></pre>
+<p>TCP connection breaks.</p>
+<p>Because:</p>
+<pre class="hljs"><code>IP changed</code></pre>
+<hr>
+<p>QUIC uses:</p>
+<pre class="hljs"><code>Connection ID</code></pre>
+<p>instead of relying solely on IP/port tuple.</p>
+<p>Can continue despite network change.</p>
+<p>Great for mobile devices.</p>
+<hr>
+<h2 id="the-interview-summary">The Interview Summary</h2>
+<p>If someone asks:</p>
+<p><strong>Why HTTP/3?</strong></p>
+<p>Answer:</p>
+<blockquote>
+<p>HTTP/2 multiplexes streams over a single TCP connection. Packet loss in TCP causes transport-layer head-of-line blocking because TCP delivers bytes in order. HTTP/3 uses QUIC over UDP, where streams are independently managed. Loss in one stream does not block others, reducing latency and improving performance on lossy networks.</p>
+</blockquote>
+<p>If they ask:</p>
+<p><strong>How does QUIC remain reliable over UDP?</strong></p>
+<p>Answer:</p>
+<blockquote>
+<p>QUIC implements acknowledgements, retransmissions, congestion control, flow control, encryption, and stream multiplexing in user space on top of UDP.</p>
+</blockquote>
+<p>That answer alone is usually enough to impress in a backend/networking interview. 🚀</p>
+<p>One subtle detail many candidates miss: <strong>QUIC does not eliminate packet loss. It eliminates unnecessary waiting caused by unrelated streams sharing TCP&#39;s single ordered byte stream.</strong> That distinction is exactly what interviewers are looking for.</p>
+<p>Excellent questions. These are exactly the questions that get into the design tradeoffs of QUIC.</p>
+<h2 id="if-quic-is-in-user-space-how-is-it-safe">If QUIC is in user space, how is it safe?</h2>
+<p>Remember, &quot;user space&quot; doesn&#39;t mean &quot;bypass the OS&quot;.</p>
+<p>The OS still controls:</p>
+<ul>
+<li>memory protection</li>
+<li>process isolation</li>
+<li>network access</li>
+<li>scheduling</li>
+</ul>
+<p>QUIC is just a program using UDP sockets.</p>
+<pre class="hljs"><code>Chrome
+  |
+QUIC implementation
+  |
+UDP socket
+  |
+Kernel
+  |
+NIC</code></pre>
+<p>Chrome cannot suddenly access another process&#39;s memory.</p>
+<p>It still calls:</p>
+<pre class="hljs"><code>sendto()
+recvfrom()</code></pre>
+<p>through the kernel.</p>
+<p>The kernel remains the security boundary.</p>
+<hr>
+<h2 id="why-move-transport-logic-out-of-the-kernel">Why move transport logic out of the kernel?</h2>
+<p>Updating TCP is painful.</p>
+<p>To improve TCP:</p>
+<pre class="hljs"><code>Linux kernel update
+Windows kernel update
+Router compatibility
+Middlebox compatibility</code></pre>
+<p>takes years.</p>
+<p>With QUIC:</p>
+<pre class="hljs"><code>Update Chrome
+Update Firefox
+Update Server</code></pre>
+<p>done.</p>
+<p>Google can ship a new congestion algorithm next week.</p>
+<p>No kernel upgrade needed.</p>
+<hr>
+<h2 id="does-quic-implement-flow-control">Does QUIC implement flow control?</h2>
+<p>Yes.</p>
+<p>Actually two kinds.</p>
+<h3 id="stream-flow-control">Stream flow control</h3>
+<p>Per stream.</p>
+<pre class="hljs"><code>Stream 1 -&gt; 10 MB image
+Stream 2 -&gt; CSS</code></pre>
+<p>You may want:</p>
+<pre class="hljs"><code>Allow Stream 2
+Pause Stream 1</code></pre>
+<p>without affecting everything.</p>
+<hr>
+<h3 id="connection-flow-control">Connection flow control</h3>
+<p>Across all streams combined.</p>
+<p>Example:</p>
+<pre class="hljs"><code>Connection:
+  Stream A = 50 MB
+  Stream B = 20 MB</code></pre>
+<p>Maybe receiver only wants:</p>
+<pre class="hljs"><code>100 MB</code></pre>
+<p>buffered.</p>
+<p>QUIC enforces that.</p>
+<p>Very similar to TCP receive windows.</p>
+<hr>
+<h2 id="does-quic-implement-congestion-control">Does QUIC implement congestion control?</h2>
+<p>Yes.</p>
+<p>Otherwise internet would melt. 🔥</p>
+<p>QUIC implements things like:</p>
+<ul>
+<li>Cubic</li>
+<li>BBR</li>
+<li>Reno</li>
+</ul>
+<p>depending on implementation.</p>
+<p>Same idea as TCP:</p>
+<pre class="hljs"><code>Network congested
+↓
+Slow down</code></pre>
+<hr>
+<h2 id="does-quic-have-a-slower-connection-than-tcp">Does QUIC have a slower connection than TCP?</h2>
+<p>Usually the opposite.</p>
+<p>Connection establishment is often faster.</p>
+<p>TCP + TLS 1.3:</p>
+<pre class="hljs"><code>TCP handshake
+TLS handshake</code></pre>
+<p>roughly:</p>
+<pre class="hljs"><code>1 RTT + 1 RTT</code></pre>
+<p>(implementation dependent)</p>
+<hr>
+<p>QUIC:</p>
+<pre class="hljs"><code>Handshake
+Encryption negotiation</code></pre>
+<p>combined.</p>
+<p>Often:</p>
+<pre class="hljs"><code>1 RTT</code></pre>
+<p>or</p>
+<pre class="hljs"><code>0 RTT</code></pre>
+<p>for repeat connections.</p>
+<p>So startup latency is often lower.</p>
+<hr>
+<h2 id="is-quic-connection-oriented">Is QUIC connection-oriented?</h2>
+<p>Yes.</p>
+<p>This surprises people because UDP itself is connectionless.</p>
+<p>UDP:</p>
+<pre class="hljs"><code>send packet
+send packet
+send packet</code></pre>
+<p>No concept of a connection.</p>
+<hr>
+<p>QUIC builds one.</p>
+<p>QUIC connection:</p>
+<pre class="hljs"><code>Connection ID
+Streams
+Flow control
+ACKs
+State</code></pre>
+<p>all maintained by QUIC.</p>
+<p>So from an application perspective:</p>
+<blockquote>
+<p>QUIC is connection-oriented.</p>
+</blockquote>
+<hr>
+<h2 id="is-quic-a-byte-stream-protocol">Is QUIC a byte stream protocol?</h2>
+<p>This is where it differs from TCP.</p>
+<p>TCP:</p>
+<pre class="hljs"><code>Hello World</code></pre>
+<p>becomes:</p>
+<pre class="hljs"><code>byte 0
+byte 1
+byte 2
+...</code></pre>
+<p>TCP only understands bytes.</p>
+<hr>
+<p>QUIC understands streams.</p>
+<pre class="hljs"><code>Connection
+   |
+   +-- Stream 1
+   +-- Stream 2
+   +-- Stream 3</code></pre>
+<p>Each stream is independently ordered.</p>
+<p>So QUIC is not merely:</p>
+<pre class="hljs"><code>one giant byte stream</code></pre>
+<p>like TCP.</p>
+<p>It&#39;s more accurate to think:</p>
+<blockquote>
+<p>QUIC provides multiple reliable ordered byte streams within one connection.</p>
+</blockquote>
+<hr>
+<h2 id="does-quic-always-guarantee-reliability">Does QUIC always guarantee reliability?</h2>
+<p>No.</p>
+<p>This is a very important design point.</p>
+<p>QUIC supports different delivery semantics.</p>
+<p>For HTTP/3:</p>
+<pre class="hljs"><code>Reliable
+Ordered</code></pre>
+<p>because web pages need correctness.</p>
+<hr>
+<p>But QUIC also supports things like:</p>
+<ul>
+<li>unreliable datagrams</li>
+<li>partially reliable delivery</li>
+</ul>
+<p>through extensions.</p>
+<p>Example:</p>
+<p>Voice chat.</p>
+<p>Suppose packet 100 is lost.</p>
+<p>Would you rather:</p>
+<h4 id="option-a">Option A</h4>
+<p>Wait 200ms for retransmission.</p>
+<p>or</p>
+<h4 id="option-b">Option B</h4>
+<p>Skip packet 100 and play packet 101.</p>
+<p>Real-time applications usually want B.</p>
+<p>QUIC can support that.</p>
+<p>TCP cannot.</p>
+<hr>
+<h2 id="do-we-choose-which-guarantees-to-add">Do we choose which guarantees to add?</h2>
+<p>Exactly.</p>
+<p>Think of UDP as:</p>
+<pre class="hljs"><code>Raw ingredients</code></pre>
+<p>and QUIC as:</p>
+<pre class="hljs"><code>A transport toolkit</code></pre>
+<p>You can build:</p>
+<pre class="hljs"><code>Reliable ordered stream</code></pre>
+<p>or</p>
+<pre class="hljs"><code>Unreliable datagrams</code></pre>
+<p>or</p>
+<pre class="hljs"><code>Multiplexed streams</code></pre>
+<p>over the same connection.</p>
+<p>HTTP/3 chooses:</p>
+<pre class="hljs"><code>Reliable
+Ordered
+Multiplexed
+Encrypted</code></pre>
+<p>because that&#39;s what web traffic needs.</p>
+<hr>
+<p>A comparison interviewers love:</p>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>TCP</th>
+<th>QUIC</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Reliable</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Ordered delivery</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Congestion control</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Flow control</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Multiplexed streams</td>
+<td>No</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Kernel implementation</td>
+<td>Yes</td>
+<td>Usually</td>
+</tr>
+<tr>
+<td>User-space implementation</td>
+<td>No</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Connection migration</td>
+<td>No</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>HOL blocking between streams</td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Runs over UDP</td>
+<td>No</td>
+<td>Yes</td>
+</tr>
+</tbody></table>
+<p>The key mental model is:</p>
+<p><strong>QUIC is not &quot;UDP but faster.&quot;</strong></p>
+<p>It is closer to:</p>
+<blockquote>
+<p>&quot;A modern transport protocol that reimplements most of TCP&#39;s good properties, adds stream multiplexing and connection migration, and ships in user space over UDP so it can evolve much faster.&quot;</p>
+</blockquote>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="url-to-page.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">What Happens When You Type a URL</span></a><a class="pn-card pn-next" href="sockets-and-zero-copy.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">Sockets, Kernel Structures &amp; Zero-Copy</span></a></nav>
+</main>
+<aside class="toc"><div class="toc-title">On this page</div><ul><li class="toc-d2"><a href="#tcp-transmission-control-protocol">TCP - Transmission Control protocol</a></li><li class="toc-d2"><a href="#udp-user-datagram-protocol">UDP - User Datagram protocol</a></li><li class="toc-d2"><a href="#tcp-internals">TCP internals</a></li><li class="toc-d1"><a href="#1-why-tcp-exists">1. Why TCP exists</a></li><li class="toc-d1"><a href="#2-tcp-is-a-byte-stream">2. TCP is a BYTE STREAM</a></li><li class="toc-d1"><a href="#3-tcp-header">3. TCP Header</a></li><li class="toc-d1"><a href="#4-three-way-handshake">4. Three-Way Handshake</a></li><li class="toc-d1"><a href="#5-sequence-numbers">5. Sequence Numbers</a></li><li class="toc-d1"><a href="#6-acknowledgements">6. Acknowledgements</a></li><li class="toc-d1"><a href="#7-retransmissions">7. Retransmissions</a></li><li class="toc-d1"><a href="#8-sliding-window">8. Sliding Window</a></li><li class="toc-d1"><a href="#9-flow-control">9. Flow Control</a></li><li class="toc-d1"><a href="#10-congestion-control">10. Congestion Control</a></li><li class="toc-d1"><a href="#11-congestion-window-cwnd">11. Congestion Window (cwnd)</a></li><li class="toc-d1"><a href="#12-slow-start">12. Slow Start</a></li><li class="toc-d1"><a href="#13-congestion-detection">13. Congestion Detection</a></li><li class="toc-d1"><a href="#14-fast-retransmit">14. Fast Retransmit</a></li><li class="toc-d1"><a href="#15-timeout-retransmission">15. Timeout Retransmission</a></li><li class="toc-d1"><a href="#16-mss">16. MSS</a></li><li class="toc-d1"><a href="#17-mtu">17. MTU</a></li><li class="toc-d1"><a href="#18-tcp-connection-teardown">18. TCP Connection Teardown</a></li><li class="toc-d1"><a href="#19-timewait">19. TIME_WAIT</a></li><li class="toc-d1"><a href="#20-why-tcp-is-slower-than-udp">20. Why TCP is slower than UDP</a></li><li class="toc-d1"><a href="#21-head-of-line-blocking">21. Head-of-Line Blocking</a></li><li class="toc-d1"><a href="#22-tcp-vs-udp">22. TCP vs UDP</a></li><li class="toc-d1"><a href="#interview-questions-you-should-definitely-be-able-to-answer">Interview questions you should definitely be able to answer</a></li><li class="toc-d1"><a href="#udp">UDP</a></li><li class="toc-d1"><a href="#1-application-writes-data">1. Application writes data</a></li><li class="toc-d1"><a href="#2-udp-header-is-added">2. UDP Header is added</a></li><li class="toc-d1"><a href="#3-ip-layer-wraps-it">3. IP Layer wraps it</a></li><li class="toc-d1"><a href="#4-find-mac-address-arp">4. Find MAC Address (ARP)</a></li><li class="toc-d1"><a href="#5-ethernet-frame-created">5. Ethernet Frame Created</a></li><li class="toc-d1"><a href="#6-routers-forward-it">6. Routers Forward It</a></li><li class="toc-d1"><a href="#7-receiver-gets-packet">7. Receiver Gets Packet</a></li><li class="toc-d1"><a href="#what-udp-doesnt-do">What UDP DOESN&#39;T Do</a></li><li class="toc-d1"><a href="#example-packet-loss">Example: Packet Loss</a></li><li class="toc-d1"><a href="#why-use-udp-then">Why Use UDP Then?</a></li><li class="toc-d1"><a href="#a-real-dns-lookup">A Real DNS Lookup</a></li><li class="toc-d1"><a href="#why-a-port-number">Why a Port Number?</a></li><li class="toc-d1"><a href="#mtu-maximum-transmission-unit">MTU (Maximum Transmission Unit)</a></li><li class="toc-d1"><a href="#mss-maximum-segment-size">MSS (Maximum Segment Size)</a></li><li class="toc-d1"><a href="#why-does-tcp-care-about-mss">Why does TCP care about MSS?</a></li><li class="toc-d1"><a href="#how-does-mss-get-chosen">How does MSS get chosen?</a></li><li class="toc-d1"><a href="#what-about-udp">What about UDP?</a></li><li class="toc-d1"><a href="#common-interview-numbers">Common interview numbers</a></li><li class="toc-d1"><a href="#easy-way-to-remember">Easy way to remember</a></li><li class="toc-d1"><a href="#http2-and-quic">HTTP/2 and QUIC</a></li><li class="toc-d1"><a href="#1-what-is-http">1. What is HTTP?</a></li><li class="toc-d1"><a href="#2-structure-of-http-message">2. Structure of HTTP Message</a></li><li class="toc-d2"><a href="#request">Request</a></li><li class="toc-d2"><a href="#response">Response</a></li><li class="toc-d1"><a href="#3-important-http-methods">3. Important HTTP Methods</a></li><li class="toc-d2"><a href="#get">GET</a></li><li class="toc-d2"><a href="#post">POST</a></li><li class="toc-d2"><a href="#put">PUT</a></li><li class="toc-d2"><a href="#delete">DELETE</a></li><li class="toc-d1"><a href="#4-idempotency">4. Idempotency</a></li><li class="toc-d1"><a href="#5-http-status-codes">5. HTTP Status Codes</a></li><li class="toc-d1"><a href="#6-statelessness">6. Statelessness</a></li><li class="toc-d1"><a href="#7-then-how-do-websites-remember-me">7. Then How Do Websites Remember Me?</a></li><li class="toc-d1"><a href="#8-cookies">8. Cookies</a></li><li class="toc-d1"><a href="#9-sessions">9. Sessions</a></li><li class="toc-d1"><a href="#10-jwt-token-authentication">10. JWT / Token Authentication</a></li><li class="toc-d1"><a href="#11-keep-alive">11. Keep-Alive</a></li><li class="toc-d1"><a href="#12-http11-problem">12. HTTP/1.1 Problem</a></li><li class="toc-d1"><a href="#13-http2">13. HTTP/2</a></li><li class="toc-d1"><a href="#14-rest-basics">14. REST Basics</a></li><li class="toc-d1"><a href="#15-rest-principles-interview-level">15. REST Principles (Interview Level)</a></li><li class="toc-d1"><a href="#common-interview-questions">Common Interview Questions</a></li><li class="toc-d1"><a href="#http-3">HTTP 3</a></li><li class="toc-d1"><a href="#1-http-caching">1. HTTP Caching</a></li><li class="toc-d2"><a href="#cache-control">Cache-Control</a></li><li class="toc-d2"><a href="#the-real-problem">The Real Problem</a></li><li class="toc-d2"><a href="#etag">ETag</a></li><li class="toc-d2"><a href="#interview-answer">Interview Answer</a></li><li class="toc-d1"><a href="#2-reverse-proxy">2. Reverse Proxy</a></li><li class="toc-d2"><a href="#why">Why?</a></li><li class="toc-d2"><a href="#interview-definition">Interview Definition</a></li><li class="toc-d1"><a href="#3-load-balancers">3. Load Balancers</a></li><li class="toc-d2"><a href="#round-robin">Round Robin</a></li><li class="toc-d2"><a href="#least-connections">Least Connections</a></li><li class="toc-d2"><a href="#consistent-hashing">Consistent Hashing</a></li><li class="toc-d1"><a href="#l4-vs-l7-load-balancing">L4 vs L7 Load Balancing</a></li><li class="toc-d2"><a href="#layer-4">Layer 4</a></li><li class="toc-d2"><a href="#layer-7">Layer 7</a></li><li class="toc-d1"><a href="#4-http11-hol-blocking">4. HTTP/1.1 HOL Blocking</a></li><li class="toc-d1"><a href="#5-why-http2-still-suffers">5. Why HTTP/2 Still Suffers</a></li><li class="toc-d1"><a href="#6-http3">6. HTTP/3</a></li><li class="toc-d1"><a href="#7-why-udp">7. Why UDP?</a></li><li class="toc-d1"><a href="#8-quic-streams">8. QUIC Streams</a></li><li class="toc-d1"><a href="#example">Example</a></li><li class="toc-d1"><a href="#9-quic-reliability">9. QUIC Reliability</a></li><li class="toc-d1"><a href="#10-faster-handshake">10. Faster Handshake</a></li><li class="toc-d1"><a href="#11-connection-migration">11. Connection Migration</a></li><li class="toc-d1"><a href="#the-interview-summary">The Interview Summary</a></li><li class="toc-d1"><a href="#if-quic-is-in-user-space-how-is-it-safe">If QUIC is in user space, how is it safe?</a></li><li class="toc-d1"><a href="#why-move-transport-logic-out-of-the-kernel">Why move transport logic out of the kernel?</a></li><li class="toc-d1"><a href="#does-quic-implement-flow-control">Does QUIC implement flow control?</a></li><li class="toc-d2"><a href="#stream-flow-control">Stream flow control</a></li><li class="toc-d2"><a href="#connection-flow-control">Connection flow control</a></li><li class="toc-d1"><a href="#does-quic-implement-congestion-control">Does QUIC implement congestion control?</a></li><li class="toc-d1"><a href="#does-quic-have-a-slower-connection-than-tcp">Does QUIC have a slower connection than TCP?</a></li><li class="toc-d1"><a href="#is-quic-connection-oriented">Is QUIC connection-oriented?</a></li><li class="toc-d1"><a href="#is-quic-a-byte-stream-protocol">Is QUIC a byte stream protocol?</a></li><li class="toc-d1"><a href="#does-quic-always-guarantee-reliability">Does QUIC always guarantee reliability?</a></li><li class="toc-d1"><a href="#do-we-choose-which-guarantees-to-add">Do we choose which guarantees to add?</a></li></ul></aside>
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

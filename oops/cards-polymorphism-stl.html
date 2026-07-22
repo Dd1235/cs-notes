@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Polymorphism, Casts, Templates &amp; STL Flashcards · OOP &amp; C++</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#8A4E5E">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link is-active" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">OOP & C++</a><div class="side-group"><div class="side-label">Lecture Notes</div><ul><li><a class="side-link" href="volatile-macros-inline.html">volatile, Macros &amp; inline</a></li><li><a class="side-link" href="references-and-const.html">References &amp; const</a></li><li><a class="side-link" href="function-overloading.html">Function Overloading</a></li><li><a class="side-link" href="dynamic-memory.html">Dynamic Memory Management</a></li><li><a class="side-link" href="classes-and-objects.html">Classes &amp; Objects</a></li><li><a class="side-link" href="constructors.html">Constructors &amp; Information Hiding</a></li><li><a class="side-link" href="copy-semantics.html">Copy Constructor &amp; Copy Assignment</a></li><li><a class="side-link" href="constness-and-static.html">Const-ness &amp; Static Members</a></li><li><a class="side-link" href="friend-functions.html">Friend Functions &amp; Friend Classes</a></li><li><a class="side-link" href="operator-overloading.html">Operator Overloading</a></li><li><a class="side-link" href="inheritance.html">Inheritance &amp; Overriding</a></li><li><a class="side-link" href="multiple-private-inheritance.html">Multiple &amp; Private Inheritance</a></li><li><a class="side-link" href="virtual-functions.html">Virtual Functions &amp; Dynamic Binding</a></li><li><a class="side-link" href="vtables-and-const-cast.html">Virtual Pointer Tables &amp; const_cast</a></li><li><a class="side-link" href="cpp-casts.html">C++ Casts</a></li><li><a class="side-link" href="exceptions.html">Exceptions &amp; Error Handling</a></li><li><a class="side-link" href="try-catch-and-templates.html">try/catch &amp; Function Templates</a></li><li><a class="side-link" href="class-templates-functors.html">Class Templates &amp; Functors</a></li></ul></div><div class="side-group"><div class="side-label">Extras</div><ul><li><a class="side-link" href="compilation-model.html">The C++ Compilation Model</a></li><li><a class="side-link" href="template-metaprogramming.html">Template Metaprogramming</a></li><li><a class="side-link" href="build-your-own-vector.html">Exercise — Build Your Own Vector</a></li><li><a class="side-link" href="miscellany.html">Miscellany</a></li><li><a class="side-link" href="resources.html">Resources</a></li></ul></div><div class="side-group"><div class="side-label">Topic Notes</div><ul><li><a class="side-link" href="notes-cpp-core.html">C++ Core</a></li><li><a class="side-link" href="notes-cpp-oop.html">C++ OOP</a></li><li><a class="side-link" href="notes-cpp-advanced.html">C++ Advanced</a></li><li><a class="side-link" href="notes-ooad-uml.html">OOAD &amp; UML</a></li><li><a class="side-link" href="notes-design-patterns.html">Design Patterns</a></li><li><a class="side-link" href="notes-testing-sdlc.html">Testing, SDLC &amp; SE</a></li><li><a class="side-link" href="notes-interview-questions.html">Interview Questions</a></li></ul></div><div class="side-group"><div class="side-label">Flashcards</div><ul><li><a class="side-link" href="cards-cpp-core.html">C++ Core Flashcards</a></li><li><a class="side-link" href="cards-oop-lifetime.html">OOP, Lifetime &amp; Memory Flashcards</a></li><li><a class="side-link is-active" href="cards-polymorphism-stl.html">Polymorphism, Casts, Templates &amp; STL Flashcards</a></li><li><a class="side-link" href="cards-ooad-uml.html">OOAD &amp; UML Flashcards</a></li><li><a class="side-link" href="cards-design-patterns.html">Design Patterns Flashcards</a></li><li><a class="side-link" href="cards-testing-sdlc.html">Testing, SDLC &amp; SE Flashcards</a></li><li><a class="side-link" href="cards-interview-drills.html">Interview &amp; Code-Reading Drills</a></li></ul></div><div class="side-group"><div class="side-label">Under the Hood</div><ul><li><a class="side-link" href="memory-layout.html">Memory Layout, Alignment &amp; Padding</a></li></ul></div><div class="side-group"><div class="side-label">Revision</div><ul><li><a class="side-link" href="refresher.html">Rapid Refresher<span class="badge">&#9733;</span></a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">OOP & C++</a></div>
+  <div class="page-head">
+    <div class="page-kicker">OOP & C++</div>
+    <h1 class="page-title">Polymorphism, Casts, Templates &amp; STL Flashcards</h1>
+    <div class="page-meta">10 min read &middot; source: <code>oops_cpp/flashcards/03_polymorphism_casts_templates_stl.md</code></div>
+  </div>
+  <article class="prose"><h3 id="a001">A001</h3>
+<p>Tags: inheritance</p>
+<p>Prompt: When is public inheritance appropriate?</p>
+<p>Answer: When the derived type is substitutable for the base type: an <code>is-a</code> relationship where code expecting a base can correctly use a derived object.</p>
+<h3 id="a002">A002</h3>
+<p>Tags: inheritance</p>
+<p>Prompt: Public/protected/private inheritance changes base member access how?</p>
+<p>Answer: Public inheritance keeps public as public and protected as protected. Protected inheritance makes public/protected base members protected. Private inheritance makes public/protected base members private.</p>
+<h3 id="a003">A003</h3>
+<p>Tags: inheritance, design</p>
+<p>Prompt: Inheritance vs composition: when prefer composition?</p>
+<p>Answer: Prefer composition for <code>has-a</code>, <code>uses-a</code>, or <code>implemented-using</code> relationships, and when substitutability is not required.</p>
+<h3 id="a004">A004</h3>
+<p>Tags: overloading, overriding, hiding</p>
+<p>Prompt: Define overloading, overriding, and hiding.</p>
+<p>Answer: Overloading: same name with different parameters in the same scope. Overriding: derived virtual function replaces base virtual behavior. Hiding: a derived declaration with the same name hides the base overload set.</p>
+<h3 id="a005">A005</h3>
+<p>Tags: overriding</p>
+<p>Prompt: Why use <code>override</code>?</p>
+<p>Answer: It makes the compiler verify that a derived function actually overrides a virtual base function, catching signature mistakes and accidental hiding.</p>
+<h3 id="a006">A006</h3>
+<p>Tags: name-hiding, edge-case</p>
+<p>Prompt: In <code>Base* p = new Child; cout &lt;&lt; p-&gt;x;</code>, if both classes have data member <code>x</code>, which <code>x</code> is used?</p>
+<p>Answer: <code>Base::x</code>. Data members are resolved using static type, not virtual dispatch. Variables are hidden, not overridden.</p>
+<h3 id="a007">A007</h3>
+<p>Tags: binding</p>
+<p>Prompt: Static type vs dynamic type?</p>
+<p>Answer: Static type is the declared compile-time type. Dynamic type is the actual most-derived type of the object a pointer/reference refers to at runtime.</p>
+<h3 id="a008">A008</h3>
+<p>Tags: binding, virtual</p>
+<p>Prompt: What conditions are needed for dynamic dispatch?</p>
+<p>Answer: A virtual function in the base, a call through a pointer/reference to base, and a dynamic object whose most-derived type may differ from the static type.</p>
+<h3 id="a009">A009</h3>
+<p>Tags: vtable</p>
+<p>Prompt: Explain the common vtable/vptr model.</p>
+<p>Answer: Each polymorphic class has a vtable of virtual function pointers. Each polymorphic object stores a hidden vptr pointing to its class vtable. A virtual call uses that table at runtime.</p>
+<h3 id="a010">A010</h3>
+<p>Tags: vtable, costs</p>
+<p>Prompt: Common costs of virtual dispatch?</p>
+<p>Answer: One hidden vptr per polymorphic object in common implementations, indirect-call overhead, and reduced optimization opportunities.</p>
+<h3 id="a011">A011</h3>
+<p>Tags: virtual-destructor</p>
+<p>Prompt: When must a base destructor be virtual?</p>
+<p>Answer: If objects may be deleted through a base pointer/reference-owning interface. Without a virtual destructor, <code>delete base_ptr_to_derived</code> is undefined behavior.</p>
+<h3 id="a012">A012</h3>
+<p>Tags: virtual-destructor, correction</p>
+<p>Prompt: Does a missing virtual destructor cause object slicing?</p>
+<p>Answer: No. It causes undefined behavior when deleting a derived object through a base pointer. Slicing is when a derived object is copied/passed by value into a base object.</p>
+<h3 id="a013">A013</h3>
+<p>Tags: abstract-class</p>
+<p>Prompt: What makes a class abstract?</p>
+<p>Answer: It has at least one pure virtual function that remains pure in that class, so objects of that class cannot be instantiated.</p>
+<h3 id="a014">A014</h3>
+<p>Tags: pure-virtual, edge-case</p>
+<p>Prompt: Can a pure virtual function have a body?</p>
+<p>Answer: Yes. Define it outside the class and call it with qualified syntax such as <code>Base::f()</code> from derived code for common behavior.</p>
+<h3 id="a015">A015</h3>
+<p>Tags: abstract-class</p>
+<p>Prompt: What happens if a derived class does not override all inherited pure virtual functions?</p>
+<p>Answer: The derived class remains abstract and cannot be instantiated.</p>
+<h3 id="a016">A016</h3>
+<p>Tags: slicing</p>
+<p>Prompt: What is object slicing?</p>
+<p>Answer: Copying a derived object into a base object by value discards the derived subobject. Virtual dispatch on that sliced base object cannot reach derived behavior.</p>
+<h3 id="a017">A017</h3>
+<p>Tags: slicing</p>
+<p>Prompt: How do you avoid slicing in polymorphic code?</p>
+<p>Answer: Pass/store polymorphic objects by reference, pointer, or smart pointer, not by base value.</p>
+<h3 id="a018">A018</h3>
+<p>Tags: casts</p>
+<p>Prompt: Match casts: <code>static_cast</code>, <code>dynamic_cast</code>, <code>const_cast</code>, <code>reinterpret_cast</code>.</p>
+<p>Answer: <code>static_cast</code>: intended compile-time conversions. <code>dynamic_cast</code>: runtime-checked casts in polymorphic class hierarchies. <code>const_cast</code>: add/remove const/volatile. <code>reinterpret_cast</code>: low-level pointer/integer or unrelated pointer reinterpretation.</p>
+<h3 id="a019">A019</h3>
+<p>Tags: casts, static-cast</p>
+<p>Prompt: What can <code>static_cast</code> do with class types?</p>
+<p>Answer: It can upcast, perform unchecked downcasts, invoke explicit single-argument constructors or conversion operators, cast to rvalue references, convert enum values, and convert to <code>void</code>.</p>
+<h3 id="a020">A020</h3>
+<p>Tags: casts, static-cast, edge-case</p>
+<p>Prompt: Why is <code>static_cast&lt;Window&gt;(*this).onResize();</code> inside <code>SpecialWindow::onResize()</code> wrong when trying to call the base method?</p>
+<p>Answer: It creates a sliced temporary <code>Window</code> object and calls the method on that temporary. Use <code>Window::onResize();</code> to call the base implementation on the current object.</p>
+<h3 id="a021">A021</h3>
+<p>Tags: casts, dynamic-cast</p>
+<p>Prompt: What does <code>dynamic_cast&lt;Derived*&gt;(basePtr)</code> return on failure? What about <code>dynamic_cast&lt;Derived&amp;&gt;(baseRef)</code>?</p>
+<p>Answer: Pointer dynamic_cast returns <code>nullptr</code> on failure. Reference dynamic_cast throws <code>std::bad_cast</code> because references have no null value.</p>
+<h3 id="a022">A022</h3>
+<p>Tags: casts, dynamic-cast</p>
+<p>Prompt: Why does checked downcasting require a polymorphic hierarchy?</p>
+<p>Answer: Runtime type information is available through polymorphic machinery such as vtables/vptrs. Without polymorphism, the runtime cannot reliably know the most-derived class from a base expression.</p>
+<h3 id="a023">A023</h3>
+<p>Tags: casts, dynamic-cast</p>
+<p>Prompt: Is <code>dynamic_cast</code> a design smell?</p>
+<p>Answer: Often. It can mean the base interface is missing needed virtual behavior. It is acceptable for boundary checks, optional downcasts, or frameworks where runtime type discovery is explicit.</p>
+<h3 id="a024">A024</h3>
+<p>Tags: casts, const-cast</p>
+<p>Prompt: What is the only C++ cast that can remove constness or volatility?</p>
+<p>Answer: <code>const_cast</code>.</p>
+<h3 id="a025">A025</h3>
+<p>Tags: casts, const-cast, edge-case</p>
+<p>Prompt: When is modifying through a <code>const_cast</code> undefined behavior?</p>
+<p>Answer: When the original object is truly const. It is only safe to remove constness from a non-const object viewed through a const-qualified pointer/reference.</p>
+<h3 id="a026">A026</h3>
+<p>Tags: casts, const-cast</p>
+<p>Prompt: Can <code>const_cast</code> change an object&#39;s actual type?</p>
+<p>Answer: No. It changes cv-qualification on pointer/reference expressions; it does not transform object representation or dynamic type.</p>
+<h3 id="a027">A027</h3>
+<p>Tags: casts, reinterpret-cast</p>
+<p>Prompt: Why is <code>reinterpret_cast</code> dangerous?</p>
+<p>Answer: It can produce a pointer/reference/integer view that does not actually represent a valid object of the target type. Using the result can violate alignment, aliasing, and lifetime rules.</p>
+<h3 id="a028">A028</h3>
+<p>Tags: casts, c-style-cast</p>
+<p>Prompt: Why avoid C-style casts in C++?</p>
+<p>Answer: They hide intent by trying several cast categories. C++ casts document whether you mean checked downcast, const removal, compile-time conversion, or low-level reinterpretation.</p>
+<h3 id="a029">A029</h3>
+<p>Tags: rtti, typeid</p>
+<p>Prompt: What does <code>typeid(expr)</code> report for polymorphic vs non-polymorphic class expressions?</p>
+<p>Answer: For polymorphic glvalue expressions, it reports dynamic type. For non-polymorphic expressions, it reports static type.</p>
+<h3 id="a030">A030</h3>
+<p>Tags: rtti, typeid</p>
+<p>Prompt: What are <code>std::type_info::name()</code>, <code>operator==</code>, and <code>operator!=</code> used for?</p>
+<p>Answer: <code>name()</code> gives an implementation-defined type name. <code>==</code> and <code>!=</code> compare whether two <code>type_info</code> objects represent the same type.</p>
+<h3 id="a031">A031</h3>
+<p>Tags: rtti, typeid, edge-case</p>
+<p>Prompt: When can <code>typeid(*p)</code> throw <code>std::bad_typeid</code>?</p>
+<p>Answer: When <code>p</code> is a null pointer to a polymorphic type and the expression dereferences it for <code>typeid</code>.</p>
+<h3 id="a032">A032</h3>
+<p>Tags: multiple-inheritance</p>
+<p>Prompt: What is the diamond problem?</p>
+<p>Answer: A derived class receives duplicate base subobjects through two inheritance paths, creating ambiguity and duplicated state.</p>
+<h3 id="a033">A033</h3>
+<p>Tags: multiple-inheritance</p>
+<p>Prompt: What does virtual inheritance solve in a diamond hierarchy?</p>
+<p>Answer: It shares one common virtual base subobject instead of duplicating it along each inheritance path.</p>
+<h3 id="a034">A034</h3>
+<p>Tags: multiple-inheritance, design</p>
+<p>Prompt: What kind of multiple inheritance is usually safer?</p>
+<p>Answer: Multiple inheritance of small, stateless interfaces. Multiple stateful concrete bases require strong justification.</p>
+<h3 id="a035">A035</h3>
+<p>Tags: exceptions</p>
+<p>Prompt: What problem do exceptions solve compared with return-code error handling?</p>
+<p>Answer: They separate normal control flow from error propagation, prevent ignored return codes from silently losing errors, and let stack unwinding clean up RAII objects.</p>
+<h3 id="a036">A036</h3>
+<p>Tags: exceptions</p>
+<p>Prompt: Synchronous vs asynchronous exceptions/events in the course notes?</p>
+<p>Answer: Synchronous errors occur at a planned program point, such as throwing on invalid stack pop. Asynchronous events are unexpected external interrupts/signals.</p>
+<h3 id="a037">A037</h3>
+<p>Tags: exceptions</p>
+<p>Prompt: What is stack unwinding?</p>
+<p>Answer: When an exception propagates, stack frames are exited and destructors for fully constructed local objects are called.</p>
+<h3 id="a038">A038</h3>
+<p>Tags: exceptions</p>
+<p>Prompt: Why catch exceptions by <code>const&amp;</code>?</p>
+<p>Answer: It avoids copying, preserves dynamic type without slicing, and allows catching standard exception hierarchies polymorphically.</p>
+<h3 id="a039">A039</h3>
+<p>Tags: exceptions, edge-case</p>
+<p>Prompt: Why should more specific catch clauses appear before base-class catches and <code>catch(...)</code>?</p>
+<p>Answer: Catch matching is tried top-to-bottom. A base catch such as <code>catch (B)</code> can catch <code>D</code> first, making later <code>catch (D)</code> unreachable.</p>
+<h3 id="a040">A040</h3>
+<p>Tags: exceptions</p>
+<p>Prompt: What does bare <code>throw;</code> do inside a catch block?</p>
+<p>Answer: It rethrows the currently handled exception without creating a new exception object.</p>
+<h3 id="a041">A041</h3>
+<p>Tags: exceptions</p>
+<p>Prompt: Exception safety levels?</p>
+<p>Answer: No guarantee: object may be corrupted. Basic: invariants hold and no leaks. Strong: operation succeeds or state is unchanged. No-throw: operation will not throw.</p>
+<h3 id="a042">A042</h3>
+<p>Tags: exceptions, raii</p>
+<p>Prompt: Why does RAII reduce the need for C-style <code>goto cleanup</code>?</p>
+<p>Answer: Resources are owned by objects whose destructors run automatically on every exit path, including exceptions, so shared manual cleanup labels are unnecessary.</p>
+<h3 id="a043">A043</h3>
+<p>Tags: templates</p>
+<p>Prompt: What is a function template?</p>
+<p>Answer: A pattern describing how to generate functions for concrete template arguments, e.g. <code>template&lt;class T&gt; T max(T a, T b)</code>.</p>
+<h3 id="a044">A044</h3>
+<p>Tags: templates</p>
+<p>Prompt: <code>template&lt;class T&gt;</code> vs <code>template&lt;typename T&gt;</code>?</p>
+<p>Answer: For type template parameters, they are equivalent. <code>typename</code> is also needed to disambiguate dependent nested type names.</p>
+<h3 id="a045">A045</h3>
+<p>Tags: templates, typename</p>
+<p>Prompt: Why write <code>typename T::value_type x;</code> in a template?</p>
+<p>Answer: Because <code>T::value_type</code> is a dependent name. Without <code>typename</code>, the compiler may parse it as a static member/value expression rather than a type.</p>
+<h3 id="a046">A046</h3>
+<p>Tags: templates, specialization</p>
+<p>Prompt: Why specialize <code>Max&lt;char*&gt;</code> instead of using generic <code>x &gt; y</code>?</p>
+<p>Answer: Generic pointer comparison compares addresses, not string contents. A specialization can use <code>strcmp</code>.</p>
+<h3 id="a047">A047</h3>
+<p>Tags: templates, arrays, edge-case</p>
+<p>Prompt: Why does <code>template&lt;class T&gt; T Max(T arr[])</code> not know the array length?</p>
+<p>Answer: The array parameter decays to <code>T*</code>. To preserve size, take a reference: <code>template&lt;class T, size_t N&gt; T Max(const T (&amp;arr)[N])</code>.</p>
+<h3 id="a048">A048</h3>
+<p>Tags: templates, class-template</p>
+<p>Prompt: Why can <code>Stack&lt;char&gt;* ps;</code> be declared with only a forward declaration, but <code>Stack&lt;char&gt; s;</code> cannot?</p>
+<p>Answer: A pointer declaration only needs to know that the type exists. An object definition needs the complete class layout and constructors/destructor.</p>
+<h3 id="a049">A049</h3>
+<p>Tags: templates</p>
+<p>Prompt: What is a non-type template parameter?</p>
+<p>Answer: A compile-time value parameter, such as <code>template&lt;int N&gt;</code> or <code>template&lt;class T, size_t N&gt;</code>, not a type.</p>
+<h3 id="a050">A050</h3>
+<p>Tags: templates, polymorphism</p>
+<p>Prompt: What is parametric polymorphism?</p>
+<p>Answer: Code is written generically in terms of parameters such as types or compile-time values, and the compiler instantiates concrete versions.</p>
+<h3 id="a051">A051</h3>
+<p>Tags: stl</p>
+<p>Prompt: What four concepts does the STL separate?</p>
+<p>Answer: Containers store data, iterators navigate ranges, algorithms operate on iterator ranges, and function objects/lambdas customize behavior.</p>
+<h3 id="a052">A052</h3>
+<p>Tags: stl, containers</p>
+<p>Prompt: Choose the container: contiguous dynamic array, double-ended queue, linked list, ordered map, hash map, heap adaptor.</p>
+<p>Answer: <code>vector</code>, <code>deque</code>, <code>list</code>, <code>map</code>, <code>unordered_map</code>, <code>priority_queue</code>.</p>
+<h3 id="a053">A053</h3>
+<p>Tags: stl, vector-list</p>
+<p>Prompt: Why is <code>vector</code> often faster than <code>list</code> even for many traversals?</p>
+<p>Answer: <code>vector</code> has contiguous storage and excellent cache locality. <code>list</code> has pointer chasing and poor locality despite cheap relinking.</p>
+<h3 id="a054">A054</h3>
+<p>Tags: stl, iterators</p>
+<p>Prompt: Why does <code>std::sort</code> work on <code>vector</code> but not <code>list</code>?</p>
+<p>Answer: <code>std::sort</code> requires random-access iterators. <code>vector</code> provides them; <code>list</code> only provides bidirectional iterators and has its own <code>list::sort</code>.</p>
+<h3 id="a055">A055</h3>
+<p>Tags: stl, iterators</p>
+<p>Prompt: List iterator categories from weakest to strongest.</p>
+<p>Answer: Input/output, forward, bidirectional, random access, contiguous.</p>
+<h3 id="a056">A056</h3>
+<p>Tags: stl, erase-remove</p>
+<p>Prompt: Explain the erase-remove idiom.</p>
+<p>Answer: <code>remove_if</code> moves kept elements forward and returns the new logical end; <code>erase</code> physically removes the trailing elements: <code>v.erase(remove_if(v.begin(), v.end(), pred), v.end());</code>.</p>
+<h3 id="a057">A057</h3>
+<p>Tags: functors</p>
+<p>Prompt: What is a functor?</p>
+<p>Answer: An object that overloads <code>operator()</code> and can be called like a function, often while storing state.</p>
+<h3 id="a058">A058</h3>
+<p>Tags: functors</p>
+<p>Prompt: Why can a functor outperform a function pointer?</p>
+<p>Answer: Its concrete type is known to templates, so calls are often inlineable and it can store state without type-erasure overhead.</p>
+<h3 id="a059">A059</h3>
+<p>Tags: callables</p>
+<p>Prompt: Compare function pointer, functor, lambda, and <code>std::function</code>.</p>
+<p>Answer: Function pointer stores no state and has limited inline potential. Functor stores state and is inline-friendly. Lambda is compiler-generated functor with captures. <code>std::function</code> is type-erased and convenient but adds overhead.</p>
+<h3 id="a060">A060</h3>
+<p>Tags: functors, deprecated</p>
+<p>Prompt: Is inheriting <code>std::binary_function</code> required for STL functors?</p>
+<p>Answer: No. It is deprecated/removed in modern C++. Just define <code>operator()</code> with the needed signature.</p>
+<h3 id="a061">A061</h3>
+<p>Tags: policy</p>
+<p>Prompt: What is policy parameterization?</p>
+<p>Answer: Passing behavior as a parameter, such as a comparator to <code>sort</code>, so one algorithm supports multiple policies without hardcoded branching.</p>
+<h3 id="a062">A062</h3>
+<p>Tags: virtual, base-call</p>
+<p>Prompt: How do you call a base implementation from an override?</p>
+<p>Answer: Use qualified syntax inside the derived method, e.g. <code>Base::f();</code>, not a cast that creates a base temporary.</p>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="cards-oop-lifetime.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">OOP, Lifetime &amp; Memory Flashcards</span></a><a class="pn-card pn-next" href="cards-ooad-uml.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">OOAD &amp; UML Flashcards</span></a></nav>
+</main>
+<aside class="toc"><div class="toc-title">On this page</div><ul><li class="toc-d2"><a href="#a001">A001</a></li><li class="toc-d2"><a href="#a002">A002</a></li><li class="toc-d2"><a href="#a003">A003</a></li><li class="toc-d2"><a href="#a004">A004</a></li><li class="toc-d2"><a href="#a005">A005</a></li><li class="toc-d2"><a href="#a006">A006</a></li><li class="toc-d2"><a href="#a007">A007</a></li><li class="toc-d2"><a href="#a008">A008</a></li><li class="toc-d2"><a href="#a009">A009</a></li><li class="toc-d2"><a href="#a010">A010</a></li><li class="toc-d2"><a href="#a011">A011</a></li><li class="toc-d2"><a href="#a012">A012</a></li><li class="toc-d2"><a href="#a013">A013</a></li><li class="toc-d2"><a href="#a014">A014</a></li><li class="toc-d2"><a href="#a015">A015</a></li><li class="toc-d2"><a href="#a016">A016</a></li><li class="toc-d2"><a href="#a017">A017</a></li><li class="toc-d2"><a href="#a018">A018</a></li><li class="toc-d2"><a href="#a019">A019</a></li><li class="toc-d2"><a href="#a020">A020</a></li><li class="toc-d2"><a href="#a021">A021</a></li><li class="toc-d2"><a href="#a022">A022</a></li><li class="toc-d2"><a href="#a023">A023</a></li><li class="toc-d2"><a href="#a024">A024</a></li><li class="toc-d2"><a href="#a025">A025</a></li><li class="toc-d2"><a href="#a026">A026</a></li><li class="toc-d2"><a href="#a027">A027</a></li><li class="toc-d2"><a href="#a028">A028</a></li><li class="toc-d2"><a href="#a029">A029</a></li><li class="toc-d2"><a href="#a030">A030</a></li><li class="toc-d2"><a href="#a031">A031</a></li><li class="toc-d2"><a href="#a032">A032</a></li><li class="toc-d2"><a href="#a033">A033</a></li><li class="toc-d2"><a href="#a034">A034</a></li><li class="toc-d2"><a href="#a035">A035</a></li><li class="toc-d2"><a href="#a036">A036</a></li><li class="toc-d2"><a href="#a037">A037</a></li><li class="toc-d2"><a href="#a038">A038</a></li><li class="toc-d2"><a href="#a039">A039</a></li><li class="toc-d2"><a href="#a040">A040</a></li><li class="toc-d2"><a href="#a041">A041</a></li><li class="toc-d2"><a href="#a042">A042</a></li><li class="toc-d2"><a href="#a043">A043</a></li><li class="toc-d2"><a href="#a044">A044</a></li><li class="toc-d2"><a href="#a045">A045</a></li><li class="toc-d2"><a href="#a046">A046</a></li><li class="toc-d2"><a href="#a047">A047</a></li><li class="toc-d2"><a href="#a048">A048</a></li><li class="toc-d2"><a href="#a049">A049</a></li><li class="toc-d2"><a href="#a050">A050</a></li><li class="toc-d2"><a href="#a051">A051</a></li><li class="toc-d2"><a href="#a052">A052</a></li><li class="toc-d2"><a href="#a053">A053</a></li><li class="toc-d2"><a href="#a054">A054</a></li><li class="toc-d2"><a href="#a055">A055</a></li><li class="toc-d2"><a href="#a056">A056</a></li><li class="toc-d2"><a href="#a057">A057</a></li><li class="toc-d2"><a href="#a058">A058</a></li><li class="toc-d2"><a href="#a059">A059</a></li><li class="toc-d2"><a href="#a060">A060</a></li><li class="toc-d2"><a href="#a061">A061</a></li><li class="toc-d2"><a href="#a062">A062</a></li></ul></aside>
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

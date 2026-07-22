@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SQL Essentials · Database Systems</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#B05730">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link is-active" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">Database Systems</a><div class="side-group"><div class="side-label">Foundations</div><ul><li><a class="side-link" href="acid.html">ACID &amp; Isolation Levels</a></li><li><a class="side-link" href="normalization.html">Normalization</a></li><li><a class="side-link is-active" href="sql.html">SQL Essentials</a></li><li><a class="side-link" href="drop-delete-truncate.html">DROP vs DELETE vs TRUNCATE</a></li></ul></div><div class="side-group"><div class="side-label">Indexing & Storage</div><ul><li><a class="side-link" href="b-plus-trees.html">B+ Trees</a></li><li><a class="side-link" href="unique-indexes.html">Unique Indexes</a></li><li><a class="side-link" href="primary-vs-secondary-index.html">Primary vs Secondary Indexes</a></li><li><a class="side-link" href="write-ahead-logging.html">Write-Ahead Logging</a></li></ul></div><div class="side-group"><div class="side-label">Concurrency</div><ul><li><a class="side-link" href="concurrency-control.html">Concurrency Control Basics</a></li><li><a class="side-link" href="mvcc.html">MVCC in Depth</a></li><li><a class="side-link" href="mvcc-cmu.html">MVCC — CMU Lecture Notes</a></li></ul></div><div class="side-group"><div class="side-label">Scale & Patterns</div><ul><li><a class="side-link" href="sharding.html">Sharding vs Partitioning</a></li><li><a class="side-link" href="n-plus-one-problem.html">The N+1 Query Problem</a></li><li><a class="side-link" href="graph-databases.html">Graph Databases</a></li></ul></div><div class="side-group"><div class="side-label">SQL in Practice</div><ul><li><a class="side-link" href="joins.html">Joins — Semantics &amp; Algorithms</a></li><li><a class="side-link" href="window-functions.html">Window Functions</a></li></ul></div><div class="side-group"><div class="side-label">Distributed Data</div><ul><li><a class="side-link" href="cap-replication.html">CAP &amp; Replication</a></li></ul></div><div class="side-group"><div class="side-label">Revision</div><ul><li><a class="side-link" href="refresher.html">Rapid Refresher<span class="badge">&#9733;</span></a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">Database Systems</a></div>
+  <div class="page-head">
+    <div class="page-kicker">Database Systems</div>
+    <h1 class="page-title">SQL Essentials</h1>
+    <div class="page-meta">3 min read &middot; source: <code>dbms/sql.md</code></div>
+  </div>
+  <article class="prose"><ul>
+<li>used to acess and manipulate data</li>
+<li>crud operations to communicate with db.</li>
+<li>query language</li>
+<li>rdbms<ul>
+<li>software that allows us to implement designed relational model</li>
+<li>table / relation is simplest form of store</li>
+</ul>
+</li>
+</ul>
+<p>types</p>
+<ul>
+<li>ddl, drl, dml, dcl, tcl</li>
+</ul>
+<p>For SQL interview purposes, the logical query processing order is:</p>
+<pre class="hljs"><code><span class="hljs-keyword">SELECT</span> ...
+<span class="hljs-keyword">FROM</span> ...
+<span class="hljs-keyword">JOIN</span> ...
+<span class="hljs-keyword">WHERE</span> ...
+<span class="hljs-keyword">GROUP</span> <span class="hljs-keyword">BY</span> ...
+<span class="hljs-keyword">HAVING</span> ...
+<span class="hljs-keyword">ORDER</span> <span class="hljs-keyword">BY</span> ...
+LIMIT ...</code></pre>
+<p>is <strong>not</strong> the actual execution order.</p>
+<p>The logical order is:</p>
+<ol>
+<li><code>FROM</code></li>
+<li><code>JOIN</code></li>
+<li><code>WHERE</code></li>
+<li><code>GROUP BY</code></li>
+<li><code>HAVING</code></li>
+<li><code>SELECT</code></li>
+<li><code>DISTINCT</code></li>
+<li><code>ORDER BY</code></li>
+<li><code>LIMIT/OFFSET</code></li>
+</ol>
+<hr>
+<h4 id="example">Example</h4>
+<p>Table: Employees</p>
+<table>
+<thead>
+<tr>
+<th>id</th>
+<th>dept</th>
+<th>salary</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>Eng</td>
+<td>100</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Eng</td>
+<td>200</td>
+</tr>
+<tr>
+<td>3</td>
+<td>HR</td>
+<td>150</td>
+</tr>
+<tr>
+<td>4</td>
+<td>HR</td>
+<td>250</td>
+</tr>
+</tbody></table>
+<p>Query:</p>
+<pre class="hljs"><code><span class="hljs-keyword">SELECT</span> dept, <span class="hljs-built_in">AVG</span>(salary) <span class="hljs-keyword">AS</span> avg_sal
+<span class="hljs-keyword">FROM</span> Employees
+<span class="hljs-keyword">WHERE</span> salary <span class="hljs-operator">&gt;</span> <span class="hljs-number">100</span>
+<span class="hljs-keyword">GROUP</span> <span class="hljs-keyword">BY</span> dept
+<span class="hljs-keyword">HAVING</span> <span class="hljs-built_in">AVG</span>(salary) <span class="hljs-operator">&gt;</span> <span class="hljs-number">180</span>
+<span class="hljs-keyword">ORDER</span> <span class="hljs-keyword">BY</span> avg_sal <span class="hljs-keyword">DESC</span>;</code></pre>
+<hr>
+<h4 id="step-1-from">Step 1: FROM</h4>
+<p>Start with all rows.</p>
+<table>
+<thead>
+<tr>
+<th>id</th>
+<th>dept</th>
+<th>salary</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>Eng</td>
+<td>100</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Eng</td>
+<td>200</td>
+</tr>
+<tr>
+<td>3</td>
+<td>HR</td>
+<td>150</td>
+</tr>
+<tr>
+<td>4</td>
+<td>HR</td>
+<td>250</td>
+</tr>
+</tbody></table>
+<hr>
+<h4 id="step-2-where">Step 2: WHERE</h4>
+<pre class="hljs"><code><span class="hljs-keyword">WHERE</span> salary <span class="hljs-operator">&gt;</span> <span class="hljs-number">100</span></code></pre>
+<p>Removes rows before grouping.</p>
+<table>
+<thead>
+<tr>
+<th>id</th>
+<th>dept</th>
+<th>salary</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>2</td>
+<td>Eng</td>
+<td>200</td>
+</tr>
+<tr>
+<td>3</td>
+<td>HR</td>
+<td>150</td>
+</tr>
+<tr>
+<td>4</td>
+<td>HR</td>
+<td>250</td>
+</tr>
+</tbody></table>
+<hr>
+<h4 id="step-3-group-by">Step 3: GROUP BY</h4>
+<pre class="hljs"><code><span class="hljs-keyword">GROUP</span> <span class="hljs-keyword">BY</span> dept</code></pre>
+<p>Creates groups:</p>
+<pre class="hljs"><code>Eng -&gt; [200]
+HR  -&gt; [150, 250]</code></pre>
+<hr>
+<h4 id="step-4-having">Step 4: HAVING</h4>
+<p>Compute aggregates and filter groups.</p>
+<pre class="hljs"><code><span class="hljs-keyword">HAVING</span> <span class="hljs-built_in">AVG</span>(salary) <span class="hljs-operator">&gt;</span> <span class="hljs-number">180</span></code></pre>
+<pre class="hljs"><code>Eng avg = 200
+HR  avg = 200</code></pre>
+<p>Both survive.</p>
+<hr>
+<h4 id="step-5-select">Step 5: SELECT</h4>
+<pre class="hljs"><code><span class="hljs-keyword">SELECT</span> dept, <span class="hljs-built_in">AVG</span>(salary)</code></pre>
+<p>Result:</p>
+<table>
+<thead>
+<tr>
+<th>dept</th>
+<th>avg_sal</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Eng</td>
+<td>200</td>
+</tr>
+<tr>
+<td>HR</td>
+<td>200</td>
+</tr>
+</tbody></table>
+<hr>
+<h4 id="step-6-order-by">Step 6: ORDER BY</h4>
+<pre class="hljs"><code><span class="hljs-keyword">ORDER</span> <span class="hljs-keyword">BY</span> avg_sal <span class="hljs-keyword">DESC</span></code></pre>
+<p>Sorts final rows.</p>
+<hr>
+<h3 id="where-vs-having">WHERE vs HAVING</h3>
+<p>This is one of the most common interview questions.</p>
+<h4 id="where">WHERE</h4>
+<p>Filters <strong>rows before grouping</strong>.</p>
+<pre class="hljs"><code><span class="hljs-keyword">SELECT</span> dept, <span class="hljs-built_in">COUNT</span>(<span class="hljs-operator">*</span>)
+<span class="hljs-keyword">FROM</span> Employees
+<span class="hljs-keyword">WHERE</span> salary <span class="hljs-operator">&gt;</span> <span class="hljs-number">100</span>
+<span class="hljs-keyword">GROUP</span> <span class="hljs-keyword">BY</span> dept;</code></pre>
+<p>Only employees with salary &gt; 100 participate in grouping.</p>
+<hr>
+<h4 id="having">HAVING</h4>
+<p>Filters <strong>groups after grouping</strong>.</p>
+<pre class="hljs"><code><span class="hljs-keyword">SELECT</span> dept, <span class="hljs-built_in">COUNT</span>(<span class="hljs-operator">*</span>)
+<span class="hljs-keyword">FROM</span> Employees
+<span class="hljs-keyword">GROUP</span> <span class="hljs-keyword">BY</span> dept
+<span class="hljs-keyword">HAVING</span> <span class="hljs-built_in">COUNT</span>(<span class="hljs-operator">*</span>) <span class="hljs-operator">&gt;</span> <span class="hljs-number">10</span>;</code></pre>
+<p>All rows participate in grouping first, then groups with ≤ 10 employees are removed.</p>
+<hr>
+<h4 id="why-this-is-invalid">Why this is invalid</h4>
+<pre class="hljs"><code><span class="hljs-keyword">SELECT</span> dept, <span class="hljs-built_in">COUNT</span>(<span class="hljs-operator">*</span>)
+<span class="hljs-keyword">FROM</span> Employees
+<span class="hljs-keyword">WHERE</span> <span class="hljs-built_in">COUNT</span>(<span class="hljs-operator">*</span>) <span class="hljs-operator">&gt;</span> <span class="hljs-number">10</span>
+<span class="hljs-keyword">GROUP</span> <span class="hljs-keyword">BY</span> dept;</code></pre>
+<p><code>WHERE</code> runs before grouping, so <code>COUNT(*)</code> does not exist yet.</p>
+<p>Use:</p>
+<pre class="hljs"><code><span class="hljs-keyword">SELECT</span> dept, <span class="hljs-built_in">COUNT</span>(<span class="hljs-operator">*</span>)
+<span class="hljs-keyword">FROM</span> Employees
+<span class="hljs-keyword">GROUP</span> <span class="hljs-keyword">BY</span> dept
+<span class="hljs-keyword">HAVING</span> <span class="hljs-built_in">COUNT</span>(<span class="hljs-operator">*</span>) <span class="hljs-operator">&gt;</span> <span class="hljs-number">10</span>;</code></pre>
+<hr>
+<h4 id="interview-one-liner">Interview One-Liner</h4>
+<ul>
+<li><strong>WHERE filters rows.</strong></li>
+<li><strong>GROUP BY creates groups.</strong></li>
+<li><strong>HAVING filters groups.</strong></li>
+</ul>
+<p>Think:</p>
+<pre class="hljs"><code>Rows --&gt; WHERE --&gt; Groups --&gt; HAVING --&gt; Final Result</code></pre>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="normalization.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">Normalization</span></a><a class="pn-card pn-next" href="drop-delete-truncate.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">DROP vs DELETE vs TRUNCATE</span></a></nav>
+</main>
+
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

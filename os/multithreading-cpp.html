@@ -1,0 +1,493 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Multithreading in C++ · Operating Systems</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#77682E">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link is-active" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">Operating Systems</a><div class="side-group"><div class="side-label">Notes</div><ul><li><a class="side-link is-active" href="multithreading-cpp.html">Multithreading in C++</a></li><li><a class="side-link" href="semaphore-vs-mutex.html">Semaphore vs Mutex</a></li><li><a class="side-link" href="csapp-ch12.html">Concurrent Programming — CS:APP Ch. 12</a></li><li><a class="side-link" href="csapp-ch9.html">Virtual Memory — CS:APP Ch. 9</a></li></ul></div><div class="side-group"><div class="side-label">Processes & Scheduling</div><ul><li><a class="side-link" href="processes.html">Processes — Lifecycle, fork &amp; Friends</a></li><li><a class="side-link" href="scheduling.html">CPU Scheduling — FIFO to MLFQ</a></li></ul></div><div class="side-group"><div class="side-label">Locks & Memory</div><ul><li><a class="side-link" href="locks-internals.html">How Locks Actually Work</a></li><li><a class="side-link" href="deadlock.html">Deadlock</a></li><li><a class="side-link" href="page-replacement.html">Page Replacement — FIFO, LRU, Clock</a></li></ul></div><div class="side-group"><div class="side-label">Files & IPC</div><ul><li><a class="side-link" href="filesystems.html">Filesystems — Inodes &amp; Journaling</a></li><li><a class="side-link" href="ipc.html">IPC — Pipes, Shared Memory, Signals</a></li></ul></div><div class="side-group"><div class="side-label">Revision</div><ul><li><a class="side-link" href="refresher.html">Rapid Refresher<span class="badge">&#9733;</span></a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">Operating Systems</a></div>
+  <div class="page-head">
+    <div class="page-kicker">Operating Systems</div>
+    <h1 class="page-title">Multithreading in C++</h1>
+    <div class="page-meta">10 min read &middot; source: <code>os/threading_cpp/0.md</code></div>
+  </div>
+  <article class="prose"><ul>
+<li>eg. a spellchecker tool</li>
+</ul>
+<p>Ways to create threads in C++11</p>
+<ul>
+<li>function pointers</li>
+<li>lambda functions</li>
+<li>functors</li>
+<li>member functions</li>
+<li>static member functions</li>
+</ul>
+<p>There is no guarantee which thread will be first to be created.<br>Need to pass in a callable object to the thread.</p>
+<pre class="hljs"><code><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">func</span><span class="hljs-params">(<span class="hljs-type">int</span> x)</span></span>{
+    <span class="hljs-comment">// do something</span>
+}
+
+<span class="hljs-comment">// lambda function, can write it anonymously inside the thread</span>
+<span class="hljs-keyword">auto</span> fun = [](<span class="hljs-type">int</span> x){
+    <span class="hljs-comment">// do something</span>
+};
+
+<span class="hljs-comment">// functors</span>
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">Base</span> {
+
+<span class="hljs-keyword">public</span>:
+
+    <span class="hljs-comment">// for functor</span>
+    <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">operator</span><span class="hljs-params">()</span><span class="hljs-params">(<span class="hljs-type">int</span> x)</span></span>{
+        <span class="hljs-comment">// do something</span>
+    }
+
+
+    <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">run</span><span class="hljs-params">(<span class="hljs-type">int</span> x)</span></span>{
+        ..
+    }
+
+    <span class="hljs-type">static</span> <span class="hljs-type">void</span> run<span class="hljs-number">2.</span>..
+};
+
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>{
+    <span class="hljs-function">std::thread <span class="hljs-title">t</span><span class="hljs-params">(fun, <span class="hljs-number">10</span>)</span></span>;
+
+    <span class="hljs-comment">// thread(&amp;Base::run, &amp;b, 10); we know implicily this pointer is like the first argument that points to the object and is passed as argument for member functions, replicate something similar</span>
+
+    <span class="hljs-comment">// thread(&amp;Base::run2, 10);</span>
+
+    t.<span class="hljs-built_in">join</span>();
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>
+};</code></pre>
+<h2 id="join-and-detach-with-joinable">Join and Detach with Joinable</h2>
+<ul>
+<li>once a thread is tarted we wait for it to finish <code>t1.join()</code></li>
+<li>double join will result into program termination</li>
+<li>if needed we should check thread is joinable before join</li>
+</ul>
+<p>constructing <code>std::thread</code> calls <code>pthread_create(...)</code>, then <code>pthread_join(thread_handle, nullptr)</code>, os keeps metadata for every thread in thread contorl block, when worker finishes, os marks the thread as terminated, wakes any thread waiting in <code>join</code>. without joining, os thread objects owns as os thread, destroying thread object will leave os thread orphaned.</p>
+<p>join can only be called once because after <code>t.join()</code> the thread no longers exists, resources are reclaimed.</p>
+<p>hence do <code>if(t1.joinable())  t1.join()</code></p>
+<p>Detach - detach newly created thread from parent thread</p>
+<p>Check if a thread is joinable and only detach if its detachable.</p>
+<p>A thread starts its life in a <code>joinable</code> state ----&gt; there is an actual os thread running and <code>thread</code> object is owner of that thread. You can release that ownership either using <code>join()</code> or <code>detach()</code>. Join -&gt; wait till work() finishes, os resources are cleaned up, t no longer owns a thread, and joinable becomes false.</p>
+<p>After <code>detach()</code>, t stops owning the thread, thread continues running independently, &quot;go do your thing, I won&#39;t track you&quot;</p>
+<pre class="hljs"><code>
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>{
+    ...
+    t<span class="hljs-number">1.</span><span class="hljs-built_in">detach</span>();
+}</code></pre>
+<pre class="hljs"><code>{
+    <span class="hljs-function">std::thread <span class="hljs-title">t</span><span class="hljs-params">(work)</span></span>;
+} <span class="hljs-comment">// terminate, destructor seens joinable and calls terminate()</span></code></pre>
+<p><code>std::thread</code> object is a small handle to the os object.</p>
+<p>Detached threads are rare in modern C++.</p>
+<h2 id="mutex">Mutex</h2>
+<ul>
+<li>race conditions is a situation where two or more threads/process change a common data at the same time</li>
+<li>if there is a race condition, protected section is called critical section</li>
+<li>mutex is used to avoid race condition</li>
+<li>we use lock(), unlock() on mutex to avoid race condition.</li>
+</ul>
+<h2 id="trylock"><code>try_lock</code></h2>
+<p><code>try_lock()</code> returns immediately instead of blocking. On success returns true else returns false. Hence its <em>non-blocking</em></p>
+<ul>
+<li>if its called by the thread that has the same mutex, then its a <em>deadlock</em> with undefined behaviour.</li>
+<li>want to lock same mutex again, use recursive mutex.</li>
+</ul>
+<h2 id="timed-mutex">timed-mutex</h2>
+<p>try oto acquire a lock for a limited amount of time instead of waiting forever.</p>
+<p>try_lock() doesn&#39;t wait at all, try_lock_for(duration), try_lock_until(time_point)</p>
+<pre class="hljs"><code>
+std::timed mutex m;
+
+<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">increment</span><span class="hljs-params">(<span class="hljs-type">int</span> i)</span></span>{
+    <span class="hljs-keyword">if</span>(m.<span class="hljs-built_in">try_lock_for</span>(std::chrono::<span class="hljs-built_in">seconds</span>(<span class="hljs-number">2</span>))){
+        ...
+    }<span class="hljs-keyword">else</span>{
+<span class="hljs-comment">// couldn&#x27;t get lock within 2 seconds</span>
+    }
+}</code></pre>
+<h2 id="stdrecursive-mutex">std::recursive-mutex</h2>
+<ol>
+<li>which threads owns</li>
+<li>how many times that thread has locked it</li>
+</ol>
+<pre class="hljs"><code><span class="hljs-comment">// std::mutex m;</span>
+std::recursive_mutex m;
+
+<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">f</span><span class="hljs-params">()</span></span>{
+    m.<span class="hljs-built_in">lock</span>(); <span class="hljs-comment">// count = 1</span>
+    <span class="hljs-built_in">g</span>(); <span class="hljs-comment">// g also tries to lock m</span>
+    m.<span class="hljs-built_in">unlock</span>(); <span class="hljs-comment">// count = 0</span>
+}
+
+<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">g</span><span class="hljs-params">()</span></span>{
+    m.<span class="hljs-built_in">lock</span>(); <span class="hljs-comment">// deadlock =&gt; // count = 2</span>
+    m.<span class="hljs-built_in">unlock</span>(); <span class="hljs-comment">// count = 1</span>
+}</code></pre>
+<p>Most experienced C++ engineers avoid it when possible because it can hide design problems.</p>
+<ul>
+<li>same thread can lock multiple times</li>
+<li>must unlock same number of times</li>
+<li>stores owner + rec count</li>
+</ul>
+<p>&quot;Only when re-entrant locking is genuinely needed. Most of the time I&#39;d rather redesign the locking structure so that a regular mutex suffices, because it&#39;s simpler and easier to reason about.&quot;</p>
+<h2 id="lock-guard">lock-guard</h2>
+<ul>
+<li>it is a small RAII wrapper around a mutex</li>
+<li>template function</li>
+</ul>
+<pre class="hljs"><code>contructor -&gt; lock the mutex
+destructor -&gt; unlock the mutex</code></pre>
+<pre class="hljs"><code>std::mutex m;
+
+void work() {
+    std::lock_guard&lt;std::mutex&gt; lg(m);
+
+    // critical section
+
+} // lg destroyed here, m.unlock() automatically called</code></pre>
+<pre class="hljs"><code>void f() {
+    std::lock_guard&lt;std::mutex&gt; lg(m);
+
+    throw std::runtime_error(&quot;oops&quot;);
+}</code></pre>
+<p>no deadlock</p>
+<p>lock_guard is the simplest RAII mutex wrapper. It acquires a mutex in its constructor and releases it in its destructor, guaranteeing exception-safe unlocking and preventing many common synchronization bugs.</p>
+<h2 id="uniquelock">Unique_lock</h2>
+<ul>
+<li>wrapper over mutex, mutex ownership wrapper</li>
+<li>both provide raii locking</li>
+<li>unique_lock owns hte lock and lets you manipulate ownership.</li>
+</ul>
+<ol>
+<li>manual unlock/relock</li>
+<li>deferred locking</li>
+<li>try-lock support</li>
+<li>timed mutex support</li>
+<li>movable ownership</li>
+<li>requiredf or condition variables</li>
+</ol>
+<p>conceptually it keeps a pointer to the mutex, and a bool that tells me it owns. Destructor unlocks only if owns.</p>
+<p>we can have move but not copy. ie ownership of the object.</p>
+<h2 id="condition-variable">Condition Variable</h2>
+<ul>
+<li>notify other threads | wait for some condition</li>
+<li><code>notify_one() notify_all()</code></li>
+</ul>
+<pre class="hljs"><code>// consumer
+void consumer() {
+    std::unique_lock&lt;std::mutex&gt; lk(m);
+
+    cv.wait(lk, [] {
+        return !q.empty();
+    });
+
+    int x = q.front();
+    q.pop();
+}
+
+void producer() {
+    {
+        std::lock_guard&lt;std::mutex&gt; lg(m);
+        q.push(42);
+    }
+
+    cv.notify_one();
+}</code></pre>
+<p><code>cv.wait(lk, predicate);</code> while the predicate is false, unlock and sleep, unlock and sleep is atomic.</p>
+<ul>
+<li>after waking up do check for false wakeup - spurious wakeup.</li>
+<li>synchronize two or more threads.</li>
+</ul>
+<h2 id="deadlock">deadlock</h2>
+<p>4 coffman conditions</p>
+<ul>
+<li>mutual exclusion: resource can be owned only by one thread</li>
+<li>hold and wait: a thread holds one resource while waiting for another</li>
+<li>no premeption: mutex owner decides when to unlock</li>
+<li>circular wait</li>
+</ul>
+<p>soln:</p>
+<ul>
+<li>always lock in a fixed order</li>
+<li>adopt_lock</li>
+<li>timed locks</li>
+</ul>
+<p>deadlock vs starvation: nobody moves vs some thread nevers gets a chance</p>
+<h2 id="thread-or-process-synchronization">Thread OR process synchronization</h2>
+<p>need mutex</p>
+<h2 id="stdlock"><code>std::lock()</code></h2>
+<ul>
+<li><p>used to lock multiple mutex at the same time</p>
+</li>
+<li><p><code>std::lock(m1,m2,m3,m4)</code></p>
+</li>
+<li><p>order of locking is not defined, it will try to lock in any order ot ensure that is no dead lock</p>
+</li>
+<li><p>it is a blocking call ie thread stops making progress until operation is complete</p>
+</li>
+<li><p><code>m.lock(); do_work();</code> if another thread owns the mutex, while blocked that thread is not executing instructions.</p>
+</li>
+<li><p>with multiple threads deadlock can still occur.</p>
+</li>
+</ul>
+<h2 id="promise-and-future-in-c-threading">promise and future in c++ threading</h2>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;future&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;thread&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+    std::promise&lt;<span class="hljs-type">int</span>&gt; p;
+    std::future&lt;<span class="hljs-type">int</span>&gt; f = p.<span class="hljs-built_in">get_future</span>();  <span class="hljs-comment">// linked to p</span>
+
+    <span class="hljs-function">std::thread <span class="hljs-title">t</span><span class="hljs-params">([&amp;p] {
+        <span class="hljs-comment">// do work...</span>
+        p.set_value(<span class="hljs-number">42</span>);                  <span class="hljs-comment">// producer sets the value</span>
+    })</span></span>;
+
+    <span class="hljs-type">int</span> result = f.<span class="hljs-built_in">get</span>();                 <span class="hljs-comment">// blocks until value is ready</span>
+    std::cout &lt;&lt; result &lt;&lt; <span class="hljs-string">&quot;\n&quot;</span>;          <span class="hljs-comment">// 42</span>
+    t.<span class="hljs-built_in">join</span>();
+}</code></pre>
+<h3 id="stdpromise-and-stdfuture-in-c"><code>std::promise</code> and <code>std::future</code> in C++</h3>
+<p>These two form a one-shot communication channel between threads: one end <em>sets</em> a value, the other <em>waits</em> for it.</p>
+<hr>
+<h4 id="the-core-mental-model">The Core Mental Model</h4>
+<p>Think of it like a vending machine ticket system:</p>
+<ul>
+<li><strong><code>promise</code></strong> = the machine that will dispense the result</li>
+<li><strong><code>future</code></strong> = the ticket you hold, redeemed when the result is ready</li>
+<li>The shared state = the slot connecting both</li>
+</ul>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;future&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;thread&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+    std::promise&lt;<span class="hljs-type">int</span>&gt; p;
+    std::future&lt;<span class="hljs-type">int</span>&gt; f = p.<span class="hljs-built_in">get_future</span>();  <span class="hljs-comment">// linked to p</span>
+
+    <span class="hljs-function">std::thread <span class="hljs-title">t</span><span class="hljs-params">([&amp;p] {
+        <span class="hljs-comment">// do work...</span>
+        p.set_value(<span class="hljs-number">42</span>);                  <span class="hljs-comment">// producer sets the value</span>
+    })</span></span>;
+
+    <span class="hljs-type">int</span> result = f.<span class="hljs-built_in">get</span>();                 <span class="hljs-comment">// blocks until value is ready</span>
+    std::cout &lt;&lt; result &lt;&lt; <span class="hljs-string">&quot;\n&quot;</span>;          <span class="hljs-comment">// 42</span>
+    t.<span class="hljs-built_in">join</span>();
+}</code></pre>
+<hr>
+<h4 id="key-operations">Key Operations</h4>
+<p><strong><code>promise&lt;T&gt;</code></strong></p>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>get_future()</code></td>
+<td>Returns the associated <code>future</code> (call only once)</td>
+</tr>
+<tr>
+<td><code>set_value(v)</code></td>
+<td>Stores value, unblocks any waiting <code>get()</code></td>
+</tr>
+<tr>
+<td><code>set_exception(eptr)</code></td>
+<td>Stores an exception instead of a value</td>
+</tr>
+<tr>
+<td><code>set_value_at_thread_exit(v)</code></td>
+<td>Defers notification until thread exits</td>
+</tr>
+</tbody></table>
+<p><strong><code>future&lt;T&gt;</code></strong></p>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>get()</code></td>
+<td>Blocks until ready, returns value (or rethrows exception). <strong>Callable only once</strong> — invalidates the future.</td>
+</tr>
+<tr>
+<td><code>wait()</code></td>
+<td>Blocks until ready, doesn&#39;t consume</td>
+</tr>
+<tr>
+<td><code>wait_for(duration)</code></td>
+<td>Timed wait, returns <code>future_status</code></td>
+</tr>
+<tr>
+<td><code>valid()</code></td>
+<td>Whether this future holds a shared state</td>
+</tr>
+</tbody></table>
+<hr>
+<h4 id="exception-propagation">Exception Propagation</h4>
+<p>The promise/future channel transparently tunnels exceptions across thread boundaries:</p>
+<pre class="hljs"><code>std::promise&lt;<span class="hljs-type">int</span>&gt; p;
+std::future&lt;<span class="hljs-type">int</span>&gt; f = p.<span class="hljs-built_in">get_future</span>();
+
+<span class="hljs-function">std::thread <span class="hljs-title">t</span><span class="hljs-params">([&amp;p] {
+    <span class="hljs-keyword">try</span> {
+        <span class="hljs-keyword">throw</span> std::runtime_error(<span class="hljs-string">&quot;oops&quot;</span>);
+    } <span class="hljs-keyword">catch</span> (...) {
+        p.set_exception(std::current_exception());  <span class="hljs-comment">// marshal exception</span>
+    }
+})</span></span>;
+
+<span class="hljs-keyword">try</span> {
+    <span class="hljs-type">int</span> v = f.<span class="hljs-built_in">get</span>();   <span class="hljs-comment">// rethrows on the calling thread</span>
+} <span class="hljs-built_in">catch</span> (<span class="hljs-type">const</span> std::exception&amp; e) {
+    std::cout &lt;&lt; e.<span class="hljs-built_in">what</span>() &lt;&lt; <span class="hljs-string">&quot;\n&quot;</span>;  <span class="hljs-comment">// &quot;oops&quot;</span>
+}
+t.<span class="hljs-built_in">join</span>();</code></pre>
+<hr>
+<h4 id="stdasync-the-high-level-wrapper"><code>std::async</code> — The High-Level Wrapper</h4>
+<p>Most of the time you don&#39;t need to manage a <code>promise</code> manually. <code>std::async</code> creates the promise/future pair for you:</p>
+<pre class="hljs"><code>std::future&lt;<span class="hljs-type">int</span>&gt; f = std::<span class="hljs-built_in">async</span>(std::launch::async, [] {
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">expensive_computation</span>();
+});
+
+<span class="hljs-comment">// ... do other work ...</span>
+
+<span class="hljs-type">int</span> result = f.<span class="hljs-built_in">get</span>();  <span class="hljs-comment">// blocks if not done yet</span></code></pre>
+<p><code>std::launch::async</code> forces a new thread. <code>std::launch::deferred</code> runs lazily on <code>get()</code>. Omitting the policy lets the runtime decide.</p>
+<hr>
+<h4 id="sharedfuture-multiple-consumers"><code>shared_future</code> — Multiple Consumers</h4>
+<p>A <code>future</code> is move-only and <code>get()</code> is destructive (one consumer only). If you need multiple threads to observe the same result, share it:</p>
+<pre class="hljs"><code>std::shared_future&lt;<span class="hljs-type">int</span>&gt; sf = p.<span class="hljs-built_in">get_future</span>().<span class="hljs-built_in">share</span>();
+
+<span class="hljs-comment">// Both threads can call sf.get() safely</span>
+<span class="hljs-function">std::thread <span class="hljs-title">t1</span><span class="hljs-params">([sf]{ std::cout &lt;&lt; sf.get() &lt;&lt; <span class="hljs-string">&quot;\n&quot;</span>; })</span></span>;
+<span class="hljs-function">std::thread <span class="hljs-title">t2</span><span class="hljs-params">([sf]{ std::cout &lt;&lt; sf.get() &lt;&lt; <span class="hljs-string">&quot;\n&quot;</span>; })</span></span>;</code></pre>
+<hr>
+<h4 id="broken-promise">Broken Promise</h4>
+<p>If a <code>promise</code> is destroyed without <code>set_value</code> or <code>set_exception</code>, <code>future::get()</code> throws <code>std::future_error</code> with <code>broken_promise</code>. This is the C++ equivalent of a dangling callback.</p>
+<hr>
+<h4 id="when-to-use-what">When to Use What</h4>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Tool</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Fire-and-get a single async result</td>
+<td><code>std::async</code></td>
+</tr>
+<tr>
+<td>Producer/consumer with explicit thread control</td>
+<td><code>promise</code> + <code>future</code></td>
+</tr>
+<tr>
+<td>Multiple threads reading one result</td>
+<td><code>shared_future</code></td>
+</tr>
+<tr>
+<td>Ongoing stream of values</td>
+<td><code>promise</code>/<code>future</code> is wrong — use a queue or channel</td>
+</tr>
+</tbody></table>
+<p>The key limitation to internalize: this is a <strong>one-shot</strong> mechanism. A <code>promise</code> can only be satisfied once. For repeated signaling, you want <code>condition_variable</code>; for a stream of values, a concurrent queue.</p>
+<p>aync -&gt; eager, deferred -&gt; lazy</p>
+<p><code>std::launch::async</code> is eager. Task starts immediately on a new thread whether or not you ever get a <code>get()</code>. Happens in parallel with your current thread right now.</p>
+<p><code>std::launch::deferred</code> nothing runs at all until you call <code>f.get()</code> or <code>f.wait()</code>. At a point, the function runs synchronously on the calling thread -- no new thread is every created. It&#39;s basically a deferred function call dressed up as a future.</p>
+<p><code>latency hiding</code> - work that takes times, and instead of blocking your thread waiting for it, you want to overlap that works wtih others things you could be doing. This is what async allows us to do.</p>
+<p>async is collapsing all of this</p>
+<pre class="hljs"><code>std::promise&lt;int&gt; p;
+std::future&lt;int&gt; f = p.get_future()
+
+std::thread t([p = std::move(p)]() mutable {
+    try {
+        p.set_value(compute());
+    }catch (...){
+        p.set_exception(std::current_exception());
+    }
+});
+
+t.detach()</code></pre>
+<p>detaching means thread outlives the future that can cause races. The returned futures destructor blocks until the thread if finished. Special property only futures returned by async have.</p>
+<p>What deferred abstracs? even less, <code>function&lt;int()&gt; deferred = compute; int result = deferred()</code></p>
+<p><a href="https://claude.ai/chat/feaebac2-2303-4039-b3de-fc8e878f9680" target="_blank" rel="noopener">https://claude.ai/chat/feaebac2-2303-4039-b3de-fc8e878f9680</a></p>
+<h2 id="producer-and-consumer-problem">Producer and Consumer Problem</h2>
+<pre class="hljs"><code>using namespace std;
+
+std::mutex mu;
+std::condition_variable cond;
+deque&lt;int&gt; buffer;
+const unsigned int maxBufferSize = 50;
+
+void producer(int val){
+    while(val){
+        std::unique_lock&lt;std::mutex&gt; locker(mu);
+        cond.wait(locker, [](){return buffer.size() &lt; maxBufferSize;});
+        buffer.push_back(val);
+        cout &lt;&lt; ..
+        val--;
+        locker.unlock();
+        cond.notify_one();
+    }
+}
+
+void consumer(){
+    while(true){
+        unique_lock&lt;mutex&gt; locker(mu);
+        cond.wait(locker, [](){return buffer.size() &gt; 0;})
+        buffer.pop_back();
+        ...
+        locker.unlock();
+        cond.notify_one();
+    }
+}</code></pre>
+<h2 id="sleep-vs-wait">Sleep vs wait</h2>
+<ul>
+<li><p>both make your thread not runnable</p>
+</li>
+<li><p>sleep is directly to thread, it will keep the lock and sleep.</p>
+</li>
+<li><p>don&#39;t give me another timeslice until someone calls notify() notifyAll()</p>
+</li>
+<li><p>wait - done with my timeslices, don&#39;t me another until someone notifies me</p>
+</li>
+<li><p>it releases the lock and wait</p>
+</li>
+<li><p>wait is on a condition_variable</p>
+</li>
+</ul>
+<p>thread.sleep_for vs cv.wait...</p>
+<p>work is not going on while sleeping because lock is not released.</p>
+</article>
+  <nav class="prevnext"><span></span><a class="pn-card pn-next" href="semaphore-vs-mutex.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">Semaphore vs Mutex</span></a></nav>
+</main>
+<aside class="toc"><div class="toc-title">On this page</div><ul><li class="toc-d1"><a href="#join-and-detach-with-joinable">Join and Detach with Joinable</a></li><li class="toc-d1"><a href="#mutex">Mutex</a></li><li class="toc-d1"><a href="#trylock"><code>try_lock</code></a></li><li class="toc-d1"><a href="#timed-mutex">timed-mutex</a></li><li class="toc-d1"><a href="#stdrecursive-mutex">std::recursive-mutex</a></li><li class="toc-d1"><a href="#lock-guard">lock-guard</a></li><li class="toc-d1"><a href="#uniquelock">Unique_lock</a></li><li class="toc-d1"><a href="#condition-variable">Condition Variable</a></li><li class="toc-d1"><a href="#deadlock">deadlock</a></li><li class="toc-d1"><a href="#thread-or-process-synchronization">Thread OR process synchronization</a></li><li class="toc-d1"><a href="#stdlock"><code>std::lock()</code></a></li><li class="toc-d1"><a href="#promise-and-future-in-c-threading">promise and future in c++ threading</a></li><li class="toc-d2"><a href="#stdpromise-and-stdfuture-in-c"><code>std::promise</code> and <code>std::future</code> in C++</a></li><li class="toc-d1"><a href="#producer-and-consumer-problem">Producer and Consumer Problem</a></li><li class="toc-d1"><a href="#sleep-vs-wait">Sleep vs wait</a></li></ul></aside>
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

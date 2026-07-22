@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Random Walks &amp; Gambler's Ruin · Probability &amp; Puzzles</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script type="module">
+import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+mermaid.initialize({
+  startOnLoad: true,
+  theme: 'base',
+  themeVariables: {
+    fontFamily: 'Inter, sans-serif',
+    fontSize: '14px',
+    primaryColor: '#F1E8D7',
+    primaryTextColor: '#2E2A21',
+    primaryBorderColor: '#8B8170',
+    lineColor: '#57503F',
+    secondaryColor: '#FDFAF3',
+    tertiaryColor: '#FBF6EA',
+    clusterBkg: '#FBF6EA',
+    clusterBorder: '#E2D8C3',
+    actorBkg: '#F1E8D7',
+    actorBorder: '#8B8170',
+    actorTextColor: '#2E2A21',
+    actorLineColor: '#B8AD97',
+    signalColor: '#57503F',
+    signalTextColor: '#2E2A21',
+    labelBoxBkgColor: '#F1E8D7',
+    labelTextColor: '#2E2A21',
+    loopTextColor: '#57503F',
+    noteBkgColor: '#FBF3DC',
+    noteBorderColor: '#D9B36C',
+    noteTextColor: '#57503F',
+    activationBkgColor: '#EFE6D2',
+    activationBorderColor: '#8B8170',
+    edgeLabelBackground: '#F7F1E4'
+  }
+});
+</script>
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#4A648C">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link is-active" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">Probability & Puzzles</a><div class="side-group"><div class="side-label">Probability</div><ul><li><a class="side-link" href="probability-toolkit.html">Conditional Probability &amp; Bayes</a></li><li><a class="side-link" href="expectation-and-indicators.html">Expectation, Linearity &amp; Indicators</a></li><li><a class="side-link" href="coins-dice-waiting-times.html">Coins, Dice &amp; Waiting Times</a></li><li><a class="side-link" href="classic-paradoxes.html">Birthday, Monty Hall &amp; Friends</a></li><li><a class="side-link is-active" href="random-walks-gamblers-ruin.html">Random Walks &amp; Gambler's Ruin</a></li><li><a class="side-link" href="counting-toolkit.html">Counting — Stars, Bars &amp; Derangements</a></li><li><a class="side-link" href="markov-chains-mini.html">Markov Chains, Minimally</a></li></ul></div><div class="side-group"><div class="side-label">Puzzles</div><ul><li><a class="side-link" href="logic-puzzles.html">Logic Puzzles — Ropes, Bridges, Prisoners</a></li><li><a class="side-link" href="brainteaser-bank.html">Brainteaser Bank</a></li><li><a class="side-link" href="resources.html">Books &amp; Resources</a></li></ul></div><div class="side-group"><div class="side-label">Revision</div><ul><li><a class="side-link" href="refresher.html">Rapid Refresher<span class="badge">&#9733;</span></a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">Probability & Puzzles</a></div>
+  <div class="page-head">
+    <div class="page-kicker">Probability & Puzzles</div>
+    <h1 class="page-title">Random Walks &amp; Gambler's Ruin</h1>
+    <div class="page-meta">2 min read &middot; source: <code>quant/random_walks.md</code></div>
+  </div>
+  <article class="prose"><blockquote>
+<p>One setup, a dozen interview questions: a drunk staggers ±1 on a line. Everything reduces to &quot;absorbing walls and first-step equations&quot;.</p>
+</blockquote>
+<h3 id="gamblers-ruin">Gambler&#39;s ruin</h3>
+<p>You have ₹a, opponent has ₹(N−a). Fair coin each round, ₹1 stakes, play until someone is broke.</p>
+<ul>
+<li><strong>Fair game:</strong> P(you win everything) = <strong>a/N</strong> — your share of the total money. Clean, memorable, provable by symmetry or by noting the walk is a martingale.</li>
+<li><strong>Expected duration:</strong> a·(N−a) rounds. Two players with ₹50 each: 2500 rounds — walks are <em>slow</em>.</li>
+<li><strong>Biased game</strong> (win prob p ≠ ½, r = q/p): P(ruin) uses the geometric ladder: P(reach N from a) = (1−rᵃ)/(1−r^N). Even a 51/49 edge compounds brutally over many rounds — this is why casinos always win.</li>
+</ul>
+<div class="diagram"><pre class="mermaid">graph LR
+    Z[&quot;0 — ruin (absorbing)&quot;] --- A1[&quot;1&quot;] --- A2[&quot;2&quot;] --- DOTS[&quot;…&quot;] --- AN1[&quot;N−1&quot;] --- N[&quot;N — jackpot (absorbing)&quot;]
+    A2 --&gt;|&quot;p&quot;| DOTS
+    DOTS --&gt;|&quot;q = 1−p&quot;| A2</pre></div>
+<p><strong>Analogy:</strong> a fair random walk between two cliffs — your survival odds are exactly proportional to how far you start from your own cliff.</p>
+<h3 id="first-step-analysis-the-universal-hammer">First-step analysis (the universal hammer)</h3>
+<p>Let Eₐ = expected rounds from state a. Then Eₐ = 1 + p·Eₐ₊₁ + q·Eₐ₋₁, with E₀ = E_N = 0. Every &quot;expected time until…&quot; walk question is this one template with different boundaries.</p>
+<h3 id="facts-worth-having-loaded">Facts worth having loaded</h3>
+<ul>
+<li>A fair walk returns to 0 <strong>with probability 1</strong> in 1D and 2D, but only ~34% in 3D (&quot;a drunk man finds his way home; a drunk bird may not&quot; — Kakutani).</li>
+<li>Expected distance from origin after n fair steps ≈ √(2n/π) — grows like <strong>√n</strong>, not n.</li>
+<li><strong>Reflection principle:</strong> paths from A that touch a barrier correspond 1-1 to reflected paths — the counting trick behind the ballot problem (see <a href="counting-toolkit.html">counting</a>).</li>
+</ul>
+<h3 id="drill">Drill</h3>
+<ol>
+<li>Fair walk starting at 1, absorbing wall at 0 only — P(eventually hit 0)? <em>(1 — but expected time is infinite. Both statements together is the interview answer.)</em></li>
+<li>You have ₹1, opponent ₹99, you win each round with p = 0.5 — your odds? With p = 0.55? <em>(1%; then (1−r)/(1−r¹⁰⁰) ≈ 18% — edges matter more than bankrolls.)</em></li>
+<li>Frog on a 10-lilypad row, jumps L/R equally, pads 0 and 10 are absorbing, starts at 3 — expected jumps? <em>(3·7 = 21.)</em></li>
+</ol>
+<p><em>Seen at: <a href="../companies/citadel.html">Citadel</a> and <a href="../companies/de-shaw.html">D. E. Shaw</a> — ruin variants are near-guaranteed in quant-flavoured rounds.</em></p>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="classic-paradoxes.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">Birthday, Monty Hall &amp; Friends</span></a><a class="pn-card pn-next" href="counting-toolkit.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">Counting — Stars, Bars &amp; Derangements</span></a></nav>
+</main>
+<aside class="toc"><div class="toc-title">On this page</div><ul><li class="toc-d2"><a href="#gamblers-ruin">Gambler&#39;s ruin</a></li><li class="toc-d2"><a href="#first-step-analysis-the-universal-hammer">First-step analysis (the universal hammer)</a></li><li class="toc-d2"><a href="#facts-worth-having-loaded">Facts worth having loaded</a></li><li class="toc-d2"><a href="#drill">Drill</a></li></ul></aside>
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

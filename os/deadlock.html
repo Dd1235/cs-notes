@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Deadlock · Operating Systems</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#77682E">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link is-active" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">Operating Systems</a><div class="side-group"><div class="side-label">Notes</div><ul><li><a class="side-link" href="multithreading-cpp.html">Multithreading in C++</a></li><li><a class="side-link" href="semaphore-vs-mutex.html">Semaphore vs Mutex</a></li><li><a class="side-link" href="csapp-ch12.html">Concurrent Programming — CS:APP Ch. 12</a></li><li><a class="side-link" href="csapp-ch9.html">Virtual Memory — CS:APP Ch. 9</a></li></ul></div><div class="side-group"><div class="side-label">Processes & Scheduling</div><ul><li><a class="side-link" href="processes.html">Processes — Lifecycle, fork &amp; Friends</a></li><li><a class="side-link" href="scheduling.html">CPU Scheduling — FIFO to MLFQ</a></li></ul></div><div class="side-group"><div class="side-label">Locks & Memory</div><ul><li><a class="side-link" href="locks-internals.html">How Locks Actually Work</a></li><li><a class="side-link is-active" href="deadlock.html">Deadlock</a></li><li><a class="side-link" href="page-replacement.html">Page Replacement — FIFO, LRU, Clock</a></li></ul></div><div class="side-group"><div class="side-label">Files & IPC</div><ul><li><a class="side-link" href="filesystems.html">Filesystems — Inodes &amp; Journaling</a></li><li><a class="side-link" href="ipc.html">IPC — Pipes, Shared Memory, Signals</a></li></ul></div><div class="side-group"><div class="side-label">Revision</div><ul><li><a class="side-link" href="refresher.html">Rapid Refresher<span class="badge">&#9733;</span></a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">Operating Systems</a></div>
+  <div class="page-head">
+    <div class="page-kicker">Operating Systems</div>
+    <h1 class="page-title">Deadlock</h1>
+    <div class="page-meta">2 min read &middot; source: <code>os/deadlock.md</code></div>
+  </div>
+  <article class="prose"><blockquote>
+<p>Four conditions, three strategies, one practical answer (lock ordering). This page is deliberately the shape of the interview answer.</p>
+</blockquote>
+<h3 id="the-four-conditions-all-must-hold">The four conditions (all must hold)</h3>
+<ol>
+<li><strong>Mutual exclusion</strong> — resources aren&#39;t shareable.</li>
+<li><strong>Hold and wait</strong> — threads hold some locks while waiting for others.</li>
+<li><strong>No preemption</strong> — you can&#39;t forcibly take a lock away.</li>
+<li><strong>Circular wait</strong> — a cycle: A waits for B&#39;s lock, B waits for A&#39;s.</li>
+</ol>
+<p>Memory hook: <em>&quot;Mutual Hold, No Circle&quot;</em>. Break any one and deadlock is impossible.</p>
+<h3 id="the-canonical-bug">The canonical bug</h3>
+<pre class="hljs"><code><span class="hljs-comment">// thread 1            // thread 2</span>
+<span class="hljs-built_in">lock</span>(m1);              <span class="hljs-built_in">lock</span>(m2);
+<span class="hljs-built_in">lock</span>(m2);   <span class="hljs-comment">// waits   lock(m1);   // waits  → cycle</span></code></pre>
+<h3 id="three-strategies">Three strategies</h3>
+<p><strong>Prevention</strong> — design so a condition can&#39;t arise. The industrial answer: <strong>global lock ordering</strong> (kills circular wait — everyone acquires m1 before m2, always). Others: acquire all locks atomically (kills hold-and-wait; <code>std::scoped_lock(m1, m2)</code> does deadlock-avoiding all-or-nothing acquisition), or use <code>trylock</code> + back off (a <em>preemption</em> of sorts — beware livelock: two threads politely retrying forever).</p>
+<p><strong>Avoidance</strong> — admit requests only if a safe state remains. <strong>Banker&#39;s algorithm</strong> in three sentences: processes declare max needs upfront; before granting, the OS checks a completion order still exists for everyone; if not, the requester waits. Beautiful, rarely used — real systems don&#39;t know max needs upfront.</p>
+<p><strong>Detection &amp; recovery</strong> — let it happen, find cycles in the waits-for graph, kill/rollback a victim. Databases do exactly this (deadlock detector + abort one transaction — ties to <a href="../dbms/concurrency-control.html">concurrency control</a>); OSes mostly don&#39;t bother (the &quot;ostrich algorithm&quot;).</p>
+<h3 id="deadlocks-cousins">Deadlock&#39;s cousins</h3>
+<ul>
+<li><strong>Livelock</strong> — nobody blocks, nobody progresses (hallway dance).</li>
+<li><strong>Starvation</strong> — system moves, one thread never wins (readers flooding a writers lock — see <a href="csapp-ch12.html">CS:APP ch 12</a>).</li>
+</ul>
+<h3 id="drill">Drill</h3>
+<ol>
+<li>Transfer <code>A→B</code> and <code>B→A</code> concurrently, locking both accounts — write the deadlock, then fix it by ordering on account ID.</li>
+<li>Which of the four conditions does <code>scoped_lock</code> break? Which does lock ordering break?</li>
+<li>Why do databases choose detection while kernels choose &quot;ostrich&quot;? <em>(DBs can cheaply roll back a transaction; kernels can&#39;t roll back arbitrary threads.)</em></li>
+</ol>
+<p>Reference: <a href="https://pages.cs.wisc.edu/~remzi/OSTEP/threads-bugs.pdf" target="_blank" rel="noopener">OSTEP ch 32 — Common Concurrency Problems</a>.</p>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="locks-internals.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">How Locks Actually Work</span></a><a class="pn-card pn-next" href="page-replacement.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">Page Replacement — FIFO, LRU, Clock</span></a></nav>
+</main>
+<aside class="toc"><div class="toc-title">On this page</div><ul><li class="toc-d2"><a href="#the-four-conditions-all-must-hold">The four conditions (all must hold)</a></li><li class="toc-d2"><a href="#the-canonical-bug">The canonical bug</a></li><li class="toc-d2"><a href="#three-strategies">Three strategies</a></li><li class="toc-d2"><a href="#deadlocks-cousins">Deadlock&#39;s cousins</a></li><li class="toc-d2"><a href="#drill">Drill</a></li></ul></aside>
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

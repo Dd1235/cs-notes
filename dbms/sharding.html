@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sharding vs Partitioning · Database Systems</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script type="module">
+import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+mermaid.initialize({
+  startOnLoad: true,
+  theme: 'base',
+  themeVariables: {
+    fontFamily: 'Inter, sans-serif',
+    fontSize: '14px',
+    primaryColor: '#F1E8D7',
+    primaryTextColor: '#2E2A21',
+    primaryBorderColor: '#8B8170',
+    lineColor: '#57503F',
+    secondaryColor: '#FDFAF3',
+    tertiaryColor: '#FBF6EA',
+    clusterBkg: '#FBF6EA',
+    clusterBorder: '#E2D8C3',
+    actorBkg: '#F1E8D7',
+    actorBorder: '#8B8170',
+    actorTextColor: '#2E2A21',
+    actorLineColor: '#B8AD97',
+    signalColor: '#57503F',
+    signalTextColor: '#2E2A21',
+    labelBoxBkgColor: '#F1E8D7',
+    labelTextColor: '#2E2A21',
+    loopTextColor: '#57503F',
+    noteBkgColor: '#FBF3DC',
+    noteBorderColor: '#D9B36C',
+    noteTextColor: '#57503F',
+    activationBkgColor: '#EFE6D2',
+    activationBorderColor: '#8B8170',
+    edgeLabelBackground: '#F7F1E4'
+  }
+});
+</script>
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#B05730">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link is-active" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">Database Systems</a><div class="side-group"><div class="side-label">Foundations</div><ul><li><a class="side-link" href="acid.html">ACID &amp; Isolation Levels</a></li><li><a class="side-link" href="normalization.html">Normalization</a></li><li><a class="side-link" href="sql.html">SQL Essentials</a></li><li><a class="side-link" href="drop-delete-truncate.html">DROP vs DELETE vs TRUNCATE</a></li></ul></div><div class="side-group"><div class="side-label">Indexing & Storage</div><ul><li><a class="side-link" href="b-plus-trees.html">B+ Trees</a></li><li><a class="side-link" href="unique-indexes.html">Unique Indexes</a></li><li><a class="side-link" href="primary-vs-secondary-index.html">Primary vs Secondary Indexes</a></li><li><a class="side-link" href="write-ahead-logging.html">Write-Ahead Logging</a></li></ul></div><div class="side-group"><div class="side-label">Concurrency</div><ul><li><a class="side-link" href="concurrency-control.html">Concurrency Control Basics</a></li><li><a class="side-link" href="mvcc.html">MVCC in Depth</a></li><li><a class="side-link" href="mvcc-cmu.html">MVCC — CMU Lecture Notes</a></li></ul></div><div class="side-group"><div class="side-label">Scale & Patterns</div><ul><li><a class="side-link is-active" href="sharding.html">Sharding vs Partitioning</a></li><li><a class="side-link" href="n-plus-one-problem.html">The N+1 Query Problem</a></li><li><a class="side-link" href="graph-databases.html">Graph Databases</a></li></ul></div><div class="side-group"><div class="side-label">SQL in Practice</div><ul><li><a class="side-link" href="joins.html">Joins — Semantics &amp; Algorithms</a></li><li><a class="side-link" href="window-functions.html">Window Functions</a></li></ul></div><div class="side-group"><div class="side-label">Distributed Data</div><ul><li><a class="side-link" href="cap-replication.html">CAP &amp; Replication</a></li></ul></div><div class="side-group"><div class="side-label">Revision</div><ul><li><a class="side-link" href="refresher.html">Rapid Refresher<span class="badge">&#9733;</span></a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">Database Systems</a></div>
+  <div class="page-head">
+    <div class="page-kicker">Database Systems</div>
+    <h1 class="page-title">Sharding vs Partitioning</h1>
+    <div class="page-meta">3 min read &middot; source: <code>dbms/sharding.md</code></div>
+  </div>
+  <article class="prose"><p>The terms are often used interchangeably in industry, but there is a useful distinction.</p>
+<h3 id="partitioning">Partitioning</h3>
+<p>Partitioning means splitting data into smaller pieces.</p>
+<p>You can partition:</p>
+<ul>
+<li>within one database server</li>
+<li>across multiple database servers</li>
+</ul>
+<p>Example:</p>
+<pre class="hljs"><code>Users
+
+1
+2
+3
+4
+5
+6</code></pre>
+<p>Partition by user ID:</p>
+<pre class="hljs"><code>Partition A: 1,2,3
+Partition B: 4,5,6</code></pre>
+<p>The application may not even know partitions exist.</p>
+<hr>
+<h3 id="vertical-vs-horizontal-partitioning">Vertical vs Horizontal Partitioning</h3>
+<h4 id="vertical-partitioning">Vertical Partitioning</h4>
+<p>Split by columns.</p>
+<pre class="hljs"><code>Users
+
+id
+name
+email
+profile_picture
+bio</code></pre>
+<p>becomes:</p>
+<pre class="hljs"><code>UsersBasic
+id
+name
+email
+
+UsersProfile
+id
+profile_picture
+bio</code></pre>
+<p>Useful when some columns are large or rarely accessed.</p>
+<hr>
+<h4 id="horizontal-partitioning">Horizontal Partitioning</h4>
+<p>Split by rows.</p>
+<pre class="hljs"><code>Users
+
+1
+2
+3
+...
+1000000</code></pre>
+<p>becomes:</p>
+<pre class="hljs"><code>Partition 1: ids 1-100000
+Partition 2: ids 100001-200000
+...</code></pre>
+<p>This is what most people mean by &quot;partitioning&quot;.</p>
+<hr>
+<h2 id="sharding">Sharding</h2>
+<p>Sharding is a special case of horizontal partitioning where partitions live on different machines.</p>
+<pre class="hljs"><code>Shard 1 (Server A)
+Users 1-1,000,000
+
+Shard 2 (Server B)
+Users 1,000,001-2,000,000
+
+Shard 3 (Server C)
+Users 2,000,001-3,000,000</code></pre>
+<div class="diagram"><pre class="mermaid">graph TD
+    APP[&quot;application&quot;] --&gt; RT[&quot;router / shard map&lt;br/&gt;shard = f(user_id)&quot;]
+    RT --&gt; S1[&quot;Server A&lt;br/&gt;users 1 – 1M&quot;]
+    RT --&gt; S2[&quot;Server B&lt;br/&gt;users 1M – 2M&quot;]
+    RT --&gt; S3[&quot;Server C&lt;br/&gt;users 2M – 3M&quot;]
+    S1 -.X.- S2
+    S2 -.X.- S3
+    linkStyle 4,5 stroke:#B05730,stroke-dasharray:4</pre></div>
+<p><em>The dashed links are the catch: queries that need two shards (joins, transactions, aggregates) no longer happen inside one database.</em></p>
+<p>Each shard owns part of the data.</p>
+<hr>
+<h3 id="simple-analogy">Simple analogy</h3>
+<p>Partitioning:</p>
+<pre class="hljs"><code>One cupboard
+├── drawer A
+├── drawer B
+└── drawer C</code></pre>
+<p>Sharding:</p>
+<pre class="hljs"><code>House A → drawer A
+House B → drawer B
+House C → drawer C</code></pre>
+<hr>
+<h2 id="why-shard">Why shard?</h2>
+<p>Single machine limitations:</p>
+<pre class="hljs"><code>CPU
+RAM
+Disk
+Network</code></pre>
+<p>Eventually one database server cannot hold:</p>
+<pre class="hljs"><code>10 TB
+100 million users</code></pre>
+<p>So data is distributed.</p>
+<hr>
+<h3 id="sharding-strategies">Sharding strategies</h3>
+<h4 id="range-based">Range-based</h4>
+<pre class="hljs"><code>1-1000000   -&gt; Shard A
+1000001-... -&gt; Shard B</code></pre>
+<p>Easy but can cause hotspots.</p>
+<hr>
+<h4 id="hash-based">Hash-based</h4>
+<pre class="hljs"><code>hash(user_id) % N</code></pre>
+<p>Example:</p>
+<pre class="hljs"><code>hash(123)%4 = 2</code></pre>
+<p>goes to shard 2.</p>
+<p>More balanced.</p>
+<hr>
+<h4 id="directory-based">Directory-based</h4>
+<p>Lookup service:</p>
+<pre class="hljs"><code>user123 -&gt; shard5
+user456 -&gt; shard2</code></pre>
+<p>Flexible but requires metadata management.</p>
+<hr>
+<h2 id="example-postgresql">Example: PostgreSQL</h2>
+<p>Within a single PostgreSQL instance:</p>
+<pre class="hljs"><code><span class="hljs-keyword">PARTITION</span> <span class="hljs-keyword">BY</span> <span class="hljs-keyword">RANGE</span>(order_date)</code></pre>
+<p>creates partitions:</p>
+<pre class="hljs"><code>orders_2024
+orders_2025
+orders_2026</code></pre>
+<p>This is partitioning.</p>
+<p>Still one database server.</p>
+<hr>
+<h2 id="example-instagram-facebook-style">Example: Instagram / Facebook style</h2>
+<pre class="hljs"><code>DB Server 1
+DB Server 2
+DB Server 3
+DB Server 4</code></pre>
+<p>Users distributed by hash.</p>
+<p>This is sharding.</p>
+<hr>
+<h2 id="interview-answer">Interview answer</h2>
+<p>A concise answer:</p>
+<blockquote>
+<p>Partitioning means splitting a table into smaller pieces for manageability or performance. It can happen within a single database instance. Sharding is horizontal partitioning where each partition is stored on a different machine, allowing the database to scale beyond the resources of a single server.</p>
+</blockquote>
+<p>A common follow-up:</p>
+<p><strong>Is every shard a partition?</strong></p>
+<p>Yes.</p>
+<pre class="hljs"><code>Sharding ⊂ Horizontal Partitioning</code></pre>
+<p>Every shard is a partition, but not every partition is a shard.</p>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="mvcc-cmu.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">MVCC — CMU Lecture Notes</span></a><a class="pn-card pn-next" href="n-plus-one-problem.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">The N+1 Query Problem</span></a></nav>
+</main>
+<aside class="toc"><div class="toc-title">On this page</div><ul><li class="toc-d2"><a href="#partitioning">Partitioning</a></li><li class="toc-d2"><a href="#vertical-vs-horizontal-partitioning">Vertical vs Horizontal Partitioning</a></li><li class="toc-d1"><a href="#sharding">Sharding</a></li><li class="toc-d2"><a href="#simple-analogy">Simple analogy</a></li><li class="toc-d1"><a href="#why-shard">Why shard?</a></li><li class="toc-d2"><a href="#sharding-strategies">Sharding strategies</a></li><li class="toc-d1"><a href="#example-postgresql">Example: PostgreSQL</a></li><li class="toc-d1"><a href="#example-instagram-facebook-style">Example: Instagram / Facebook style</a></li><li class="toc-d1"><a href="#interview-answer">Interview answer</a></li></ul></aside>
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

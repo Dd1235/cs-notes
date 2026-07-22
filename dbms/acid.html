@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ACID &amp; Isolation Levels · Database Systems</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#B05730">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link is-active" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">Database Systems</a><div class="side-group"><div class="side-label">Foundations</div><ul><li><a class="side-link is-active" href="acid.html">ACID &amp; Isolation Levels</a></li><li><a class="side-link" href="normalization.html">Normalization</a></li><li><a class="side-link" href="sql.html">SQL Essentials</a></li><li><a class="side-link" href="drop-delete-truncate.html">DROP vs DELETE vs TRUNCATE</a></li></ul></div><div class="side-group"><div class="side-label">Indexing & Storage</div><ul><li><a class="side-link" href="b-plus-trees.html">B+ Trees</a></li><li><a class="side-link" href="unique-indexes.html">Unique Indexes</a></li><li><a class="side-link" href="primary-vs-secondary-index.html">Primary vs Secondary Indexes</a></li><li><a class="side-link" href="write-ahead-logging.html">Write-Ahead Logging</a></li></ul></div><div class="side-group"><div class="side-label">Concurrency</div><ul><li><a class="side-link" href="concurrency-control.html">Concurrency Control Basics</a></li><li><a class="side-link" href="mvcc.html">MVCC in Depth</a></li><li><a class="side-link" href="mvcc-cmu.html">MVCC — CMU Lecture Notes</a></li></ul></div><div class="side-group"><div class="side-label">Scale & Patterns</div><ul><li><a class="side-link" href="sharding.html">Sharding vs Partitioning</a></li><li><a class="side-link" href="n-plus-one-problem.html">The N+1 Query Problem</a></li><li><a class="side-link" href="graph-databases.html">Graph Databases</a></li></ul></div><div class="side-group"><div class="side-label">SQL in Practice</div><ul><li><a class="side-link" href="joins.html">Joins — Semantics &amp; Algorithms</a></li><li><a class="side-link" href="window-functions.html">Window Functions</a></li></ul></div><div class="side-group"><div class="side-label">Distributed Data</div><ul><li><a class="side-link" href="cap-replication.html">CAP &amp; Replication</a></li></ul></div><div class="side-group"><div class="side-label">Revision</div><ul><li><a class="side-link" href="refresher.html">Rapid Refresher<span class="badge">&#9733;</span></a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">Database Systems</a></div>
+  <div class="page-head">
+    <div class="page-kicker">Database Systems</div>
+    <h1 class="page-title">ACID &amp; Isolation Levels</h1>
+    <div class="page-meta">3 min read &middot; source: <code>dbms/acid.md</code></div>
+  </div>
+  <article class="prose"><h3 id="transactions">Transactions</h3>
+<p>A <strong>transaction</strong> is a collection of queries treated as <strong>one unit of work</strong> — e.g. an account deposit: read the balance, add the amount, write it back. Either all of it happens or none of it does.</p>
+<p>ACID = <strong>atomicity, consistency, isolation, durability</strong>.</p>
+<h3 id="atomicity">Atomicity</h3>
+<p>All queries in the transaction must succeed; if one fails, <strong>rollback</strong> everything. Partial work is never visible after a crash — recovery undoes it.</p>
+<h3 id="isolation">Isolation</h3>
+<p>The question isolation answers: <em>can my in-flight transaction see changes made by other transactions?</em> The answer is tunable, via <strong>isolation levels</strong>, and the ways it can go wrong are the <strong>read phenomena</strong>:</p>
+<ul>
+<li><strong>Dirty read</strong> — reading another transaction&#39;s uncommitted change (it may roll back).</li>
+<li><strong>Non-repeatable read</strong> — reading the same row twice gives different values, because someone committed in between.</li>
+<li><strong>Phantom read</strong> — re-running the same <em>predicate</em> query returns new rows that appeared in between.</li>
+<li><strong>Lost update</strong> — two transactions read the same value, both write; one write silently overwrites the other.</li>
+</ul>
+<p>The levels, weakest to strongest:</p>
+<ul>
+<li>read uncommitted</li>
+<li>read committed</li>
+<li>repeatable read</li>
+<li>serializable</li>
+</ul>
+<p><figure class="note-figure"><img src="../assets/iso.png" alt="" loading="lazy"></figure></p>
+<p>The key idea is that <strong>Repeatable Read protects rows you&#39;ve already read, but not necessarily the set of rows matching a predicate</strong> — that&#39;s why phantoms remain possible.</p>
+<p>Repeatable read is enough if it was implemented with versioning. The SQL standard&#39;s anomaly table is old — it assumed lock-based implementations. In databases using <strong>MVCC</strong>, such as PostgreSQL and MySQL, the behavior differs: PostgreSQL&#39;s <code>REPEATABLE READ</code> actually uses <strong>snapshot isolation</strong>, which prevents classic phantoms too (but not write skew — see the MVCC notes).</p>
+<h3 id="consistency">Consistency</h3>
+<p>Two different meanings, both matter:</p>
+<p><strong>Consistency in data</strong> — the current data obeys the rules:</p>
+<ol>
+<li>defined by the user (e.g. CHECK constraints, business rules)</li>
+<li>referential integrity, i.e. foreign keys</li>
+<li>enforced as a <em>consequence</em> of atomicity + isolation — <strong>atomicity + isolation → consistency</strong></li>
+</ol>
+<p><strong>Consistency in reads</strong> — does a read see the latest committed write? Both SQL and NoSQL databases suffer here the moment you replicate: if you have more than one server, a read after an update won&#39;t necessarily reflect that update. NoSQL systems typically only give <strong>eventual consistency</strong>.</p>
+<p>Scaling an RDBMS is hard; systems get better scalability by giving up read consistency.</p>
+<h3 id="durability">Durability</h3>
+<p>Committed transactions must be persisted in <strong>durable, non-volatile storage</strong> — an OS crash or power loss must not lose a commit. This is what write-ahead logging plus <code>fsync</code> buys (see the WAL notes). Redis, by default, is <em>not</em> durable — an in-memory store with periodic snapshots can lose acknowledged writes.</p>
+<h3 id="interview-one-liners">Interview one-liners</h3>
+<ul>
+<li>Atomicity = all-or-nothing. Isolation = as-if-alone. Both together give you data consistency; durability makes it survive a crash.</li>
+<li>&quot;Which anomaly does each isolation level allow?&quot; — walk the table above, then add: <em>in practice check the engine, because MVCC engines beat the standard&#39;s table.</em></li>
+<li>Durability is a spectrum: fsync-per-commit (Postgres default) → group commit → async replication → Redis snapshots.</li>
+</ul>
+</article>
+  <nav class="prevnext"><span></span><a class="pn-card pn-next" href="normalization.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">Normalization</span></a></nav>
+</main>
+<aside class="toc"><div class="toc-title">On this page</div><ul><li class="toc-d2"><a href="#transactions">Transactions</a></li><li class="toc-d2"><a href="#atomicity">Atomicity</a></li><li class="toc-d2"><a href="#isolation">Isolation</a></li><li class="toc-d2"><a href="#consistency">Consistency</a></li><li class="toc-d2"><a href="#durability">Durability</a></li><li class="toc-d2"><a href="#interview-one-liners">Interview one-liners</a></li></ul></aside>
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

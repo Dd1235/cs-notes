@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Birthday, Monty Hall &amp; Friends · Probability &amp; Puzzles</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#4A648C">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link is-active" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">Probability & Puzzles</a><div class="side-group"><div class="side-label">Probability</div><ul><li><a class="side-link" href="probability-toolkit.html">Conditional Probability &amp; Bayes</a></li><li><a class="side-link" href="expectation-and-indicators.html">Expectation, Linearity &amp; Indicators</a></li><li><a class="side-link" href="coins-dice-waiting-times.html">Coins, Dice &amp; Waiting Times</a></li><li><a class="side-link is-active" href="classic-paradoxes.html">Birthday, Monty Hall &amp; Friends</a></li><li><a class="side-link" href="random-walks-gamblers-ruin.html">Random Walks &amp; Gambler's Ruin</a></li><li><a class="side-link" href="counting-toolkit.html">Counting — Stars, Bars &amp; Derangements</a></li><li><a class="side-link" href="markov-chains-mini.html">Markov Chains, Minimally</a></li></ul></div><div class="side-group"><div class="side-label">Puzzles</div><ul><li><a class="side-link" href="logic-puzzles.html">Logic Puzzles — Ropes, Bridges, Prisoners</a></li><li><a class="side-link" href="brainteaser-bank.html">Brainteaser Bank</a></li><li><a class="side-link" href="resources.html">Books &amp; Resources</a></li></ul></div><div class="side-group"><div class="side-label">Revision</div><ul><li><a class="side-link" href="refresher.html">Rapid Refresher<span class="badge">&#9733;</span></a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">Probability & Puzzles</a></div>
+  <div class="page-head">
+    <div class="page-kicker">Probability & Puzzles</div>
+    <h1 class="page-title">Birthday, Monty Hall &amp; Friends</h1>
+    <div class="page-meta">2 min read &middot; source: <code>quant/paradoxes.md</code></div>
+  </div>
+  <article class="prose"><blockquote>
+<p>Three problems that sound trivial and aren&#39;t. Each has one sentence that dissolves the confusion — memorize the sentence, re-derive the rest.</p>
+</blockquote>
+<h3 id="birthday-paradox">Birthday paradox</h3>
+<p>23 people → &gt;50% chance two share a birthday. 57 people → 99%.</p>
+<p>Work with the complement: P(all distinct) = 365/365 · 364/365 · … and use 1−x ≈ e^(−x):<br>P(all n distinct) ≈ exp(−n(n−1)/730). Set to ½ → n ≈ 23.</p>
+<p><strong>The dissolving sentence:</strong> you&#39;re not comparing 23 people to <em>you</em> — you&#39;re comparing <strong>C(23,2) = 253 pairs</strong>, and 253 lottery tickets at 1/365 each is a lot.</p>
+<p>Interview variant: how many people until someone shares <em>your</em> birthday? ~253 (now it <em>is</em> per-person, 1−(364/365)ⁿ = ½).</p>
+<h3 id="monty-hall">Monty Hall</h3>
+<p>3 doors, 1 car. You pick one; the host — <strong>who knows where the car is</strong> — opens a different door showing a goat, and offers a switch. Switch: <strong>2/3</strong> win.</p>
+<table>
+<thead>
+<tr>
+<th>Your first pick</th>
+<th>Host opens</th>
+<th>Switching gets you</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>car (p = 1/3)</td>
+<td>either goat</td>
+<td>goat ✗</td>
+</tr>
+<tr>
+<td>goat A (p = 1/3)</td>
+<td>goat B (forced)</td>
+<td>car ✓</td>
+</tr>
+<tr>
+<td>goat B (p = 1/3)</td>
+<td>goat A (forced)</td>
+<td>car ✓</td>
+</tr>
+</tbody></table>
+<p><strong>The dissolving sentence:</strong> the host&#39;s reveal is <em>not</em> random — he filters his side of the split, so your initial 1/3 never gets updated, and the remaining 2/3 collapses onto one door.</p>
+<p>If the host opens a random door and it <em>happens</em> to show a goat, switching is 50/50 — the information content of the reveal is what matters. Say this unprompted and the interviewer is done.</p>
+<h3 id="boygirl-phrasing-traps">Boy–girl phrasing traps</h3>
+<p>Two children, each B/G equally likely:</p>
+<ul>
+<li>&quot;The <strong>elder</strong> is a boy&quot; → P(both boys) = <strong>1/2</strong> (only GG eliminated... specifically {BB, BG} remain from ordering elder-younger).</li>
+<li>&quot;<strong>At least one</strong> is a boy&quot; → P(both boys) = <strong>1/3</strong> (BB out of {BB, BG, GB}).</li>
+<li>&quot;At least one is a boy <strong>born on a Tuesday</strong>&quot; → 13/27 (!). The more specific the identifying detail, the closer to 1/2 — specificity makes it more like pointing at a particular child.</li>
+</ul>
+<p><strong>The dissolving sentence:</strong> the answer depends on the <em>procedure that generated the statement</em>, not the statement alone.</p>
+<h3 id="drill">Drill</h3>
+<ol>
+<li>In a room of 30, expected number of shared-birthday pairs? <em>(C(30,2)/365 ≈ 1.19 — indicators again.)</em></li>
+<li>Monty Hall with 100 doors, host opens 98 goats — switch odds? <em>(99/100; the exaggeration is the best intuition pump.)</em></li>
+<li>A family has two children and you meet one at random: a boy. P(both boys)? <em>(1/2 — you sampled a child, not a statement.)</em></li>
+</ol>
+<p><em>Seen at: quant OAs generally; Monty Hall reasoning shows up in <a href="../companies/de-shaw.html">D. E. Shaw</a> aptitude sections.</em></p>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="coins-dice-waiting-times.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">Coins, Dice &amp; Waiting Times</span></a><a class="pn-card pn-next" href="random-walks-gamblers-ruin.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">Random Walks &amp; Gambler's Ruin</span></a></nav>
+</main>
+<aside class="toc"><div class="toc-title">On this page</div><ul><li class="toc-d2"><a href="#birthday-paradox">Birthday paradox</a></li><li class="toc-d2"><a href="#monty-hall">Monty Hall</a></li><li class="toc-d2"><a href="#boygirl-phrasing-traps">Boy–girl phrasing traps</a></li><li class="toc-d2"><a href="#drill">Drill</a></li></ul></aside>
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

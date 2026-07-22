@@ -1,0 +1,478 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The C++ Compilation Model · OOP &amp; C++</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#8A4E5E">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link is-active" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">OOP & C++</a><div class="side-group"><div class="side-label">Lecture Notes</div><ul><li><a class="side-link" href="volatile-macros-inline.html">volatile, Macros &amp; inline</a></li><li><a class="side-link" href="references-and-const.html">References &amp; const</a></li><li><a class="side-link" href="function-overloading.html">Function Overloading</a></li><li><a class="side-link" href="dynamic-memory.html">Dynamic Memory Management</a></li><li><a class="side-link" href="classes-and-objects.html">Classes &amp; Objects</a></li><li><a class="side-link" href="constructors.html">Constructors &amp; Information Hiding</a></li><li><a class="side-link" href="copy-semantics.html">Copy Constructor &amp; Copy Assignment</a></li><li><a class="side-link" href="constness-and-static.html">Const-ness &amp; Static Members</a></li><li><a class="side-link" href="friend-functions.html">Friend Functions &amp; Friend Classes</a></li><li><a class="side-link" href="operator-overloading.html">Operator Overloading</a></li><li><a class="side-link" href="inheritance.html">Inheritance &amp; Overriding</a></li><li><a class="side-link" href="multiple-private-inheritance.html">Multiple &amp; Private Inheritance</a></li><li><a class="side-link" href="virtual-functions.html">Virtual Functions &amp; Dynamic Binding</a></li><li><a class="side-link" href="vtables-and-const-cast.html">Virtual Pointer Tables &amp; const_cast</a></li><li><a class="side-link" href="cpp-casts.html">C++ Casts</a></li><li><a class="side-link" href="exceptions.html">Exceptions &amp; Error Handling</a></li><li><a class="side-link" href="try-catch-and-templates.html">try/catch &amp; Function Templates</a></li><li><a class="side-link" href="class-templates-functors.html">Class Templates &amp; Functors</a></li></ul></div><div class="side-group"><div class="side-label">Extras</div><ul><li><a class="side-link is-active" href="compilation-model.html">The C++ Compilation Model</a></li><li><a class="side-link" href="template-metaprogramming.html">Template Metaprogramming</a></li><li><a class="side-link" href="build-your-own-vector.html">Exercise — Build Your Own Vector</a></li><li><a class="side-link" href="miscellany.html">Miscellany</a></li><li><a class="side-link" href="resources.html">Resources</a></li></ul></div><div class="side-group"><div class="side-label">Topic Notes</div><ul><li><a class="side-link" href="notes-cpp-core.html">C++ Core</a></li><li><a class="side-link" href="notes-cpp-oop.html">C++ OOP</a></li><li><a class="side-link" href="notes-cpp-advanced.html">C++ Advanced</a></li><li><a class="side-link" href="notes-ooad-uml.html">OOAD &amp; UML</a></li><li><a class="side-link" href="notes-design-patterns.html">Design Patterns</a></li><li><a class="side-link" href="notes-testing-sdlc.html">Testing, SDLC &amp; SE</a></li><li><a class="side-link" href="notes-interview-questions.html">Interview Questions</a></li></ul></div><div class="side-group"><div class="side-label">Flashcards</div><ul><li><a class="side-link" href="cards-cpp-core.html">C++ Core Flashcards</a></li><li><a class="side-link" href="cards-oop-lifetime.html">OOP, Lifetime &amp; Memory Flashcards</a></li><li><a class="side-link" href="cards-polymorphism-stl.html">Polymorphism, Casts, Templates &amp; STL Flashcards</a></li><li><a class="side-link" href="cards-ooad-uml.html">OOAD &amp; UML Flashcards</a></li><li><a class="side-link" href="cards-design-patterns.html">Design Patterns Flashcards</a></li><li><a class="side-link" href="cards-testing-sdlc.html">Testing, SDLC &amp; SE Flashcards</a></li><li><a class="side-link" href="cards-interview-drills.html">Interview &amp; Code-Reading Drills</a></li></ul></div><div class="side-group"><div class="side-label">Under the Hood</div><ul><li><a class="side-link" href="memory-layout.html">Memory Layout, Alignment &amp; Padding</a></li></ul></div><div class="side-group"><div class="side-label">Revision</div><ul><li><a class="side-link" href="refresher.html">Rapid Refresher<span class="badge">&#9733;</span></a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">OOP & C++</a></div>
+  <div class="page-head">
+    <div class="page-kicker">OOP & C++</div>
+    <h1 class="page-title">The C++ Compilation Model</h1>
+    <div class="page-meta">5 min read &middot; source: <code>oops_cpp/self_notes/cpp_notes.md</code></div>
+  </div>
+  <article class="prose"><ul>
+<li><p><strong>Source file</strong> (<code>.cpp</code>) → your human-written C++ code</p>
+</li>
+<li><p><strong>Header file</strong> (<code>.h/.hpp</code>) → declarations/templates/macros shared across files</p>
+</li>
+<li><p><strong>Preprocessor</strong> runs before compilation</p>
+<ul>
+<li>handles <code>#include</code>, <code>#define</code>, conditional compilation</li>
+<li>basically a giant text-copying machine 🧩</li>
+</ul>
+</li>
+<li><p><code>#include &lt;file&gt;</code></p>
+<ul>
+<li>literally pastes file contents into current file before compilation</li>
+<li>no magic module system in old-school C++</li>
+</ul>
+</li>
+<li><p><strong>Translation Unit</strong></p>
+<ul>
+<li>result after preprocessing a <code>.cpp</code> file</li>
+<li>one <code>.cpp</code> + all recursively included headers</li>
+<li>compiler compiles each translation unit independently</li>
+</ul>
+</li>
+<li><p><strong>Compilation pipeline</strong></p>
+<ol>
+<li>Preprocessing</li>
+<li>Lexing/tokenization</li>
+<li>Parsing</li>
+<li>AST generation</li>
+<li>Semantic analysis/type checking</li>
+<li>Optimization</li>
+<li>Assembly generation</li>
+<li>Object file generation</li>
+<li>Linking</li>
+</ol>
+</li>
+<li><p><strong>AST (Abstract Syntax Tree)</strong></p>
+<ul>
+<li>tree representation of program structure</li>
+<li>compiler uses this for semantic analysis/optimizations</li>
+<li>example: <code>a + b * c</code> becomes a tree with <code>+</code> root and <code>*</code> subtree</li>
+</ul>
+</li>
+<li><p><strong>Object file</strong> (<code>.o/.obj</code>)</p>
+<ul>
+<li>compiled machine code but not complete executable yet</li>
+<li>may contain unresolved symbols (<code>printf</code>, functions from other files)</li>
+<li>contains:<ul>
+<li>machine instructions</li>
+<li>symbol table</li>
+<li>relocation info</li>
+<li>debug info (optional)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>Linker</strong></p>
+<ul>
+<li>combines object files + libraries into executable</li>
+<li>resolves symbol references between translation units</li>
+<li>decides final memory layout</li>
+</ul>
+</li>
+<li><p><strong>Static linking</strong></p>
+<ul>
+<li>library code copied into executable</li>
+<li>bigger executable, fewer runtime deps</li>
+</ul>
+</li>
+<li><p><strong>Dynamic linking</strong></p>
+<ul>
+<li>executable loads shared libraries at runtime (<code>.so</code>, <code>.dll</code>)</li>
+<li>smaller executable</li>
+</ul>
+</li>
+<li><p><strong>Symbol</strong></p>
+<ul>
+<li>named entity compiler/linker tracks</li>
+<li>functions, globals, statics, etc.</li>
+</ul>
+</li>
+<li><p><strong>Name mangling</strong></p>
+<ul>
+<li>C++ encodes function signatures into symbol names</li>
+<li>needed for function overloading</li>
+</ul>
+</li>
+<li><p><code>extern &quot;C&quot;</code></p>
+<ul>
+<li>disables C++ name mangling</li>
+<li>useful when interfacing with C libraries</li>
+</ul>
+</li>
+<li><p><code>static</code> at global/file scope</p>
+<ul>
+<li>gives <strong>internal linkage</strong></li>
+<li>symbol visible only inside that translation unit</li>
+<li>avoids linker conflicts</li>
+</ul>
+</li>
+</ul>
+<pre class="hljs"><code><span class="hljs-type">static</span> <span class="hljs-type">int</span> x = <span class="hljs-number">5</span>; <span class="hljs-comment">// only this file can see x</span></code></pre>
+<ul>
+<li><p><code>static</code> function at file scope</p>
+<ul>
+<li>callable only inside that <code>.cpp</code> file</li>
+</ul>
+</li>
+<li><p><code>static</code> local variable inside function</p>
+<ul>
+<li>lifetime = entire program</li>
+<li>scope = only inside function</li>
+<li>stored in static/global data region, NOT stack</li>
+</ul>
+</li>
+</ul>
+<pre class="hljs"><code><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">foo</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-type">static</span> <span class="hljs-type">int</span> cnt = <span class="hljs-number">0</span>;
+}</code></pre>
+<ul>
+<li><p>normal local variable</p>
+<ul>
+<li>stored on stack</li>
+<li>recreated every function call</li>
+</ul>
+</li>
+<li><p><strong>Function code</strong> usually lives in <strong>text/code segment</strong> of process memory</p>
+</li>
+<li><p><strong>Memory layout</strong></p>
+<ul>
+<li>text/code segment → instructions</li>
+<li>data segment → initialized globals/statics</li>
+<li>BSS → uninitialized globals/statics</li>
+<li>heap → dynamic allocation (<code>new/malloc</code>)</li>
+<li>stack → function frames/local vars</li>
+</ul>
+</li>
+<li><p><code>const</code></p>
+<ul>
+<li>means value cannot be modified through that variable</li>
+<li>not necessarily compile-time constant</li>
+</ul>
+</li>
+</ul>
+<pre class="hljs"><code><span class="hljs-type">int</span> x = <span class="hljs-number">5</span>;
+<span class="hljs-type">const</span> <span class="hljs-type">int</span> y = x; <span class="hljs-comment">// allowed</span></code></pre>
+<ul>
+<li><code>constexpr</code><ul>
+<li>must be evaluatable at compile time</li>
+</ul>
+</li>
+</ul>
+<pre class="hljs"><code><span class="hljs-type">int</span> x = <span class="hljs-number">5</span>;
+<span class="hljs-keyword">constexpr</span> <span class="hljs-type">int</span> z = x; <span class="hljs-comment">// error</span></code></pre>
+<ul>
+<li><p><code>consteval</code> (C++20)</p>
+<ul>
+<li>function MUST run at compile time</li>
+</ul>
+</li>
+<li><p><strong>ODR (One Definition Rule)</strong></p>
+<ul>
+<li>entity should have only one definition across program</li>
+<li>violating it causes linker chaos ☄️</li>
+</ul>
+</li>
+<li><p><strong>Inline function</strong></p>
+<ul>
+<li>allows multiple identical definitions across translation units</li>
+<li>modern meaning is more about ODR/linkage than performance</li>
+</ul>
+</li>
+<li><p>Templates are usually defined in headers</p>
+<ul>
+<li>compiler needs full template definition during instantiation</li>
+</ul>
+</li>
+<li><p>Header guards / <code>#pragma once</code></p>
+<ul>
+<li>prevent duplicate inclusion</li>
+</ul>
+</li>
+</ul>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">ifndef</span> MY_HEADER</span>
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> MY_HEADER</span>
+<span class="hljs-meta">#<span class="hljs-keyword">endif</span></span></code></pre>
+<ul>
+<li><p><strong>VTable</strong></p>
+<ul>
+<li>table of virtual function pointers for polymorphism</li>
+</ul>
+</li>
+<li><p><strong>VPtr</strong></p>
+<ul>
+<li>hidden pointer inside polymorphic objects pointing to vtable</li>
+</ul>
+</li>
+<li><p>Virtual dispatch</p>
+<ul>
+<li>resolved at runtime using vtable lookup</li>
+</ul>
+</li>
+<li><p>Pure virtual function</p>
+</li>
+</ul>
+<pre class="hljs"><code><span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-type">void</span> <span class="hljs-title">foo</span><span class="hljs-params">()</span> </span>= <span class="hljs-number">0</span>;</code></pre>
+<ul>
+<li><p>makes class abstract</p>
+</li>
+<li><p>Static member variable in class</p>
+<ul>
+<li>shared across all objects</li>
+</ul>
+</li>
+<li><p>Static member function</p>
+<ul>
+<li>no <code>this</code> pointer</li>
+<li>can access only static members directly</li>
+</ul>
+</li>
+<li><p><strong>This pointer</strong></p>
+<ul>
+<li>hidden pointer passed to non-static member functions</li>
+</ul>
+</li>
+<li><p><strong>RAII</strong></p>
+<ul>
+<li>resource tied to object lifetime</li>
+<li>constructor acquires, destructor releases</li>
+</ul>
+</li>
+<li><p>Constructor</p>
+<ul>
+<li>initializes object</li>
+</ul>
+</li>
+<li><p>Destructor</p>
+<ul>
+<li>cleanup when object dies</li>
+</ul>
+</li>
+<li><p>Copy constructor vs move constructor</p>
+<ul>
+<li>copy duplicates resources</li>
+<li>move transfers ownership</li>
+</ul>
+</li>
+<li><p>Rule of 3/5/0</p>
+<ul>
+<li>if managing resources manually, special member functions matter</li>
+</ul>
+</li>
+<li><p>Lvalue</p>
+<ul>
+<li>has persistent identity/address</li>
+</ul>
+</li>
+<li><p>Rvalue</p>
+<ul>
+<li>temporary object</li>
+</ul>
+</li>
+<li><p><code>std::move</code></p>
+<ul>
+<li>casts to rvalue reference</li>
+<li>does NOT move by itself</li>
+</ul>
+</li>
+<li><p>Stack unwinding</p>
+<ul>
+<li>destructors called automatically during exception propagation</li>
+</ul>
+</li>
+<li><p><code>new</code></p>
+<ul>
+<li>allocates memory + constructs object</li>
+</ul>
+</li>
+<li><p><code>delete</code></p>
+<ul>
+<li>destroys object + frees memory</li>
+</ul>
+</li>
+<li><p><code>malloc/free</code></p>
+<ul>
+<li>raw memory only, no constructors/destructors</li>
+</ul>
+</li>
+<li><p>Undefined Behavior (UB)</p>
+<ul>
+<li>compiler allowed to assume impossible things</li>
+<li>can produce spooky action at a distance 👻</li>
+</ul>
+</li>
+</ul>
+<p>Examples:</p>
+<ul>
+<li><p>out-of-bounds access</p>
+</li>
+<li><p>use-after-free</p>
+</li>
+<li><p>signed integer overflow</p>
+</li>
+<li><p>dereferencing null</p>
+</li>
+<li><p>Segmentation fault</p>
+<ul>
+<li>OS kills process for invalid memory access</li>
+</ul>
+</li>
+<li><p>Compiler optimizations (<code>-O2/-O3</code>)</p>
+<ul>
+<li>reorder/remove code assuming no UB</li>
+</ul>
+</li>
+<li><p>Dead Code Elimination</p>
+<ul>
+<li>removes code with no observable effect</li>
+</ul>
+</li>
+<li><p>Constant Folding</p>
+<ul>
+<li>compile-time evaluation of expressions</li>
+</ul>
+</li>
+<li><p>Inlining</p>
+<ul>
+<li>replace function call with function body</li>
+</ul>
+</li>
+<li><p>ABI (Application Binary Interface)</p>
+<ul>
+<li>calling conventions, object layout, binary compatibility rules</li>
+</ul>
+</li>
+<li><p>Calling convention</p>
+<ul>
+<li>defines:<ul>
+<li>argument passing</li>
+<li>return value handling</li>
+<li>stack cleanup</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Stack frame</p>
+<ul>
+<li>function call bookkeeping:<ul>
+<li>return address</li>
+<li>locals</li>
+<li>saved registers</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Recursion</p>
+<ul>
+<li>creates new stack frame per call</li>
+</ul>
+</li>
+<li><p>Stack overflow</p>
+<ul>
+<li>too many stack frames</li>
+</ul>
+</li>
+<li><p>Heap fragmentation</p>
+<ul>
+<li>memory becomes split into tiny unusable chunks</li>
+</ul>
+</li>
+<li><p>Smart pointers</p>
+<ul>
+<li><code>unique_ptr</code> → exclusive ownership</li>
+<li><code>shared_ptr</code> → reference counted ownership</li>
+<li><code>weak_ptr</code> → non-owning observer</li>
+</ul>
+</li>
+<li><p><code>volatile</code></p>
+<ul>
+<li>prevents certain compiler optimizations</li>
+<li>NOT for thread synchronization</li>
+</ul>
+</li>
+<li><p><code>atomic</code></p>
+<ul>
+<li>lock-free synchronized operations between threads</li>
+</ul>
+</li>
+<li><p>Data race</p>
+<ul>
+<li>unsynchronized concurrent access with at least one write</li>
+<li>UB in C++</li>
+</ul>
+</li>
+<li><p>Mutex</p>
+<ul>
+<li>mutual exclusion lock for critical sections</li>
+</ul>
+</li>
+<li><p>Cache line</p>
+<ul>
+<li>smallest unit CPU cache transfers (typically 64B)</li>
+</ul>
+</li>
+<li><p>False sharing</p>
+<ul>
+<li>unrelated variables on same cache line causing contention</li>
+</ul>
+</li>
+<li><p>Syscall</p>
+<ul>
+<li>transition from user mode → kernel mode</li>
+</ul>
+</li>
+<li><p>Context switch</p>
+<ul>
+<li>OS switches running thread/process</li>
+</ul>
+</li>
+<li><p>Process vs thread</p>
+<ul>
+<li>process = isolated memory space</li>
+<li>threads share process memory</li>
+</ul>
+</li>
+<li><p>ELF / PE / Mach-O</p>
+<ul>
+<li>executable formats on Linux / Windows / macOS respectively</li>
+</ul>
+</li>
+<li><p><code>a.out</code></p>
+<ul>
+<li>traditional default executable name on Unix-like systems</li>
+</ul>
+</li>
+<li><p><code>nm</code>, <code>objdump</code>, <code>readelf</code>, <code>otool</code></p>
+<ul>
+<li>useful binary inspection tools 🔬</li>
+</ul>
+</li>
+</ul>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="class-templates-functors.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">Class Templates &amp; Functors</span></a><a class="pn-card pn-next" href="template-metaprogramming.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">Template Metaprogramming</span></a></nav>
+</main>
+
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

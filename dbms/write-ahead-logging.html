@@ -1,0 +1,430 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Write-Ahead Logging · Database Systems</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script type="module">
+import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+mermaid.initialize({
+  startOnLoad: true,
+  theme: 'base',
+  themeVariables: {
+    fontFamily: 'Inter, sans-serif',
+    fontSize: '14px',
+    primaryColor: '#F1E8D7',
+    primaryTextColor: '#2E2A21',
+    primaryBorderColor: '#8B8170',
+    lineColor: '#57503F',
+    secondaryColor: '#FDFAF3',
+    tertiaryColor: '#FBF6EA',
+    clusterBkg: '#FBF6EA',
+    clusterBorder: '#E2D8C3',
+    actorBkg: '#F1E8D7',
+    actorBorder: '#8B8170',
+    actorTextColor: '#2E2A21',
+    actorLineColor: '#B8AD97',
+    signalColor: '#57503F',
+    signalTextColor: '#2E2A21',
+    labelBoxBkgColor: '#F1E8D7',
+    labelTextColor: '#2E2A21',
+    loopTextColor: '#57503F',
+    noteBkgColor: '#FBF3DC',
+    noteBorderColor: '#D9B36C',
+    noteTextColor: '#57503F',
+    activationBkgColor: '#EFE6D2',
+    activationBorderColor: '#8B8170',
+    edgeLabelBackground: '#F7F1E4'
+  }
+});
+</script>
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#B05730">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link is-active" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">Database Systems</a><div class="side-group"><div class="side-label">Foundations</div><ul><li><a class="side-link" href="acid.html">ACID &amp; Isolation Levels</a></li><li><a class="side-link" href="normalization.html">Normalization</a></li><li><a class="side-link" href="sql.html">SQL Essentials</a></li><li><a class="side-link" href="drop-delete-truncate.html">DROP vs DELETE vs TRUNCATE</a></li></ul></div><div class="side-group"><div class="side-label">Indexing & Storage</div><ul><li><a class="side-link" href="b-plus-trees.html">B+ Trees</a></li><li><a class="side-link" href="unique-indexes.html">Unique Indexes</a></li><li><a class="side-link" href="primary-vs-secondary-index.html">Primary vs Secondary Indexes</a></li><li><a class="side-link is-active" href="write-ahead-logging.html">Write-Ahead Logging</a></li></ul></div><div class="side-group"><div class="side-label">Concurrency</div><ul><li><a class="side-link" href="concurrency-control.html">Concurrency Control Basics</a></li><li><a class="side-link" href="mvcc.html">MVCC in Depth</a></li><li><a class="side-link" href="mvcc-cmu.html">MVCC — CMU Lecture Notes</a></li></ul></div><div class="side-group"><div class="side-label">Scale & Patterns</div><ul><li><a class="side-link" href="sharding.html">Sharding vs Partitioning</a></li><li><a class="side-link" href="n-plus-one-problem.html">The N+1 Query Problem</a></li><li><a class="side-link" href="graph-databases.html">Graph Databases</a></li></ul></div><div class="side-group"><div class="side-label">SQL in Practice</div><ul><li><a class="side-link" href="joins.html">Joins — Semantics &amp; Algorithms</a></li><li><a class="side-link" href="window-functions.html">Window Functions</a></li></ul></div><div class="side-group"><div class="side-label">Distributed Data</div><ul><li><a class="side-link" href="cap-replication.html">CAP &amp; Replication</a></li></ul></div><div class="side-group"><div class="side-label">Revision</div><ul><li><a class="side-link" href="refresher.html">Rapid Refresher<span class="badge">&#9733;</span></a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">Database Systems</a></div>
+  <div class="page-head">
+    <div class="page-kicker">Database Systems</div>
+    <h1 class="page-title">Write-Ahead Logging</h1>
+    <div class="page-meta">6 min read &middot; source: <code>dbms/wal.md</code></div>
+  </div>
+  <article class="prose"><p>commit -&gt; changes need to be flushed to the disk or any non volatile storage like S3. Os failure, power gone etc. also the changes are there.</p>
+<p>engineer -&gt; update row -&gt; table update or index update</p>
+<p>disk writes are complicated.<br>ram -&gt; os cache -&gt; disk cache -&gt; disk</p>
+<p>mode could be regular read only mode, or sync mode etc. sync mode bypass all cache and makes sure immediately flush is done so that there is no dataloss.</p>
+<p>write ahead logging -&gt; standard method for ensuring data integrity.</p>
+<p>its a concept that can be applied to any database for ensuring reliability.</p>
+<p>core idea: before making changes to actual datafiles, log these changes.</p>
+<p>sync -&gt; write to log<br>periodic -&gt; actual change to disk (say heap pages or the b+ trees)</p>
+<p>advantages:</p>
+<ol>
+<li>no need to flush entire data on every commit</li>
+<li>recover by replaying the logs</li>
+<li>reduce the number of disk writes</li>
+<li>point in time recovery is possible with wal, a point in time snapshot</li>
+</ol>
+<p>wal file is sequential so cost of logging changes is significantly lower.</p>
+<p>log -&gt; one append<br>data file -&gt; update table, update index, tree traversal</p>
+<div class="diagram"><pre class="mermaid">graph LR
+    TX[&quot;COMMIT&quot;] --&gt;|&quot;1. append record + fsync&lt;br/&gt;(sequential, cheap)&quot;| WAL[&quot;WAL segment file&quot;]
+    TX --&gt;|&quot;2. modify in memory&quot;| BUF[&quot;buffer pool&lt;br/&gt;dirty pages&quot;]
+    BUF -.-&gt;|&quot;3. flushed lazily, later&lt;br/&gt;(checkpoint)&quot;| DATA[&quot;heap pages / B+ tree files&quot;]
+    WAL --&gt;|&quot;crash? replay committed,&lt;br/&gt;undo uncommitted&quot;| DATA</pre></div>
+<p>Data integrity in WAL</p>
+<ul>
+<li><p>every individual record is CRC-32 protected (we could tell if record content are connrect crc is checked during crash recovery and replication). Cyclic redundancy checksum.</p>
+</li>
+<li><p>it is enabled by default in all persistant databases.</p>
+</li>
+<li><p>its an append only file. Each file is a segment (16MB). Insert Position -&gt; log sequence number (LSN). Byte offset into logs.</p>
+</li>
+<li><p>byte offset as the sequence number optimization crc update + set k:v</p>
+</li>
+</ul>
+<h3 id="wal-write-ahead-log">WAL (Write-Ahead Log)</h3>
+<p>The core idea:</p>
+<blockquote>
+<p>Before modifying the actual data structure, first append the change to a durable log.</p>
+</blockquote>
+<p>Example:</p>
+<pre class="hljs"><code>UPDATE account SET balance = 100</code></pre>
+<p>Database does:</p>
+<pre class="hljs"><code>1. Append update record to WAL
+2. fsync WAL
+3. Apply update to B-tree/page/memtable</code></pre>
+<p>If the machine crashes:</p>
+<pre class="hljs"><code>Replay WAL -&gt; recover state</code></pre>
+<p>WAL is primarily a <strong>durability and recovery mechanism</strong>.</p>
+<hr>
+<h3 id="lsm-trees">LSM Trees</h3>
+<p>An LSM tree often uses a WAL.</p>
+<p>Write path:</p>
+<pre class="hljs"><code>Client write
+    ↓
+WAL append
+    ↓
+MemTable (RAM)
+    ↓
+SSTables on disk</code></pre>
+<p>Examples:</p>
+<ul>
+<li>RocksDB</li>
+<li>LevelDB</li>
+<li>Apache Cassandra</li>
+<li>ScyllaDB</li>
+</ul>
+<p>So:</p>
+<pre class="hljs"><code>LSM tree often contains a WAL
+WAL does not imply LSM tree</code></pre>
+<p>A B+ tree database can also have a WAL.</p>
+<p>Examples:</p>
+<ul>
+<li>PostgreSQL</li>
+<li>MySQL</li>
+</ul>
+<hr>
+<h3 id="kafka">Kafka</h3>
+<p>Kafka took the &quot;append-only log&quot; idea much further.</p>
+<p>Instead of:</p>
+<pre class="hljs"><code>Log exists to recover database</code></pre>
+<p>Kafka says:</p>
+<pre class="hljs"><code>The log IS the database</code></pre>
+<p>A partition is basically:</p>
+<pre class="hljs"><code>event1
+event2
+event3
+event4</code></pre>
+<p>stored sequentially on disk.</p>
+<p>Consumers maintain offsets:</p>
+<pre class="hljs"><code>consumer A -&gt; offset 100
+consumer B -&gt; offset 500</code></pre>
+<p>and replay whenever they want.</p>
+<hr>
+<h3 id="the-log-is-the-source-of-truth">&quot;The log is the source of truth&quot;</h3>
+<p>This is the philosophy behind:</p>
+<ul>
+<li>Apache Kafka</li>
+<li>Event Sourcing</li>
+<li>CQRS architectures</li>
+</ul>
+<p>Instead of:</p>
+<pre class="hljs"><code>Database = source of truth
+Log = recovery mechanism</code></pre>
+<p>you have:</p>
+<pre class="hljs"><code>Log = source of truth
+Views/Indexes/Materialized state = derived data</code></pre>
+<p>Example:</p>
+<pre class="hljs"><code>UserCreated
+AddressChanged
+EmailChanged
+SubscriptionCancelled</code></pre>
+<p>Current user state can be reconstructed by replaying events.</p>
+<hr>
+<h3 id="evolution-of-the-idea">Evolution of the idea</h3>
+<p>You can think of it historically as:</p>
+<pre class="hljs"><code>WAL
+  ↓
+Databases realize logs are useful
+  ↓
+LSM trees use WAL + immutable files
+  ↓
+Kafka says keep only the log
+  ↓
+Event sourcing says derive everything from logs</code></pre>
+<hr>
+<p>A useful interview distinction:</p>
+<table>
+<thead>
+<tr>
+<th>System</th>
+<th>What is the source of truth?</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>PostgreSQL</td>
+<td>B+ tree tables/pages</td>
+</tr>
+<tr>
+<td>PostgreSQL WAL</td>
+<td>Recovery log</td>
+</tr>
+<tr>
+<td>RocksDB</td>
+<td>SSTables + MemTables</td>
+</tr>
+<tr>
+<td>RocksDB WAL</td>
+<td>Recovery log</td>
+</tr>
+<tr>
+<td>Kafka</td>
+<td>Append-only log itself</td>
+</tr>
+<tr>
+<td>Event Sourcing</td>
+<td>Event log itself</td>
+</tr>
+</tbody></table>
+<p>So the slogan <strong>&quot;the log is the database&quot;</strong> is much closer to Kafka and event sourcing than to traditional WALs. WALs are usually just a mechanism to protect the real data structure; Kafka elevates the log to become the primary data structure.</p>
+<p>CQRS stands for:</p>
+<blockquote>
+<p><strong>Command Query Responsibility Segregation</strong></p>
+</blockquote>
+<p>The idea is:</p>
+<blockquote>
+<p>Separate the system that handles writes from the system that handles reads.</p>
+</blockquote>
+<p>Instead of:</p>
+<pre class="hljs"><code>          +-----------+
+Read  ---&gt;| Database  |&lt;--- Write
+          +-----------+</code></pre>
+<p>you have:</p>
+<pre class="hljs"><code>          Command Side
+Write ---&gt; Validation ---&gt; Write Model
+                                |
+                                v
+                            Event Log
+                                |
+                                v
+                          Read Projections
+
+Read -----------------&gt; Read Model</code></pre>
+<hr>
+<h3 id="traditional-crud">Traditional CRUD</h3>
+<p>Suppose you&#39;re building an e-commerce site.</p>
+<pre class="hljs"><code>products
+orders
+users</code></pre>
+<p>Reads and writes both hit the same database.</p>
+<pre class="hljs"><code>Create Order
+Update Order
+Get Order
+Search Orders
+Dashboard
+Analytics</code></pre>
+<p>all use the same tables.</p>
+<p>This works for most applications.</p>
+<hr>
+<h3 id="why-cqrs">Why CQRS?</h3>
+<p>Often read patterns and write patterns are completely different.</p>
+<p>Example:</p>
+<h4 id="write">Write</h4>
+<pre class="hljs"><code>Place Order
+Cancel Order
+Refund Order</code></pre>
+<p>Need:</p>
+<ul>
+<li>Validation</li>
+<li>Transactions</li>
+<li>Correctness</li>
+</ul>
+<hr>
+<h4 id="read">Read</h4>
+<pre class="hljs"><code>Show dashboard
+Top customers
+Revenue by month
+Search orders</code></pre>
+<p>Need:</p>
+<ul>
+<li>Fast queries</li>
+<li>Denormalized views</li>
+<li>Aggregations</li>
+</ul>
+<p>The ideal schema for writes is usually terrible for reads.</p>
+<hr>
+<h3 id="cqrs-solution">CQRS Solution</h3>
+<h4 id="command-side">Command Side</h4>
+<p>Handles:</p>
+<pre class="hljs"><code>CreateOrder
+CancelOrder
+UpdateAddress</code></pre>
+<p>Only writes.</p>
+<p>May store:</p>
+<pre class="hljs"><code>Orders
+OrderItems
+Customers</code></pre>
+<p>in a normalized schema.</p>
+<hr>
+<h4 id="query-side">Query Side</h4>
+<p>Maintains separate read models.</p>
+<p>Example:</p>
+<pre class="hljs"><code>CustomerDashboardView
+
+{
+    customer_id,
+    total_orders,
+    total_spent,
+    latest_order
+}</code></pre>
+<p>Precomputed.</p>
+<p>Reads become:</p>
+<pre class="hljs"><code><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span>
+<span class="hljs-keyword">FROM</span> customer_dashboard
+<span class="hljs-keyword">WHERE</span> customer_id <span class="hljs-operator">=</span> ?</code></pre>
+<p>Very fast.</p>
+<hr>
+<h3 id="cqrs-event-sourcing">CQRS + Event Sourcing</h3>
+<p>This is where it gets interesting.</p>
+<p>Instead of storing current state:</p>
+<pre class="hljs"><code>Order:
+status = SHIPPED</code></pre>
+<p>store events:</p>
+<pre class="hljs"><code>OrderCreated
+PaymentReceived
+Packed
+Shipped</code></pre>
+<p>The event log becomes the source of truth.</p>
+<p>A read model is built from those events.</p>
+<pre class="hljs"><code>Event Log
+     ↓
+Projection Worker
+     ↓
+Read Database</code></pre>
+<p>This is common with:</p>
+<ul>
+<li>Apache Kafka</li>
+<li>Event-driven systems</li>
+<li>High-scale financial systems</li>
+</ul>
+<hr>
+<h3 id="example-banking">Example: Banking</h3>
+<p>Commands:</p>
+<pre class="hljs"><code>Deposit(100)
+Withdraw(20)</code></pre>
+<p>Events:</p>
+<pre class="hljs"><code>MoneyDeposited(100)
+MoneyWithdrawn(20)</code></pre>
+<p>Read model:</p>
+<pre class="hljs"><code>CurrentBalance = 80</code></pre>
+<p>If the read database dies:</p>
+<pre class="hljs"><code>Replay events
+Rebuild balance</code></pre>
+<hr>
+<h3 id="advantages">Advantages</h3>
+<h4 id="independent-scaling">Independent scaling</h4>
+<pre class="hljs"><code>100 writes/sec
+100,000 reads/sec</code></pre>
+<p>Scale read side separately.</p>
+<hr>
+<h4 id="optimized-schemas">Optimized schemas</h4>
+<p>Write DB:</p>
+<pre class="hljs"><code>Normalized
+Transactional</code></pre>
+<p>Read DB:</p>
+<pre class="hljs"><code>Denormalized
+Materialized views</code></pre>
+<hr>
+<h4 id="event-replay">Event replay</h4>
+<p>Rebuild projections anytime.</p>
+<p>Useful for:</p>
+<ul>
+<li>Analytics</li>
+<li>Auditing</li>
+<li>Debugging</li>
+</ul>
+<hr>
+<h3 id="drawbacks">Drawbacks</h3>
+<h4 id="complexity">Complexity</h4>
+<p>Instead of:</p>
+<pre class="hljs"><code>App
+ ↓
+Database</code></pre>
+<p>you now have:</p>
+<pre class="hljs"><code>App
+ ↓
+Command Model
+ ↓
+Event Bus
+ ↓
+Projections
+ ↓
+Read Model</code></pre>
+<p>Much more infrastructure.</p>
+<hr>
+<h4 id="eventual-consistency">Eventual Consistency</h4>
+<p>After:</p>
+<pre class="hljs"><code>Place Order</code></pre>
+<p>the read side may not update immediately.</p>
+<p>For a brief period:</p>
+<pre class="hljs"><code>Write succeeded
+Read still shows old data</code></pre>
+<p>This surprises many developers.</p>
+<hr>
+<h3 id="interview-perspective">Interview Perspective</h3>
+<p>Most systems do <strong>not</strong> need CQRS.</p>
+<p>Good answer:</p>
+<blockquote>
+<p>CQRS separates write operations (commands) from read operations (queries), allowing each side to use different models and storage optimized for its workload. It is often combined with event sourcing, where an append-only event log is the source of truth and read models are asynchronously built from those events. The tradeoff is additional complexity and eventual consistency.</p>
+</blockquote>
+<p>For interviews, it&#39;s enough to understand:</p>
+<pre class="hljs"><code>CRUD:
+    same model for reads and writes
+
+CQRS:
+    separate models for reads and writes
+
+Event Sourcing:
+    store events, not current state
+
+CQRS + Event Sourcing:
+    events drive read projections</code></pre>
+<p>Many candidates know Kafka; far fewer can clearly explain why CQRS exists and when the extra complexity is justified.</p>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="primary-vs-secondary-index.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">Primary vs Secondary Indexes</span></a><a class="pn-card pn-next" href="concurrency-control.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">Concurrency Control Basics</span></a></nav>
+</main>
+<aside class="toc"><div class="toc-title">On this page</div><ul><li class="toc-d2"><a href="#wal-write-ahead-log">WAL (Write-Ahead Log)</a></li><li class="toc-d2"><a href="#lsm-trees">LSM Trees</a></li><li class="toc-d2"><a href="#kafka">Kafka</a></li><li class="toc-d2"><a href="#the-log-is-the-source-of-truth">&quot;The log is the source of truth&quot;</a></li><li class="toc-d2"><a href="#evolution-of-the-idea">Evolution of the idea</a></li><li class="toc-d2"><a href="#traditional-crud">Traditional CRUD</a></li><li class="toc-d2"><a href="#why-cqrs">Why CQRS?</a></li><li class="toc-d2"><a href="#cqrs-solution">CQRS Solution</a></li><li class="toc-d2"><a href="#cqrs-event-sourcing">CQRS + Event Sourcing</a></li><li class="toc-d2"><a href="#example-banking">Example: Banking</a></li><li class="toc-d2"><a href="#advantages">Advantages</a></li><li class="toc-d2"><a href="#drawbacks">Drawbacks</a></li><li class="toc-d2"><a href="#interview-perspective">Interview Perspective</a></li></ul></aside>
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

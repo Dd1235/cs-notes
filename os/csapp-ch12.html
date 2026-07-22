@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Concurrent Programming — CS:APP Ch. 12 · Operating Systems</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#77682E">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link is-active" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">Operating Systems</a><div class="side-group"><div class="side-label">Notes</div><ul><li><a class="side-link" href="multithreading-cpp.html">Multithreading in C++</a></li><li><a class="side-link" href="semaphore-vs-mutex.html">Semaphore vs Mutex</a></li><li><a class="side-link is-active" href="csapp-ch12.html">Concurrent Programming — CS:APP Ch. 12</a></li><li><a class="side-link" href="csapp-ch9.html">Virtual Memory — CS:APP Ch. 9</a></li></ul></div><div class="side-group"><div class="side-label">Processes & Scheduling</div><ul><li><a class="side-link" href="processes.html">Processes — Lifecycle, fork &amp; Friends</a></li><li><a class="side-link" href="scheduling.html">CPU Scheduling — FIFO to MLFQ</a></li></ul></div><div class="side-group"><div class="side-label">Locks & Memory</div><ul><li><a class="side-link" href="locks-internals.html">How Locks Actually Work</a></li><li><a class="side-link" href="deadlock.html">Deadlock</a></li><li><a class="side-link" href="page-replacement.html">Page Replacement — FIFO, LRU, Clock</a></li></ul></div><div class="side-group"><div class="side-label">Files & IPC</div><ul><li><a class="side-link" href="filesystems.html">Filesystems — Inodes &amp; Journaling</a></li><li><a class="side-link" href="ipc.html">IPC — Pipes, Shared Memory, Signals</a></li></ul></div><div class="side-group"><div class="side-label">Revision</div><ul><li><a class="side-link" href="refresher.html">Rapid Refresher<span class="badge">&#9733;</span></a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">Operating Systems</a></div>
+  <div class="page-head">
+    <div class="page-kicker">Operating Systems</div>
+    <h1 class="page-title">Concurrent Programming — CS:APP Ch. 12</h1>
+    <div class="page-meta">3 min read &middot; source: <code>os/self_notes/ch12.md</code></div>
+  </div>
+  <article class="prose"><p><em>Read it but did not take detailed notes; this is the main learning, expanded just enough to revise from.</em></p>
+<h3 id="three-ways-to-write-a-concurrent-server">Three ways to write a concurrent server</h3>
+<ol>
+<li><strong>Multiprocess</strong> — <code>fork</code> per client. Separate address spaces: no accidental sharing, no races — but sharing anything on purpose needs IPC, and processes are heavy.</li>
+<li><strong>I/O multiplexing</strong> — one process, <code>select</code> / <code>poll</code> / <code>epoll</code> over many descriptors, an event loop with explicit state machines. Efficient and race-free, but the logic gets inverted and complex (see CN notes on epoll).</li>
+<li><strong>Multithreading</strong> — threads share the address space: cheap sharing, cheap creation, and every shared variable is now a potential race.</li>
+</ol>
+<h3 id="the-threads-memory-model">The threads memory model</h3>
+<ul>
+<li>Each thread: own stack, registers, program counter, thread ID.</li>
+<li>Shared by all: code, globals, heap, open file descriptors.</li>
+<li>The subtle bit: <strong>stacks are not protected</strong> — any thread <em>can</em> reach another thread&#39;s stack through a pointer. &quot;Local&quot; is a convention, not an enforcement.</li>
+</ul>
+<h3 id="semaphores-p-and-v">Semaphores — P and V</h3>
+<p><code>P(s)</code>: wait until s &gt; 0, then decrement. <code>V(s)</code>: increment, wake a waiter. Binary semaphore used as a lock = <strong>mutex</strong>.</p>
+<p><strong>Producer–consumer</strong> (bounded buffer) — the exact recipe:</p>
+<pre class="hljs"><code>insert:  P(slots)  P(mutex)  add item to buffer  V(mutex)  V(items)
+remove:  P(items)  P(mutex)  remove an item      V(mutex)  V(slots)</code></pre>
+<p>Order matters: taking <code>mutex</code> before <code>slots</code>/<code>items</code> deadlocks — you&#39;d sleep on a full/empty buffer while holding the lock the other side needs.</p>
+<p><strong>Readers–writers</strong> — maintain two semaphores (<code>mutex</code> for the counter, <code>w</code> for writers) and one <code>read_count</code> integer: the <strong>first reader in</strong> does <code>P(w)</code>, and <strong>the last reader out</strong> does <code>V(w)</code>; writers just wrap their section in <code>P(w)</code>/<code>V(w)</code>. This is the readers-favored version — writers can starve.</p>
+<h3 id="thread-safety-and-reentrancy">Thread safety and reentrancy</h3>
+<ul>
+<li>A function is <strong>thread-safe</strong> if it behaves correctly under concurrent calls; <strong>reentrant</strong> if it uses no shared state at all (reentrant ⊂ thread-safe).</li>
+<li>Classic unsafe example: <code>rand()</code> — it keeps hidden static state between calls. Fix: <code>rand_r(&amp;seed)</code> where the caller owns the state.</li>
+<li>Unsafe classes from the book: functions that don&#39;t protect shared variables, keep state across calls, return pointers to statics, or call any of the above.</li>
+<li><strong>Lock and copy</strong>: to safely use a function returning a pointer to a static, lock, copy the result out, unlock.</li>
+</ul>
+<h3 id="deadlock">Deadlock</h3>
+<ul>
+<li>Deadlock from semaphores: two threads P() two semaphores in opposite orders — each holds one, waits for the other. Visible as a &quot;deadlock region&quot; in the book&#39;s <strong>progress graphs</strong>.</li>
+<li><strong>Mutex lock-ordering rule</strong>: every thread acquires locks in the same global order → circular wait is impossible.</li>
+</ul>
+<h3 id="file-descriptor-tables-review-from-ch-10">File descriptor tables (review from ch. 10)</h3>
+<p>Per-process <strong>descriptor table</strong> → kernel-wide <strong>open file table</strong> (holds the offset; shared after <code>fork</code>, which is why parent and child advance the same file position) → <strong>v-node table</strong> (one per file). Two <code>open()</code>s of the same file = two offsets; <code>fork</code> or <code>dup2</code> = shared offset.</p>
+<h3 id="drill">Drill</h3>
+<ol>
+<li>Write producer-consumer from memory — the four semaphore ops on each side, in order, and justify the order.</li>
+<li>Why can readers starve writers in the readers-writers solution above? How would you flip the preference?</li>
+<li>Is <code>strtok</code> thread-safe? Why not, and what class of unsafety is it?</li>
+<li>Draw the descriptor-table picture after <code>fork()</code> and explain why the offset is shared.</li>
+</ol>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="semaphore-vs-mutex.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">Semaphore vs Mutex</span></a><a class="pn-card pn-next" href="csapp-ch9.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">Virtual Memory — CS:APP Ch. 9</span></a></nav>
+</main>
+<aside class="toc"><div class="toc-title">On this page</div><ul><li class="toc-d2"><a href="#three-ways-to-write-a-concurrent-server">Three ways to write a concurrent server</a></li><li class="toc-d2"><a href="#the-threads-memory-model">The threads memory model</a></li><li class="toc-d2"><a href="#semaphores-p-and-v">Semaphores — P and V</a></li><li class="toc-d2"><a href="#thread-safety-and-reentrancy">Thread safety and reentrancy</a></li><li class="toc-d2"><a href="#deadlock">Deadlock</a></li><li class="toc-d2"><a href="#file-descriptor-tables-review-from-ch-10">File descriptor tables (review from ch. 10)</a></li><li class="toc-d2"><a href="#drill">Drill</a></li></ul></aside>
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

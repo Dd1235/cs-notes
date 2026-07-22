@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Markov Chains, Minimally · Probability &amp; Puzzles</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script type="module">
+import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+mermaid.initialize({
+  startOnLoad: true,
+  theme: 'base',
+  themeVariables: {
+    fontFamily: 'Inter, sans-serif',
+    fontSize: '14px',
+    primaryColor: '#F1E8D7',
+    primaryTextColor: '#2E2A21',
+    primaryBorderColor: '#8B8170',
+    lineColor: '#57503F',
+    secondaryColor: '#FDFAF3',
+    tertiaryColor: '#FBF6EA',
+    clusterBkg: '#FBF6EA',
+    clusterBorder: '#E2D8C3',
+    actorBkg: '#F1E8D7',
+    actorBorder: '#8B8170',
+    actorTextColor: '#2E2A21',
+    actorLineColor: '#B8AD97',
+    signalColor: '#57503F',
+    signalTextColor: '#2E2A21',
+    labelBoxBkgColor: '#F1E8D7',
+    labelTextColor: '#2E2A21',
+    loopTextColor: '#57503F',
+    noteBkgColor: '#FBF3DC',
+    noteBorderColor: '#D9B36C',
+    noteTextColor: '#57503F',
+    activationBkgColor: '#EFE6D2',
+    activationBorderColor: '#8B8170',
+    edgeLabelBackground: '#F7F1E4'
+  }
+});
+</script>
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#4A648C">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link is-active" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">Probability & Puzzles</a><div class="side-group"><div class="side-label">Probability</div><ul><li><a class="side-link" href="probability-toolkit.html">Conditional Probability &amp; Bayes</a></li><li><a class="side-link" href="expectation-and-indicators.html">Expectation, Linearity &amp; Indicators</a></li><li><a class="side-link" href="coins-dice-waiting-times.html">Coins, Dice &amp; Waiting Times</a></li><li><a class="side-link" href="classic-paradoxes.html">Birthday, Monty Hall &amp; Friends</a></li><li><a class="side-link" href="random-walks-gamblers-ruin.html">Random Walks &amp; Gambler's Ruin</a></li><li><a class="side-link" href="counting-toolkit.html">Counting — Stars, Bars &amp; Derangements</a></li><li><a class="side-link is-active" href="markov-chains-mini.html">Markov Chains, Minimally</a></li></ul></div><div class="side-group"><div class="side-label">Puzzles</div><ul><li><a class="side-link" href="logic-puzzles.html">Logic Puzzles — Ropes, Bridges, Prisoners</a></li><li><a class="side-link" href="brainteaser-bank.html">Brainteaser Bank</a></li><li><a class="side-link" href="resources.html">Books &amp; Resources</a></li></ul></div><div class="side-group"><div class="side-label">Revision</div><ul><li><a class="side-link" href="refresher.html">Rapid Refresher<span class="badge">&#9733;</span></a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">Probability & Puzzles</a></div>
+  <div class="page-head">
+    <div class="page-kicker">Probability & Puzzles</div>
+    <h1 class="page-title">Markov Chains, Minimally</h1>
+    <div class="page-meta">2 min read &middot; source: <code>quant/markov.md</code></div>
+  </div>
+  <article class="prose"><blockquote>
+<p>You don&#39;t need the full theory — you need states, transition arrows, and two question templates: &quot;long-run fraction&quot; and &quot;expected steps to absorption&quot;.</p>
+</blockquote>
+<h3 id="the-model">The model</h3>
+<p>A system hops between finitely many <strong>states</strong>; the next state depends only on the current one (<strong>memorylessness</strong> — the chain has no diary, only a location).</p>
+<p>Write it as a transition matrix P where P[i][j] = P(next = j | now = i). Rows sum to 1.</p>
+<p><strong>Analogy:</strong> a board game where your next square depends only on where you stand and a dice roll — not on how you got there.</p>
+<h3 id="template-1-long-run-fraction-stationary-distribution">Template 1 — long-run fraction (stationary distribution)</h3>
+<p>π = πP: the distribution that the chain settles into. For small chains, solve the linear system + &quot;π sums to 1&quot;.</p>
+<p>Quick example — weather: sunny→sunny 0.9, rainy→sunny 0.5. Solve π_s = 0.9π_s + 0.5π_r with π_s+π_r = 1 → sunny 5/6 of days. Two equations, done.</p>
+<h3 id="template-2-expected-steps-to-absorption">Template 2 — expected steps to absorption</h3>
+<p>Some states are <strong>absorbing</strong> (once in, never out — ruin, jackpot, &quot;game over&quot;). For each transient state i:</p>
+<p>Eᵢ = 1 + Σⱼ P[i][j]·Eⱼ, with E = 0 at absorbing states.</p>
+<p>This <em>is</em> the first-step analysis you already used for <a href="coins-dice-waiting-times.html">waiting times</a> and <a href="random-walks-gamblers-ruin.html">gambler&#39;s ruin</a> — Markov chains are just the general framing.</p>
+<div class="diagram"><pre class="mermaid">graph LR
+    A[&quot;A: start&quot;] --&gt;|&quot;½&quot;| B[&quot;B: one heads&quot;]
+    A --&gt;|&quot;½&quot;| A
+    B --&gt;|&quot;½&quot;| WIN((&quot;HH — absorbed&quot;))
+    B --&gt;|&quot;½&quot;| A</pre></div>
+<h3 id="interview-ready-facts">Interview-ready facts</h3>
+<ul>
+<li>Memorylessness is the definition; if a problem&#39;s future depends only on &quot;where you are now&quot;, model it as a chain.</li>
+<li>P(state after n steps) = row of Pⁿ — matrix power = n-step transition.</li>
+<li>A chain with all states reachable and no forced cycles (irreducible, aperiodic) has a <strong>unique</strong> stationary distribution, reached from any start.</li>
+<li>PageRank is literally a stationary distribution: a random surfer&#39;s long-run page-visit fractions.</li>
+</ul>
+<h3 id="drill">Drill</h3>
+<ol>
+<li>Mouse in a 3-room house with doors in a line (1–2–3), moves to a random adjacent room each minute, cat waits in room 3. Starting in room 1, expected minutes to get caught? <em>(Set E₁, E₂; answer 4.)</em></li>
+<li>A die is rolled repeatedly; you track &quot;sum mod 3&quot;. Write the 3×3 transition matrix — what&#39;s the stationary distribution and why is it obvious? <em>(Uniform, by symmetry.)</em></li>
+<li>For the weather chain above, P(rain two days from a sunny day)? <em>(Compute the (s,r) entry of P².)</em></li>
+</ol>
+<p><em>Seen at: <a href="../companies/citadel.html">Citadel</a> quant screens; chains formalize half the puzzles on this site.</em></p>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="counting-toolkit.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">Counting — Stars, Bars &amp; Derangements</span></a><a class="pn-card pn-next" href="logic-puzzles.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">Logic Puzzles — Ropes, Bridges, Prisoners</span></a></nav>
+</main>
+<aside class="toc"><div class="toc-title">On this page</div><ul><li class="toc-d2"><a href="#the-model">The model</a></li><li class="toc-d2"><a href="#template-1-long-run-fraction-stationary-distribution">Template 1 — long-run fraction (stationary distribution)</a></li><li class="toc-d2"><a href="#template-2-expected-steps-to-absorption">Template 2 — expected steps to absorption</a></li><li class="toc-d2"><a href="#interview-ready-facts">Interview-ready facts</a></li><li class="toc-d2"><a href="#drill">Drill</a></li></ul></aside>
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CAP &amp; Replication · Database Systems</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#B05730">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link is-active" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">Database Systems</a><div class="side-group"><div class="side-label">Foundations</div><ul><li><a class="side-link" href="acid.html">ACID &amp; Isolation Levels</a></li><li><a class="side-link" href="normalization.html">Normalization</a></li><li><a class="side-link" href="sql.html">SQL Essentials</a></li><li><a class="side-link" href="drop-delete-truncate.html">DROP vs DELETE vs TRUNCATE</a></li></ul></div><div class="side-group"><div class="side-label">Indexing & Storage</div><ul><li><a class="side-link" href="b-plus-trees.html">B+ Trees</a></li><li><a class="side-link" href="unique-indexes.html">Unique Indexes</a></li><li><a class="side-link" href="primary-vs-secondary-index.html">Primary vs Secondary Indexes</a></li><li><a class="side-link" href="write-ahead-logging.html">Write-Ahead Logging</a></li></ul></div><div class="side-group"><div class="side-label">Concurrency</div><ul><li><a class="side-link" href="concurrency-control.html">Concurrency Control Basics</a></li><li><a class="side-link" href="mvcc.html">MVCC in Depth</a></li><li><a class="side-link" href="mvcc-cmu.html">MVCC — CMU Lecture Notes</a></li></ul></div><div class="side-group"><div class="side-label">Scale & Patterns</div><ul><li><a class="side-link" href="sharding.html">Sharding vs Partitioning</a></li><li><a class="side-link" href="n-plus-one-problem.html">The N+1 Query Problem</a></li><li><a class="side-link" href="graph-databases.html">Graph Databases</a></li></ul></div><div class="side-group"><div class="side-label">SQL in Practice</div><ul><li><a class="side-link" href="joins.html">Joins — Semantics &amp; Algorithms</a></li><li><a class="side-link" href="window-functions.html">Window Functions</a></li></ul></div><div class="side-group"><div class="side-label">Distributed Data</div><ul><li><a class="side-link is-active" href="cap-replication.html">CAP &amp; Replication</a></li></ul></div><div class="side-group"><div class="side-label">Revision</div><ul><li><a class="side-link" href="refresher.html">Rapid Refresher<span class="badge">&#9733;</span></a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">Database Systems</a></div>
+  <div class="page-head">
+    <div class="page-kicker">Database Systems</div>
+    <h1 class="page-title">CAP &amp; Replication</h1>
+    <div class="page-meta">2 min read &middot; source: <code>dbms/cap_replication.md</code></div>
+  </div>
+  <article class="prose"><blockquote>
+<p>The <a href="acid.html">ACID notes</a> ended with &quot;read-after-update breaks once you have two servers&quot;. This page is why, and what everyone does about it.</p>
+</blockquote>
+<h3 id="replication-why-and-how">Replication — why and how</h3>
+<p>Copies of the data on multiple machines buy you: surviving a dead server (availability), reads served near users (latency), and read scale-out. The standard shape is <strong>leader/follower</strong>: writes go to the leader, the leader ships its change log (the <a href="write-ahead-logging.html">WAL</a>, again) to followers, reads can go anywhere.</p>
+<ul>
+<li><strong>Synchronous</strong> replication — leader confirms commit only after follower(s) have it. No data loss on failover; every write pays the network round trip, and a dead follower can block writes.</li>
+<li><strong>Asynchronous</strong> — leader confirms immediately, ships later. Fast; a leader crash loses the unshipped tail.</li>
+<li>Real systems: semi-sync compromises (one sync follower), or <strong>quorums</strong> (write to W of N, read from R of N; W+R&gt;N ⇒ reads see latest — the Dynamo/Cassandra formulation).</li>
+</ul>
+<h3 id="replication-lag-the-bug-youll-actually-meet">Replication lag — the bug you&#39;ll actually meet</h3>
+<p>Async follower is seconds behind → user updates profile (leader), refreshes (follower) → sees the old profile. Fixes worth naming: <strong>read-your-writes</strong> (pin the user to the leader briefly), monotonic reads (same replica per session), or just accept staleness where it&#39;s harmless (like counts).</p>
+<h3 id="cap-in-plain-words">CAP, in plain words</h3>
+<p>When a <strong>network partition</strong> happens (and it will), a distributed store must pick:</p>
+<ul>
+<li><strong>CP</strong> — refuse some requests to stay consistent (a minority-side bank node returns errors rather than stale balances).</li>
+<li><strong>AP</strong> — keep answering everywhere, reconcile later (shopping carts merge; DNS serves stale records happily).</li>
+</ul>
+<p>Two corrections that signal you actually understand it: <strong>P is not optional</strong> — the choice only exists <em>during</em> a partition (normal operation trades latency vs consistency instead — PACELC name-drop); and it&#39;s per-operation, not a database&#39;s zodiac sign (a &quot;CP&quot; system can serve stale reads by config, e.g. quorum settings).</p>
+<p><strong>Analogy:</strong> two branch managers lose their phone line. CP: &quot;no big withdrawals till the line&#39;s back.&quot; AP: &quot;approve everything, reconcile the ledgers tonight&quot; — and maybe two people withdraw the same money.</p>
+<h3 id="where-familiar-systems-sit-defaults-roughly">Where familiar systems sit (defaults, roughly)</h3>
+<p>Single-node Postgres: CAP doesn&#39;t apply — that&#39;s the luxury of one box. Postgres + async replicas: CP-ish writes, stale reads. Cassandra/Dynamo: tunable via R/W quorums. Zookeeper/etcd: CP by design (that&#39;s their job).</p>
+<h3 id="drill">Drill</h3>
+<ol>
+<li>Payment service: which replication mode, and what exactly is lost if the leader dies in async mode? <em>(The acked-but-unshipped tail — for payments, unacceptable → sync/semi-sync.)</em></li>
+<li>Design read-your-writes for a profile service on async replicas — two mechanisms.</li>
+<li>Why does W+R&gt;N guarantee overlap? Draw N=3, W=2, R=2.</li>
+</ol>
+<p><em>System-design rounds at <a href="../companies/stripe.html">Stripe</a> and <a href="../companies/rubrik.html">Rubrik</a> lean on exactly this.</em></p>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="window-functions.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">Window Functions</span></a><a class="pn-card pn-next" href="refresher.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">Rapid Refresher</span></a></nav>
+</main>
+<aside class="toc"><div class="toc-title">On this page</div><ul><li class="toc-d2"><a href="#replication-why-and-how">Replication — why and how</a></li><li class="toc-d2"><a href="#replication-lag-the-bug-youll-actually-meet">Replication lag — the bug you&#39;ll actually meet</a></li><li class="toc-d2"><a href="#cap-in-plain-words">CAP, in plain words</a></li><li class="toc-d2"><a href="#where-familiar-systems-sit-defaults-roughly">Where familiar systems sit (defaults, roughly)</a></li><li class="toc-d2"><a href="#drill">Drill</a></li></ul></aside>
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

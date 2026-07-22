@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Expectation, Linearity &amp; Indicators · Probability &amp; Puzzles</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#4A648C">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link is-active" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">Probability & Puzzles</a><div class="side-group"><div class="side-label">Probability</div><ul><li><a class="side-link" href="probability-toolkit.html">Conditional Probability &amp; Bayes</a></li><li><a class="side-link is-active" href="expectation-and-indicators.html">Expectation, Linearity &amp; Indicators</a></li><li><a class="side-link" href="coins-dice-waiting-times.html">Coins, Dice &amp; Waiting Times</a></li><li><a class="side-link" href="classic-paradoxes.html">Birthday, Monty Hall &amp; Friends</a></li><li><a class="side-link" href="random-walks-gamblers-ruin.html">Random Walks &amp; Gambler's Ruin</a></li><li><a class="side-link" href="counting-toolkit.html">Counting — Stars, Bars &amp; Derangements</a></li><li><a class="side-link" href="markov-chains-mini.html">Markov Chains, Minimally</a></li></ul></div><div class="side-group"><div class="side-label">Puzzles</div><ul><li><a class="side-link" href="logic-puzzles.html">Logic Puzzles — Ropes, Bridges, Prisoners</a></li><li><a class="side-link" href="brainteaser-bank.html">Brainteaser Bank</a></li><li><a class="side-link" href="resources.html">Books &amp; Resources</a></li></ul></div><div class="side-group"><div class="side-label">Revision</div><ul><li><a class="side-link" href="refresher.html">Rapid Refresher<span class="badge">&#9733;</span></a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">Probability & Puzzles</a></div>
+  <div class="page-head">
+    <div class="page-kicker">Probability & Puzzles</div>
+    <h1 class="page-title">Expectation, Linearity &amp; Indicators</h1>
+    <div class="page-meta">2 min read &middot; source: <code>quant/expectation.md</code></div>
+  </div>
+  <article class="prose"><blockquote>
+<p>Linearity of expectation is the single highest-value trick in interview probability: it works <strong>even when events are dependent</strong>.</p>
+</blockquote>
+<h3 id="the-rule">The rule</h3>
+<p>E[X + Y] = E[X] + E[Y]. Always. No independence needed. That&#39;s the whole superpower.</p>
+<p><strong>Analogy:</strong> expected total weight of a truckload = sum of expected weights of the boxes — even if heavy boxes tend to travel together.</p>
+<h3 id="the-indicator-trick">The indicator trick</h3>
+<p>To count &quot;how many of these things happen&quot;, define Xᵢ = 1 if thing i happens, else 0. Then:</p>
+<p>E[count] = Σ E[Xᵢ] = Σ P(thing i happens)</p>
+<p>Turn a nasty counting problem into a sum of easy probabilities.</p>
+<h3 id="three-classics-solved-in-one-line-each">Three classics, solved in one line each</h3>
+<p><strong>Hat check.</strong> n people grab random hats. Expected number with their own hat?<br>E = Σᵢ P(person i gets own hat) = n · (1/n) = <strong>1</strong>. (Independent of n — great &quot;wow&quot; answer.)</p>
+<p><strong>Fixed points, pairs, anything.</strong> Expected number of adjacent HH pairs in n coin flips: (n−1) · 1/4. Just indicators over positions.</p>
+<p><strong>Coupon collector.</strong> n coupon types, draw uniformly; expected draws to collect all?<br>Waiting for the k-th <em>new</em> coupon is geometric with p = (n−k+1)/n, so<br>E = n·(1/1 + 1/2 + … + 1/n) = <strong>n·Hₙ ≈ n ln n</strong>.<br>For n = 50: ≈ 225 draws.</p>
+<h3 id="when-linearity-isnt-enough">When linearity isn&#39;t enough</h3>
+<ul>
+<li>Variance does <strong>not</strong> add for dependent variables: Var(X+Y) = Var X + Var Y + 2Cov(X,Y).</li>
+<li>E[XY] = E[X]·E[Y] needs independence (or at least zero covariance).</li>
+<li>E[g(X)] ≠ g(E[X]) in general — Jensen&#39;s inequality gives the direction (convex g: ≥).</li>
+</ul>
+<h3 id="drill">Drill</h3>
+<ol>
+<li>100 passengers, first one sits randomly, everyone else takes their own seat if free else random. P(last passenger gets own seat)? <em>(1/2 — symmetry between seat #1 and seat #100.)</em></li>
+<li>Expected number of distinct birthdays in a room of 30? <em>(365·(1 − (364/365)³⁰))</em></li>
+<li>n couples at a party, random circular seating — expected number of couples sitting together? Set up the indicators.</li>
+</ol>
+<p><em>Seen at: <a href="../companies/de-shaw.html">D. E. Shaw</a>, <a href="../companies/citadel.html">Citadel</a>; airplane-seat is a phone-screen staple everywhere.</em></p>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="probability-toolkit.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">Conditional Probability &amp; Bayes</span></a><a class="pn-card pn-next" href="coins-dice-waiting-times.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">Coins, Dice &amp; Waiting Times</span></a></nav>
+</main>
+<aside class="toc"><div class="toc-title">On this page</div><ul><li class="toc-d2"><a href="#the-rule">The rule</a></li><li class="toc-d2"><a href="#the-indicator-trick">The indicator trick</a></li><li class="toc-d2"><a href="#three-classics-solved-in-one-line-each">Three classics, solved in one line each</a></li><li class="toc-d2"><a href="#when-linearity-isnt-enough">When linearity isn&#39;t enough</a></li><li class="toc-d2"><a href="#drill">Drill</a></li></ul></aside>
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Semaphore vs Mutex · Operating Systems</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#77682E">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link is-active" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">Operating Systems</a><div class="side-group"><div class="side-label">Notes</div><ul><li><a class="side-link" href="multithreading-cpp.html">Multithreading in C++</a></li><li><a class="side-link is-active" href="semaphore-vs-mutex.html">Semaphore vs Mutex</a></li><li><a class="side-link" href="csapp-ch12.html">Concurrent Programming — CS:APP Ch. 12</a></li><li><a class="side-link" href="csapp-ch9.html">Virtual Memory — CS:APP Ch. 9</a></li></ul></div><div class="side-group"><div class="side-label">Processes & Scheduling</div><ul><li><a class="side-link" href="processes.html">Processes — Lifecycle, fork &amp; Friends</a></li><li><a class="side-link" href="scheduling.html">CPU Scheduling — FIFO to MLFQ</a></li></ul></div><div class="side-group"><div class="side-label">Locks & Memory</div><ul><li><a class="side-link" href="locks-internals.html">How Locks Actually Work</a></li><li><a class="side-link" href="deadlock.html">Deadlock</a></li><li><a class="side-link" href="page-replacement.html">Page Replacement — FIFO, LRU, Clock</a></li></ul></div><div class="side-group"><div class="side-label">Files & IPC</div><ul><li><a class="side-link" href="filesystems.html">Filesystems — Inodes &amp; Journaling</a></li><li><a class="side-link" href="ipc.html">IPC — Pipes, Shared Memory, Signals</a></li></ul></div><div class="side-group"><div class="side-label">Revision</div><ul><li><a class="side-link" href="refresher.html">Rapid Refresher<span class="badge">&#9733;</span></a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">Operating Systems</a></div>
+  <div class="page-head">
+    <div class="page-kicker">Operating Systems</div>
+    <h1 class="page-title">Semaphore vs Mutex</h1>
+    <div class="page-meta">4 min read &middot; source: <code>os/semaphore_vs_mutex.md</code></div>
+  </div>
+  <article class="prose"><p>A <strong>mutex</strong> is for <strong>mutual exclusion</strong>.</p>
+<p>A <strong>semaphore</strong> is for <strong>counting available permits/resources</strong>.</p>
+<p>They look similar because both can block threads, but their meaning is different.</p>
+<hr>
+<h3 id="1-mutex">1. Mutex</h3>
+<p>A mutex protects a critical section so that <strong>only one thread enters at a time</strong>.</p>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;thread&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;mutex&gt;</span></span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;
+
+mutex m;
+<span class="hljs-type">int</span> counter = <span class="hljs-number">0</span>;
+
+<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">increment</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">100000</span>; i++) {
+        <span class="hljs-function">lock_guard&lt;mutex&gt; <span class="hljs-title">lock</span><span class="hljs-params">(m)</span></span>;
+        counter++;
+    }
+}
+
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-function">thread <span class="hljs-title">t1</span><span class="hljs-params">(increment)</span></span>;
+    <span class="hljs-function">thread <span class="hljs-title">t2</span><span class="hljs-params">(increment)</span></span>;
+
+    t<span class="hljs-number">1.</span><span class="hljs-built_in">join</span>();
+    t<span class="hljs-number">2.</span><span class="hljs-built_in">join</span>();
+
+    cout &lt;&lt; counter &lt;&lt; <span class="hljs-string">&#x27;\n&#x27;</span>;
+}</code></pre>
+<p>Here:</p>
+<pre class="hljs"><code><span class="hljs-function">lock_guard&lt;mutex&gt; <span class="hljs-title">lock</span><span class="hljs-params">(m)</span></span>;</code></pre>
+<p>means:</p>
+<pre class="hljs"><code>lock mutex
+do work
+unlock automatically when scope ends</code></pre>
+<p>A mutex usually has <strong>ownership</strong>:</p>
+<pre class="hljs"><code>Thread A locks it
+Thread A should unlock it</code></pre>
+<p>Thread B should not unlock a mutex locked by Thread A.</p>
+<hr>
+<h3 id="2-semaphore">2. Semaphore</h3>
+<p>A semaphore has a counter.</p>
+<p>A thread can:</p>
+<pre class="hljs"><code>acquire()  -&gt; decrement permit count, or block if count is 0
+release()  -&gt; increment permit count, waking a blocked thread if needed</code></pre>
+<p>Example: allow at most 3 threads inside.</p>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;thread&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;semaphore&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;vector&gt;</span></span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;
+
+<span class="hljs-function">counting_semaphore&lt;3&gt; <span class="hljs-title">sem</span><span class="hljs-params">(<span class="hljs-number">3</span>)</span></span>;
+
+<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">worker</span><span class="hljs-params">(<span class="hljs-type">int</span> id)</span> </span>{
+    sem.<span class="hljs-built_in">acquire</span>();
+
+    cout &lt;&lt; <span class="hljs-string">&quot;Thread &quot;</span> &lt;&lt; id &lt;&lt; <span class="hljs-string">&quot; entered\n&quot;</span>;
+    this_thread::<span class="hljs-built_in">sleep_for</span>(chrono::<span class="hljs-built_in">seconds</span>(<span class="hljs-number">1</span>));
+    cout &lt;&lt; <span class="hljs-string">&quot;Thread &quot;</span> &lt;&lt; id &lt;&lt; <span class="hljs-string">&quot; leaving\n&quot;</span>;
+
+    sem.<span class="hljs-built_in">release</span>();
+}
+
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+    vector&lt;thread&gt; threads;
+
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">10</span>; i++) {
+        threads.<span class="hljs-built_in">emplace_back</span>(worker, i);
+    }
+
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">auto</span>&amp; t : threads) {
+        t.<span class="hljs-built_in">join</span>();
+    }
+}</code></pre>
+<p>At most 3 threads can be inside <code>worker</code> at once.</p>
+<hr>
+<h3 id="core-difference">Core difference</h3>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Mutex</th>
+<th>Semaphore</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Main purpose</td>
+<td>Protect shared data</td>
+<td>Control access to N resources</td>
+</tr>
+<tr>
+<td>Count</td>
+<td>Basically 0/1 locked state</td>
+<td>Counter: 0, 1, 2, 3, ...</td>
+</tr>
+<tr>
+<td>Ownership</td>
+<td>Usually owned by locking thread</td>
+<td>No strict ownership</td>
+</tr>
+<tr>
+<td>Unlock/release by another thread?</td>
+<td>Should not</td>
+<td>Allowed</td>
+</tr>
+<tr>
+<td>Typical use</td>
+<td>Critical section</td>
+<td>Producer-consumer, bounded queues, resource pools</td>
+</tr>
+<tr>
+<td>C++ type</td>
+<td><code>std::mutex</code></td>
+<td><code>std::counting_semaphore</code>, <code>std::binary_semaphore</code></td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="important-conceptual-difference">Important conceptual difference</h3>
+<p>A mutex says:</p>
+<pre class="hljs"><code>Only one thread may touch this shared thing at a time.</code></pre>
+<p>A semaphore says:</p>
+<pre class="hljs"><code>There are K permits. A thread needs one permit to proceed.</code></pre>
+<p>So a mutex is about <strong>protecting data</strong>.</p>
+<p>A semaphore is about <strong>signalling / limiting concurrency / counting resources</strong>.</p>
+<hr>
+<h3 id="binary-semaphore-vs-mutex">Binary semaphore vs mutex</h3>
+<p>A binary semaphore has only 0 or 1 permit.</p>
+<pre class="hljs"><code><span class="hljs-function">binary_semaphore <span class="hljs-title">sem</span><span class="hljs-params">(<span class="hljs-number">1</span>)</span></span>;</code></pre>
+<p>This can look like a mutex:</p>
+<pre class="hljs"><code>sem.<span class="hljs-built_in">acquire</span>();
+<span class="hljs-comment">// critical section</span>
+sem.<span class="hljs-built_in">release</span>();</code></pre>
+<p>But it is still not exactly the same.</p>
+<h4 id="difference">Difference</h4>
+<p>With a mutex:</p>
+<pre class="hljs"><code>same thread that locks should unlock</code></pre>
+<p>With a semaphore:</p>
+<pre class="hljs"><code>one thread can acquire, another thread can release</code></pre>
+<p>That makes semaphores useful for coordination.</p>
+<p>Example:</p>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;thread&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;semaphore&gt;</span></span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;
+
+<span class="hljs-function">binary_semaphore <span class="hljs-title">ready</span><span class="hljs-params">(<span class="hljs-number">0</span>)</span></span>;
+
+<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">producer</span><span class="hljs-params">()</span> </span>{
+    cout &lt;&lt; <span class="hljs-string">&quot;Producing data\n&quot;</span>;
+    ready.<span class="hljs-built_in">release</span>(); <span class="hljs-comment">// signal consumer</span>
+}
+
+<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">consumer</span><span class="hljs-params">()</span> </span>{
+    ready.<span class="hljs-built_in">acquire</span>(); <span class="hljs-comment">// wait until producer signals</span>
+    cout &lt;&lt; <span class="hljs-string">&quot;Consuming data\n&quot;</span>;
+}
+
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-function">thread <span class="hljs-title">c</span><span class="hljs-params">(consumer)</span></span>;
+    <span class="hljs-function">thread <span class="hljs-title">p</span><span class="hljs-params">(producer)</span></span>;
+
+    p.<span class="hljs-built_in">join</span>();
+    c.<span class="hljs-built_in">join</span>();
+}</code></pre>
+<p>Here the consumer blocks until the producer calls <code>release()</code>.</p>
+<p>This is <strong>not a mutex-style use case</strong>. This is signalling.</p>
+<hr>
+<h3 id="producer-consumer-example-with-semaphores">Producer-consumer example with semaphores</h3>
+<p>Suppose a bounded queue has capacity <code>N</code>.</p>
+<p>You can use:</p>
+<pre class="hljs"><code>emptySlots semaphore initialized to N
+filledSlots semaphore initialized to 0
+mutex for protecting the actual queue</code></pre>
+<p>Pseudo-code:</p>
+<pre class="hljs"><code><span class="hljs-built_in">enqueue</span>(x):
+    emptySlots.<span class="hljs-built_in">acquire</span>();  <span class="hljs-comment">// wait for space</span>
+    mutex.<span class="hljs-built_in">lock</span>();
+    queue.<span class="hljs-built_in">push</span>(x);
+    mutex.<span class="hljs-built_in">unlock</span>();
+    filledSlots.<span class="hljs-built_in">release</span>(); <span class="hljs-comment">// one more item available</span>
+
+<span class="hljs-built_in">dequeue</span>():
+    filledSlots.<span class="hljs-built_in">acquire</span>(); <span class="hljs-comment">// wait for item</span>
+    mutex.<span class="hljs-built_in">lock</span>();
+    x = queue.<span class="hljs-built_in">front</span>();
+    queue.<span class="hljs-built_in">pop</span>();
+    mutex.<span class="hljs-built_in">unlock</span>();
+    emptySlots.<span class="hljs-built_in">release</span>();  <span class="hljs-comment">// one more empty slot available</span></code></pre>
+<p>Notice the roles:</p>
+<pre class="hljs"><code>semaphores -&gt; track how many slots/items exist
+mutex      -&gt; protects the queue data structure itself</code></pre>
+<p>This is the cleanest way to remember it.</p>
+<hr>
+<h3 id="when-to-use-which">When to use which?</h3>
+<p>Use a <strong>mutex</strong> when you have shared data:</p>
+<pre class="hljs"><code>map&lt;string, <span class="hljs-type">int</span>&gt; freq;
+mutex m;</code></pre>
+<p>and multiple threads modify it.</p>
+<p>Use a <strong>semaphore</strong> when you want to represent permits:</p>
+<pre class="hljs"><code>only 5 database connections allowed
+only 3 downloads at once
+bounded queue has 10 empty slots
+consumer waits until producer creates an item</code></pre>
+<hr>
+<h3 id="interview-level-summary">Interview-level summary</h3>
+<p>A mutex is a lock used for mutual exclusion. It protects a critical section and is owned by the thread that locks it. A semaphore is a counter-based synchronization primitive. Threads acquire and release permits. A binary semaphore can behave like a lock, but unlike a mutex, it does not necessarily have ownership and can be used for signalling between threads.</p>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="multithreading-cpp.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">Multithreading in C++</span></a><a class="pn-card pn-next" href="csapp-ch12.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">Concurrent Programming — CS:APP Ch. 12</span></a></nav>
+</main>
+<aside class="toc"><div class="toc-title">On this page</div><ul><li class="toc-d2"><a href="#1-mutex">1. Mutex</a></li><li class="toc-d2"><a href="#2-semaphore">2. Semaphore</a></li><li class="toc-d2"><a href="#core-difference">Core difference</a></li><li class="toc-d2"><a href="#important-conceptual-difference">Important conceptual difference</a></li><li class="toc-d2"><a href="#binary-semaphore-vs-mutex">Binary semaphore vs mutex</a></li><li class="toc-d2"><a href="#producer-consumer-example-with-semaphores">Producer-consumer example with semaphores</a></li><li class="toc-d2"><a href="#when-to-use-which">When to use which?</a></li><li class="toc-d2"><a href="#interview-level-summary">Interview-level summary</a></li></ul></aside>
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

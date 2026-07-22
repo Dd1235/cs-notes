@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Operator Overloading · OOP &amp; C++</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#8A4E5E">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link is-active" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">OOP & C++</a><div class="side-group"><div class="side-label">Lecture Notes</div><ul><li><a class="side-link" href="volatile-macros-inline.html">volatile, Macros &amp; inline</a></li><li><a class="side-link" href="references-and-const.html">References &amp; const</a></li><li><a class="side-link" href="function-overloading.html">Function Overloading</a></li><li><a class="side-link" href="dynamic-memory.html">Dynamic Memory Management</a></li><li><a class="side-link" href="classes-and-objects.html">Classes &amp; Objects</a></li><li><a class="side-link" href="constructors.html">Constructors &amp; Information Hiding</a></li><li><a class="side-link" href="copy-semantics.html">Copy Constructor &amp; Copy Assignment</a></li><li><a class="side-link" href="constness-and-static.html">Const-ness &amp; Static Members</a></li><li><a class="side-link" href="friend-functions.html">Friend Functions &amp; Friend Classes</a></li><li><a class="side-link is-active" href="operator-overloading.html">Operator Overloading</a></li><li><a class="side-link" href="inheritance.html">Inheritance &amp; Overriding</a></li><li><a class="side-link" href="multiple-private-inheritance.html">Multiple &amp; Private Inheritance</a></li><li><a class="side-link" href="virtual-functions.html">Virtual Functions &amp; Dynamic Binding</a></li><li><a class="side-link" href="vtables-and-const-cast.html">Virtual Pointer Tables &amp; const_cast</a></li><li><a class="side-link" href="cpp-casts.html">C++ Casts</a></li><li><a class="side-link" href="exceptions.html">Exceptions &amp; Error Handling</a></li><li><a class="side-link" href="try-catch-and-templates.html">try/catch &amp; Function Templates</a></li><li><a class="side-link" href="class-templates-functors.html">Class Templates &amp; Functors</a></li></ul></div><div class="side-group"><div class="side-label">Extras</div><ul><li><a class="side-link" href="compilation-model.html">The C++ Compilation Model</a></li><li><a class="side-link" href="template-metaprogramming.html">Template Metaprogramming</a></li><li><a class="side-link" href="build-your-own-vector.html">Exercise — Build Your Own Vector</a></li><li><a class="side-link" href="miscellany.html">Miscellany</a></li><li><a class="side-link" href="resources.html">Resources</a></li></ul></div><div class="side-group"><div class="side-label">Topic Notes</div><ul><li><a class="side-link" href="notes-cpp-core.html">C++ Core</a></li><li><a class="side-link" href="notes-cpp-oop.html">C++ OOP</a></li><li><a class="side-link" href="notes-cpp-advanced.html">C++ Advanced</a></li><li><a class="side-link" href="notes-ooad-uml.html">OOAD &amp; UML</a></li><li><a class="side-link" href="notes-design-patterns.html">Design Patterns</a></li><li><a class="side-link" href="notes-testing-sdlc.html">Testing, SDLC &amp; SE</a></li><li><a class="side-link" href="notes-interview-questions.html">Interview Questions</a></li></ul></div><div class="side-group"><div class="side-label">Flashcards</div><ul><li><a class="side-link" href="cards-cpp-core.html">C++ Core Flashcards</a></li><li><a class="side-link" href="cards-oop-lifetime.html">OOP, Lifetime &amp; Memory Flashcards</a></li><li><a class="side-link" href="cards-polymorphism-stl.html">Polymorphism, Casts, Templates &amp; STL Flashcards</a></li><li><a class="side-link" href="cards-ooad-uml.html">OOAD &amp; UML Flashcards</a></li><li><a class="side-link" href="cards-design-patterns.html">Design Patterns Flashcards</a></li><li><a class="side-link" href="cards-testing-sdlc.html">Testing, SDLC &amp; SE Flashcards</a></li><li><a class="side-link" href="cards-interview-drills.html">Interview &amp; Code-Reading Drills</a></li></ul></div><div class="side-group"><div class="side-label">Under the Hood</div><ul><li><a class="side-link" href="memory-layout.html">Memory Layout, Alignment &amp; Padding</a></li></ul></div><div class="side-group"><div class="side-label">Revision</div><ul><li><a class="side-link" href="refresher.html">Rapid Refresher<span class="badge">&#9733;</span></a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">OOP & C++</a></div>
+  <div class="page-head">
+    <div class="page-kicker">OOP & C++</div>
+    <h1 class="page-title">Operator Overloading</h1>
+    <div class="page-meta">5 min read &middot; source: <code>oops_cpp/self_notes/11.md</code></div>
+  </div>
+  <article class="prose"><p>Operator function</p>
+<ul>
+<li>global function <code>A operator+(const A&amp; a, const A&amp; b)</code></li>
+<li>member function <code>A operator+(const A&amp; other) const</code></li>
+<li>friend function <code>friend A operator+(const A&amp; a, const A&amp; b)</code></li>
+</ul>
+<pre class="hljs"><code>Complex a(1,2);
+Complex b(3,4);
+
+Complex c = a + b;
+
+// now how will this be allowed? I need to overload to allow adding any float to complex number, here these should be added to the real part of the complex number
+Complex d = 2 + a;
+Complex e = a + 2;</code></pre>
+<ul>
+<li>cout is an stream object, cin is an istream object</li>
+<li>cin &gt;&gt; d, cout &lt;&lt; d should also work out.</li>
+<li>we can extend these operators.</li>
+</ul>
+<p><code>explicit</code> before the constructor, I don&#39;t want to allow explicit conversion.</p>
+<ul>
+<li>say in constructor I pass in default values <code>Complex(float r = 0, float i = 0)</code>, then if I do d3 = d1 + d2, and d1 is a float, it can just be converted to a complex. Don&#39;t do that, the + has been extended output to add a double d to a complex number.</li>
+</ul>
+<p>3 separate overloading are provided so use that.</p>
+<p>Global is not the right solution by keeping things public.</p>
+<p>I can overload the operator as a member function, but I can&#39;t do 2 + a, because 2 is not an object of class A, so I need to make it a friend function.</p>
+<p><code>friend Complex operator+(double d, const Complex&amp; c) {     return Complex(d + c.real, c.imag); }</code></p>
+<h3 id="overloading-io-operators">Overloading IO operators</h3>
+<p>cout &lt;&lt; a &lt;&lt; b; // (cout &lt;&lt; a) &lt;&lt; b; // left associative</p>
+<p>Result of the streaming as to be ostream objecct itself;</p>
+<p>int a, b, c = 10; // b = c happens first, result of assignment expression is reference to b, a = (reference to b)</p>
+<p>(a = b) = c;</p>
+<p>here b does not change, a gets finally assigned value of c.</p>
+<p>Right associative</p>
+<pre class="hljs"><code>=, +=, -=, *=</code></pre>
+<p>Left associative</p>
+<pre class="hljs"><code>+, -, *, /, &lt;&lt;, &gt;&gt;</code></pre>
+<p>conceptually, a - b - c has to be a - b first, then -c, not a - (b - c)</p>
+<p>same for a / b / c</p>
+<p>expr =&gt; expr + term so naturall builds left associative parse trees</p>
+<pre class="hljs"><code>// global function
+ostream&amp; operator &lt;&lt; (ostream&amp; os, const Complex&amp; a){
+
+}
+
+// member function in ostream, this is not acceptable
+ostream&amp; ostream::operator&lt;&lt;(const Complex&amp; a);
+
+// member function in complex, invocation of streaming will change to d &lt;&lt; cout; left operand is invoking object
+ostream&amp; Complex::operator&lt;&lt;(ostream&amp; os);</code></pre>
+<p>object to write is passed by constant reference, return by reference for ostream object for chaining.</p>
+<p>io operators cannot be overloaded by member functions.<br>operator output stream cannot be written as member function.</p>
+<p>why not global function? it breaks encapsulation, a.re and a.im need to be made public so that os &lt;&lt; a.re &lt;&lt; &quot; + &quot; &lt;&lt; a.im &lt;&lt; &quot;i&quot;; return os</p>
+<p>Must stick to <code>parameter passing</code> conventions ( built in types by value and udt by constant reference)</p>
+<ul>
+<li><p>decide on return type base on natural semantics, like pre incrementn and post increment</p>
+</li>
+<li><p>effect of casting on operands</p>
+</li>
+</ul>
+<p>by built in types by value? because of how compiler works. reference still has to alloctate memory. any reference has overhead in terms of memory. majority of built in type, like int type, are sized to fit into register. call by value? mostly no parameter copying, just reuse same register. for user defined types, they are usually larger than built in types, so pass by reference to avoid copying.</p>
+<pre class="hljs"><code>namespace mynamespace {
+    int mydata;
+    void myfunc() {}
+    public:
+        myclass(int d) : data(d) {}
+        void display() {cout &lt;&lt; &quot;myclass data = &quot; &lt;&lt; data &lt;&lt; endl;}
+}</code></pre>
+<p>You may want to define a function that shares name with something in standard library. Make your own namespace. It also clarifies to others that this function is something you have redesigned, and helps with debugging.</p>
+<p>misc</p>
+<pre class="hljs"><code><span class="hljs-keyword">struct</span> <span class="hljs-title class_">Point</span> {
+    <span class="hljs-type">int</span> x, y;
+};
+
+Point p;</code></pre>
+<p>this works<br>but in C thsi gest name as <code>struct Point</code> so you need <code>struct Pooint p</code> or use <code>typedef</code></p>
+<p>So that people can work together in industry, 100s of developers are working on that project, have namespace to avoid conflicts.</p>
+<p>whole of stl is in namespace std. In C, abs cannot be used because of conflict with user defined abs, but in C++ you can have your own abs in your own namespace, and use std::abs for standard library function.</p>
+<p>namespaces can be nested.</p>
+<p><code>data = ::data</code> global namespace</p>
+<pre class="hljs"><code>
+<span class="hljs-keyword">using</span> name1::data; <span class="hljs-comment">// using declaration, only data is brought into current scope</span>
+
+cout &lt;&lt; data &lt;&lt; endl <span class="hljs-comment">// now name1::data is accessible as data</span>
+cout &lt;&lt; name1::data &lt;&lt; endl;
+<span class="hljs-comment">// how to get the global one?</span>
+cout &lt;&lt; ::data &lt;&lt; endl; <span class="hljs-comment">// global namespace</span></code></pre>
+<p>namespaces are open</p>
+<pre class="hljs"><code>namespace hi {
+    int x = 10;
+}
+
+namespace hi {
+    int y = 20;
+}</code></pre>
+<ul>
+<li><p>every namespace is not a class</p>
+</li>
+<li><p>a namespace can be reopened and more declaration added to it</p>
+</li>
+<li><p>no instance of a namespace can be created, namespace is just lexical, there is no runtime isntance</p>
+</li>
+<li><p>using-declaractions can be used to short-cut namespace qualification</p>
+</li>
+<li><p>namespace can be unnameed</p>
+</li>
+<li><p>its about lexical scoping, binding of the name</p>
+</li>
+<li><p>unnamed namespace, only visible in that translation unit, so it is like static in C, but more powerful, because it can be used for any declaration, not just variables and functions. It can be used for classes, templates, etc. It is a way to achieve internal linkage.</p>
+</li>
+<li><p>expression scope - restricted to one expression, used by compiler</p>
+</li>
+<li><p>block scope</p>
+</li>
+<li><p>function scope</p>
+</li>
+<li><p>class scope</p>
+</li>
+<li><p>namespace scope</p>
+</li>
+<li><p>file scope</p>
+</li>
+<li><p>global scope</p>
+</li>
+</ul>
+<p>expression scope</p>
+<pre class="hljs"><code>if(int x = foo(); x &gt; 0) {
+    cout &lt;&lt; x &lt;&lt; endl;
+}
+
+[x = foo()]{
+    cout &lt;&lt; x;
+}
+
+string(&quot;hello&quot;).size();
+
+for(int i = 0; i &lt; 10; ++i) {
+    cout &lt;&lt; i &lt;&lt; endl;
+}
+
+catch(exceptions&amp; e){
+
+}</code></pre>
+<p>scope vs lifetime: where name is visble, when object actually exists.</p>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="friend-functions.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">Friend Functions &amp; Friend Classes</span></a><a class="pn-card pn-next" href="inheritance.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">Inheritance &amp; Overriding</span></a></nav>
+</main>
+
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

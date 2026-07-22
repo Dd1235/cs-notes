@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OOAD &amp; UML Flashcards · OOP &amp; C++</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#8A4E5E">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link is-active" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">OOP & C++</a><div class="side-group"><div class="side-label">Lecture Notes</div><ul><li><a class="side-link" href="volatile-macros-inline.html">volatile, Macros &amp; inline</a></li><li><a class="side-link" href="references-and-const.html">References &amp; const</a></li><li><a class="side-link" href="function-overloading.html">Function Overloading</a></li><li><a class="side-link" href="dynamic-memory.html">Dynamic Memory Management</a></li><li><a class="side-link" href="classes-and-objects.html">Classes &amp; Objects</a></li><li><a class="side-link" href="constructors.html">Constructors &amp; Information Hiding</a></li><li><a class="side-link" href="copy-semantics.html">Copy Constructor &amp; Copy Assignment</a></li><li><a class="side-link" href="constness-and-static.html">Const-ness &amp; Static Members</a></li><li><a class="side-link" href="friend-functions.html">Friend Functions &amp; Friend Classes</a></li><li><a class="side-link" href="operator-overloading.html">Operator Overloading</a></li><li><a class="side-link" href="inheritance.html">Inheritance &amp; Overriding</a></li><li><a class="side-link" href="multiple-private-inheritance.html">Multiple &amp; Private Inheritance</a></li><li><a class="side-link" href="virtual-functions.html">Virtual Functions &amp; Dynamic Binding</a></li><li><a class="side-link" href="vtables-and-const-cast.html">Virtual Pointer Tables &amp; const_cast</a></li><li><a class="side-link" href="cpp-casts.html">C++ Casts</a></li><li><a class="side-link" href="exceptions.html">Exceptions &amp; Error Handling</a></li><li><a class="side-link" href="try-catch-and-templates.html">try/catch &amp; Function Templates</a></li><li><a class="side-link" href="class-templates-functors.html">Class Templates &amp; Functors</a></li></ul></div><div class="side-group"><div class="side-label">Extras</div><ul><li><a class="side-link" href="compilation-model.html">The C++ Compilation Model</a></li><li><a class="side-link" href="template-metaprogramming.html">Template Metaprogramming</a></li><li><a class="side-link" href="build-your-own-vector.html">Exercise — Build Your Own Vector</a></li><li><a class="side-link" href="miscellany.html">Miscellany</a></li><li><a class="side-link" href="resources.html">Resources</a></li></ul></div><div class="side-group"><div class="side-label">Topic Notes</div><ul><li><a class="side-link" href="notes-cpp-core.html">C++ Core</a></li><li><a class="side-link" href="notes-cpp-oop.html">C++ OOP</a></li><li><a class="side-link" href="notes-cpp-advanced.html">C++ Advanced</a></li><li><a class="side-link" href="notes-ooad-uml.html">OOAD &amp; UML</a></li><li><a class="side-link" href="notes-design-patterns.html">Design Patterns</a></li><li><a class="side-link" href="notes-testing-sdlc.html">Testing, SDLC &amp; SE</a></li><li><a class="side-link" href="notes-interview-questions.html">Interview Questions</a></li></ul></div><div class="side-group"><div class="side-label">Flashcards</div><ul><li><a class="side-link" href="cards-cpp-core.html">C++ Core Flashcards</a></li><li><a class="side-link" href="cards-oop-lifetime.html">OOP, Lifetime &amp; Memory Flashcards</a></li><li><a class="side-link" href="cards-polymorphism-stl.html">Polymorphism, Casts, Templates &amp; STL Flashcards</a></li><li><a class="side-link is-active" href="cards-ooad-uml.html">OOAD &amp; UML Flashcards</a></li><li><a class="side-link" href="cards-design-patterns.html">Design Patterns Flashcards</a></li><li><a class="side-link" href="cards-testing-sdlc.html">Testing, SDLC &amp; SE Flashcards</a></li><li><a class="side-link" href="cards-interview-drills.html">Interview &amp; Code-Reading Drills</a></li></ul></div><div class="side-group"><div class="side-label">Under the Hood</div><ul><li><a class="side-link" href="memory-layout.html">Memory Layout, Alignment &amp; Padding</a></li></ul></div><div class="side-group"><div class="side-label">Revision</div><ul><li><a class="side-link" href="refresher.html">Rapid Refresher<span class="badge">&#9733;</span></a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">OOP & C++</a></div>
+  <div class="page-head">
+    <div class="page-kicker">OOP & C++</div>
+    <h1 class="page-title">OOAD &amp; UML Flashcards</h1>
+    <div class="page-meta">5 min read &middot; source: <code>oops_cpp/flashcards/04_ooad_uml.md</code></div>
+  </div>
+  <article class="prose"><h3 id="u001">U001</h3>
+<p>Tags: ooad</p>
+<p>Prompt: What sources of complexity does OOAD try to manage?</p>
+<p>Answer: Problem-domain complexity, development-process complexity, change pressure, many discrete states, and human cognitive limits.</p>
+<h3 id="u002">U002</h3>
+<p>Tags: ooad</p>
+<p>Prompt: OOAD manages complexity using which four broad tools?</p>
+<p>Answer: Decomposition, abstraction, hierarchy, and models.</p>
+<h3 id="u003">U003</h3>
+<p>Tags: complex-systems</p>
+<p>Prompt: Name common traits of complex systems.</p>
+<p>Answer: Hierarchical structure, relative primitives, separation of concerns, repeated patterns, and stable intermediate forms.</p>
+<h3 id="u004">U004</h3>
+<p>Tags: object-model</p>
+<p>Prompt: Major elements of the object model?</p>
+<p>Answer: Abstraction, encapsulation, modularity, and hierarchy.</p>
+<h3 id="u005">U005</h3>
+<p>Tags: object-model</p>
+<p>Prompt: Minor elements of the object model?</p>
+<p>Answer: Typing, concurrency, and persistence.</p>
+<h3 id="u006">U006</h3>
+<p>Tags: abstraction, encapsulation</p>
+<p>Prompt: Abstraction vs encapsulation?</p>
+<p>Answer: Abstraction says what a thing is from the user&#39;s view. Encapsulation hides how it is represented and implemented.</p>
+<h3 id="u007">U007</h3>
+<p>Tags: modularity</p>
+<p>Prompt: High cohesion and low coupling?</p>
+<p>Answer: High cohesion means related responsibilities stay together. Low coupling means modules depend on fewer details of other modules.</p>
+<h3 id="u008">U008</h3>
+<p>Tags: modularity, smells</p>
+<p>Prompt: Name three symptoms of poor modularity.</p>
+<p>Answer: One class knows another&#39;s internals, one change forces many unrelated changes, and utility classes collect random unrelated behavior.</p>
+<h3 id="u009">U009</h3>
+<p>Tags: objects</p>
+<p>Prompt: State, behavior, identity in OOAD?</p>
+<p>Answer: State is stored values. Behavior is supported operations. Identity is object sameness across state changes, distinct from value equality.</p>
+<h3 id="u010">U010</h3>
+<p>Tags: relationships</p>
+<p>Prompt: Match relationship to meaning: association, dependency, aggregation, composition, inheritance.</p>
+<p>Answer: Association: objects know/use each other. Dependency: temporary use. Aggregation: weak whole-part, part can outlive whole. Composition: strong ownership, part dies with whole. Inheritance: is-a.</p>
+<h3 id="u011">U011</h3>
+<p>Tags: relationships</p>
+<p>Prompt: Aggregation vs composition in C++ representation?</p>
+<p>Answer: Aggregation often uses non-owning references/pointers. Composition often uses value members or owning smart pointers such as <code>unique_ptr</code>.</p>
+<h3 id="u012">U012</h3>
+<p>Tags: relationships</p>
+<p>Prompt: Association vs dependency?</p>
+<p>Answer: Association is a structural relationship where objects know/use each other over time. Dependency is temporary use, such as a function parameter or local variable.</p>
+<h3 id="u013">U013</h3>
+<p>Tags: design-by-contract</p>
+<p>Prompt: Define precondition, postcondition, and invariant.</p>
+<p>Answer: Precondition: what must be true before a call. Postcondition: what is true after it returns. Invariant: what must always hold for a valid object.</p>
+<h3 id="u014">U014</h3>
+<p>Tags: design-by-contract</p>
+<p>Prompt: For a <code>Fraction</code> class, give a likely invariant.</p>
+<p>Answer: Denominator is never zero; often also that the fraction is normalized/reduced if the class promises canonical form.</p>
+<h3 id="u015">U015</h3>
+<p>Tags: class-discovery</p>
+<p>Prompt: In noun/verb analysis, what do nouns, verbs, and adjectives often suggest?</p>
+<p>Answer: Nouns suggest candidate classes or attributes. Verbs suggest responsibilities. Adjectives/adverbs suggest constraints, states, or qualifiers.</p>
+<h3 id="u016">U016</h3>
+<p>Tags: class-discovery</p>
+<p>Prompt: What questions filter candidate classes?</p>
+<p>Answer: Is it a real concept or just a field? Does it own state? Does it have behavior? Does it protect an invariant? Is it stable under likely changes?</p>
+<h3 id="u017">U017</h3>
+<p>Tags: uml</p>
+<p>Prompt: What is UML, and when should you use a diagram?</p>
+<p>Answer: UML is a modeling language. Use a diagram only when it answers a design question; do not draw UML as decoration.</p>
+<h3 id="u018">U018</h3>
+<p>Tags: uml</p>
+<p>Prompt: Structural vs behavioral UML diagrams?</p>
+<p>Answer: Structural diagrams describe what exists, such as classes and relationships. Behavioral diagrams describe what happens, such as interactions, workflows, and state changes.</p>
+<h3 id="u019">U019</h3>
+<p>Tags: uml, use-case</p>
+<p>Prompt: What does a use case diagram capture?</p>
+<p>Answer: External actors and user-visible system goals inside a system boundary, plus associations, includes, extends, and generalization.</p>
+<h3 id="u020">U020</h3>
+<p>Tags: uml, use-case, edge-case</p>
+<p>Prompt: Why are use cases not functions?</p>
+<p>Answer: A use case represents a user-visible goal or service, not an implementation-level function call.</p>
+<h3 id="u021">U021</h3>
+<p>Tags: uml, use-case</p>
+<p>Prompt: Include vs extend in use case diagrams?</p>
+<p>Answer: Include is mandatory reused behavior. Extend is optional or conditional behavior that augments a base use case.</p>
+<h3 id="u022">U022</h3>
+<p>Tags: uml, class-diagram</p>
+<p>Prompt: What belongs in a class diagram?</p>
+<p>Answer: Class names, attributes, operations, visibility, relationships, and multiplicities at the right abstraction level.</p>
+<h3 id="u023">U023</h3>
+<p>Tags: uml, class-diagram</p>
+<p>Prompt: UML visibility symbols: <code>+</code>, <code>-</code>, <code>#</code>?</p>
+<p>Answer: <code>+</code> public, <code>-</code> private, <code>#</code> protected.</p>
+<h3 id="u024">U024</h3>
+<p>Tags: uml, class-diagram</p>
+<p>Prompt: What does multiplicity mean? Decode <code>1</code>, <code>0..1</code>, <code>*</code>, <code>1..*</code>.</p>
+<p>Answer: Multiplicity says how many linked instances may participate. <code>1</code> exactly one, <code>0..1</code> optional one, <code>*</code> any number, <code>1..*</code> one or more.</p>
+<h3 id="u025">U025</h3>
+<p>Tags: uml, sequence</p>
+<p>Prompt: What does a sequence diagram show?</p>
+<p>Answer: Time-ordered messages between lifelines, with activation bars, calls/returns, creation/destruction, and time flowing top to bottom.</p>
+<h3 id="u026">U026</h3>
+<p>Tags: uml, sequence</p>
+<p>Prompt: How can a sequence diagram validate responsibility placement?</p>
+<p>Answer: It reveals who initiates an operation, who owns the needed data, and whether too many messages cross module boundaries.</p>
+<h3 id="u027">U027</h3>
+<p>Tags: uml, communication</p>
+<p>Prompt: Communication diagram vs sequence diagram?</p>
+<p>Answer: A communication diagram emphasizes object links and numbered messages; a sequence diagram emphasizes vertical time order.</p>
+<h3 id="u028">U028</h3>
+<p>Tags: uml, activity</p>
+<p>Prompt: What is an activity diagram good for?</p>
+<p>Answer: Workflows, validation flows, business processes, decisions/merges, forks/joins, and swimlanes for responsibilities.</p>
+<h3 id="u029">U029</h3>
+<p>Tags: uml, state-machine</p>
+<p>Prompt: When should you use a state machine diagram?</p>
+<p>Answer: When valid operations depend heavily on the object&#39;s current lifecycle state, such as order, ticket, or leave-request status.</p>
+<h3 id="u030">U030</h3>
+<p>Tags: uml, protocol-state-machine</p>
+<p>Prompt: What does a protocol state machine specify?</p>
+<p>Answer: Valid operation sequences on an interface: which methods are legal now, what transitions they cause, and which calls are illegal in each state.</p>
+<h3 id="u031">U031</h3>
+<p>Tags: lms, modeling</p>
+<p>Prompt: Candidate classes for a leave-management system?</p>
+<p>Answer: <code>Employee</code>, <code>Approver</code>, <code>LeaveRequest</code>, <code>LeavePolicy</code>, <code>LeaveBalance</code>, <code>ApprovalWorkflow</code>, <code>Document</code>, and <code>Calendar</code>.</p>
+<h3 id="u032">U032</h3>
+<p>Tags: lms, modeling</p>
+<p>Prompt: Responsibilities of <code>LeaveRequest</code>, <code>LeavePolicy</code>, <code>ApprovalWorkflow</code>, and <code>Calendar</code>.</p>
+<p>Answer: <code>LeaveRequest</code>: dates, type, status, applicant. <code>LeavePolicy</code>: validates leave-type rules. <code>ApprovalWorkflow</code>: routes request to approver. <code>Calendar</code>: counts working days/holidays.</p>
+<h3 id="u033">U033</h3>
+<p>Tags: lms, design</p>
+<p>Prompt: How should different leave rules be modeled without a giant switch?</p>
+<p>Answer: Put variable rules behind a <code>LeavePolicy</code> interface and use Strategy/policy objects, possibly created by a factory.</p>
+<h3 id="u034">U034</h3>
+<p>Tags: lms, relationships</p>
+<p>Prompt: Model these relationships: employee reports to employee; leave request belongs to employee; policy validates request.</p>
+<p>Answer: Reporting is association/self-association. Request-to-employee is association or composition depending on persistence ownership. Policy validation is dependency or strategy composition.</p>
+<h3 id="u035">U035</h3>
+<p>Tags: design</p>
+<p>Prompt: When is inheritance a poor choice in OOAD?</p>
+<p>Answer: When the relationship is not substitutable, behavior changes dynamically, shared code is the only motivation, or composition/policy objects would isolate variation better.</p>
+<h3 id="u036">U036</h3>
+<p>Tags: design</p>
+<p>Prompt: What is a good class interface expected to protect?</p>
+<p>Answer: Its invariant, ownership boundaries, valid construction, meaningful operations, and stable abstraction without leaking representation.</p>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="cards-polymorphism-stl.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">Polymorphism, Casts, Templates &amp; STL Flashcards</span></a><a class="pn-card pn-next" href="cards-design-patterns.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">Design Patterns Flashcards</span></a></nav>
+</main>
+<aside class="toc"><div class="toc-title">On this page</div><ul><li class="toc-d2"><a href="#u001">U001</a></li><li class="toc-d2"><a href="#u002">U002</a></li><li class="toc-d2"><a href="#u003">U003</a></li><li class="toc-d2"><a href="#u004">U004</a></li><li class="toc-d2"><a href="#u005">U005</a></li><li class="toc-d2"><a href="#u006">U006</a></li><li class="toc-d2"><a href="#u007">U007</a></li><li class="toc-d2"><a href="#u008">U008</a></li><li class="toc-d2"><a href="#u009">U009</a></li><li class="toc-d2"><a href="#u010">U010</a></li><li class="toc-d2"><a href="#u011">U011</a></li><li class="toc-d2"><a href="#u012">U012</a></li><li class="toc-d2"><a href="#u013">U013</a></li><li class="toc-d2"><a href="#u014">U014</a></li><li class="toc-d2"><a href="#u015">U015</a></li><li class="toc-d2"><a href="#u016">U016</a></li><li class="toc-d2"><a href="#u017">U017</a></li><li class="toc-d2"><a href="#u018">U018</a></li><li class="toc-d2"><a href="#u019">U019</a></li><li class="toc-d2"><a href="#u020">U020</a></li><li class="toc-d2"><a href="#u021">U021</a></li><li class="toc-d2"><a href="#u022">U022</a></li><li class="toc-d2"><a href="#u023">U023</a></li><li class="toc-d2"><a href="#u024">U024</a></li><li class="toc-d2"><a href="#u025">U025</a></li><li class="toc-d2"><a href="#u026">U026</a></li><li class="toc-d2"><a href="#u027">U027</a></li><li class="toc-d2"><a href="#u028">U028</a></li><li class="toc-d2"><a href="#u029">U029</a></li><li class="toc-d2"><a href="#u030">U030</a></li><li class="toc-d2"><a href="#u031">U031</a></li><li class="toc-d2"><a href="#u032">U032</a></li><li class="toc-d2"><a href="#u033">U033</a></li><li class="toc-d2"><a href="#u034">U034</a></li><li class="toc-d2"><a href="#u035">U035</a></li><li class="toc-d2"><a href="#u036">U036</a></li></ul></aside>
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

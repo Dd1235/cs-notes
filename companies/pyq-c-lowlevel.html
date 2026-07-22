@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PYQ — C &amp; Low-Level · Company Prep</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#6F5680">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link is-active" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">Company Prep</a><div class="side-group"><div class="side-label">Overview</div><ul><li><a class="side-link" href="overview.html">The Map — Who Tests What</a></li></ul></div><div class="side-group"><div class="side-label">Companies</div><ul><li><a class="side-link" href="arista.html">Arista Networks</a></li><li><a class="side-link" href="intuit.html">Intuit</a></li><li><a class="side-link" href="stripe.html">Stripe</a></li><li><a class="side-link" href="de-shaw.html">D. E. Shaw</a></li><li><a class="side-link" href="rubrik.html">Rubrik</a></li><li><a class="side-link" href="citadel.html">Citadel</a></li></ul></div><div class="side-group"><div class="side-label">PYQ Bank</div><ul><li><a class="side-link" href="pyq-os-memory.html">PYQ — OS: Memory, Paging &amp; Processes</a></li><li><a class="side-link" href="pyq-os-concurrency.html">PYQ — OS: Concurrency &amp; Sync</a></li><li><a class="side-link" href="pyq-networks.html">PYQ — Networks</a></li><li><a class="side-link" href="pyq-oop-design.html">PYQ — OOP &amp; Design</a></li><li><a class="side-link" href="pyq-dbms-sql.html">PYQ — DBMS &amp; SQL</a></li><li><a class="side-link is-active" href="pyq-c-lowlevel.html">PYQ — C &amp; Low-Level</a></li><li><a class="side-link" href="pyq-cloud-ml.html">PYQ — Cloud, Containers &amp; ML</a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">Company Prep</a></div>
+  <div class="page-head">
+    <div class="page-kicker">Company Prep</div>
+    <h1 class="page-title">PYQ — C &amp; Low-Level</h1>
+    <div class="page-meta">4 min read &middot; source: <code>company_wise/pyq_c_lowlevel.md</code></div>
+  </div>
+  <article class="prose"><blockquote>
+<p>Qualcomm&#39;s embedded battery, ThoughtSpot&#39;s atomic puzzle, Amazon&#39;s stack question. Write-the-code questions come with the code.</p>
+</blockquote>
+<p><strong>Little-endian vs big-endian — and a runtime check in C.</strong> <code>Qualcomm</code></p>
+<p>Endianness = byte order of multi-byte values in memory. Store <code>0x12345678</code>: <strong>little-endian</strong> (x86, most ARM configs) puts the <strong>least</strong> significant byte at the lowest address (<code>78 56 34 12</code>); <strong>big-endian</strong> puts the most significant first (<code>12 34 56 78</code> — also &quot;network byte order&quot;, why <code>htonl/ntohs</code> exist). The classic check — alias an int&#39;s first byte:</p>
+<pre class="hljs"><code><span class="hljs-type">int</span> <span class="hljs-title function_">is_little_endian</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> x = <span class="hljs-number">1</span>;
+    <span class="hljs-keyword">return</span> *(<span class="hljs-type">unsigned</span> <span class="hljs-type">char</span> *)&amp;x == <span class="hljs-number">1</span>;   <span class="hljs-comment">// LE: low byte first → reads 1</span>
+}</code></pre>
+<p><code>char*</code> aliasing is the sanctioned way to inspect representation (char is exempt from strict aliasing). A union <code>{ int i; char c[4]; }</code> version is the same idea. Follow-up: <code>sizeof</code>/arithmetic never expose endianness — only memory inspection and I/O do.</p>
+<p><strong>How do <code>char</code>/<code>uint8_t</code> interact with endianness?</strong> <code>Qualcomm</code></p>
+<p>They don&#39;t — <strong>endianness is invisible for single-byte types</strong>; there&#39;s no order to a single byte. It bites only when you reinterpret multi-byte values as byte arrays (or vice versa): casting a <code>uint32_t*</code> to <code>uint8_t*</code> walks bytes in memory order, packets arrive big-endian onto little-endian CPUs, and packed protocol structs need explicit <code>hton*/ntoh*</code> conversion. In embedded work this is the #1 source of &quot;works on my board&quot; bugs — always serialize field-by-field with explicit shifts (<code>b[0] = v &gt;&gt; 24; …</code>), which is endian-independent by construction.</p>
+<p><strong>Flip all bits of a 32-bit register in O(1), no loops.</strong> <code>Qualcomm</code></p>
+<pre class="hljs"><code>reg = ~reg;      <span class="hljs-comment">// bitwise NOT — one instruction</span></code></pre>
+<p>The point of the question is recognizing <code>~</code> (and not confusing it with logical <code>!</code> or XOR-by-hand). Related one-liners worth having ready: set bit k <code>x |= 1u&lt;&lt;k</code>, clear <code>x &amp;= ~(1u&lt;&lt;k)</code>, toggle <code>x ^= 1u&lt;&lt;k</code>, test <code>(x&gt;&gt;k)&amp;1</code>, lowest set bit <code>x &amp; -x</code>, clear lowest set bit <code>x &amp; (x-1)</code> (the Kernighan popcount trick).</p>
+<p><strong><code>malloc()</code> vs <code>calloc()</code> — mechanics, allocation, overhead.</strong> <code>Qualcomm</code></p>
+<p><code>malloc(n)</code>: n bytes, <strong>uninitialized</strong> (reading is UB). <code>calloc(count, size)</code>: count×size bytes, <strong>zeroed</strong>, with a mandated <strong>overflow check</strong> on the multiplication (<code>malloc(count*size)</code> silently wraps — a real CVE class). Performance subtlety that scores: for large allocations, calloc is often <em>not</em> slower than malloc+memset — the allocator gets fresh pages from the OS which are <strong>already zero</strong> (demand-zero pages, <a href="../os/csapp-ch9.html">CS:APP ch 9</a>), so zeroing costs nothing until first touch. For small reused heap blocks, calloc genuinely memsets recycled memory. Family follow-ups: <code>realloc</code> may move (returns new pointer, copies), <code>free(NULL)</code> is a no-op, and <code>malloc(0)</code> is implementation-defined.</p>
+<p><strong><code>sizeof(arr)/sizeof(int)</code> inside a function taking the array as a parameter?</strong> <code>Qualcomm</code></p>
+<p>It computes <code>sizeof(int*)/sizeof(int)</code> = 2 on 64-bit — not the element count. <strong>Array decay</strong>: in a parameter list, <code>int arr[]</code> and <code>int arr[100]</code> are rewritten to <code>int *arr</code>; the array-ness (and its size) never enters the function. The idiom works only where the <em>actual array</em> is in scope: <code>sizeof(arr)/sizeof(arr[0])</code> in the defining scope. Fixes: pass the length explicitly, or in C++ take <code>T (&amp;arr)[N]</code> by reference / use <code>std::array</code>/<code>std::span</code> — which preserve the size in the type. This is the single most reliable C interview trap; explaining <em>decay</em> by name is what they&#39;re listening for.</p>
+<p><strong>Thread-safe increment from a CAS primitive, without mutexes.</strong> <code>ThoughtSpot</code></p>
+<p>Given <code>bool f(int *p, int expected)</code>-style compare-and-swap (atomically: if <code>*p</code> matches the old value, store the new one; report success), the safe increment is the <strong>CAS retry loop</strong>:</p>
+<pre class="hljs"><code><span class="hljs-type">void</span> <span class="hljs-title function_">atomic_increment</span><span class="hljs-params">(<span class="hljs-type">int</span> *p)</span> {
+    <span class="hljs-type">int</span> old;
+    <span class="hljs-keyword">do</span> {
+        old = *p;                    <span class="hljs-comment">// read current</span>
+    } <span class="hljs-keyword">while</span> (!cas(p, old, old + <span class="hljs-number">1</span>)); <span class="hljs-comment">// retry if someone raced us</span>
+}</code></pre>
+<p>Each failure means another thread advanced <code>*p</code> between the read and the CAS — re-read and try again; the algorithm is <strong>lock-free</strong> (someone always makes progress) though not wait-free (one thread can retry indefinitely). If the prompt insists on &quot;loop-free&quot;, the honest engineering answer is that a bare read-then-CAS is only safe when contention is otherwise excluded — under real races, correctness <em>requires</em> the retry (or a stronger primitive like atomic <code>fetch_add</code>, which is the hardware&#39;s loop-free answer: <code>lock xadd</code> on x86). Say the ABA caveat and you&#39;re done (<a href="../os/locks-internals.html">locks internals</a>, and your SPSC-queue project is the extended version of this conversation).</p>
+<p><strong>Recursion stack vs iterative loop — memory, cache locality, stack overflow.</strong> <code>Amazon</code></p>
+<p>Each recursive call pushes a <strong>stack frame</strong> (return address, saved registers, locals — <a href="../oops/memory-layout.html">memory layout</a>): auxiliary memory O(depth), and depth ~10⁵–10⁶ overflows the default 1–8 MB stack — the recursion-specific crash iteration can&#39;t have. Iteration keeps O(1) frames; if you need the structure, an explicit heap stack holds <em>just your data</em>, not full frames — smaller and overflow-free (bounded by heap instead). Cache locality: hot loops touch a compact working set; deep recursion strides through fresh frames (though the top-of-stack itself stays cache-warm — a nuance worth voicing). Completing the answer: <strong>tail-call optimization</strong> can turn tail recursion into a jump (guaranteed in Scheme, opportunistic in C/C++ at <code>-O2</code>, absent in Python/Java — so &quot;recursion is fine if tail-recursive&quot; is language-dependent), and memoized recursion vs bottom-up DP is the same trade dressed up.</p>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="pyq-dbms-sql.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">PYQ — DBMS &amp; SQL</span></a><a class="pn-card pn-next" href="pyq-cloud-ml.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">PYQ — Cloud, Containers &amp; ML</span></a></nav>
+</main>
+
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

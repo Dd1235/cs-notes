@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Virtual Memory — CS:APP Ch. 9 · Operating Systems</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script type="module">
+import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+mermaid.initialize({
+  startOnLoad: true,
+  theme: 'base',
+  themeVariables: {
+    fontFamily: 'Inter, sans-serif',
+    fontSize: '14px',
+    primaryColor: '#F1E8D7',
+    primaryTextColor: '#2E2A21',
+    primaryBorderColor: '#8B8170',
+    lineColor: '#57503F',
+    secondaryColor: '#FDFAF3',
+    tertiaryColor: '#FBF6EA',
+    clusterBkg: '#FBF6EA',
+    clusterBorder: '#E2D8C3',
+    actorBkg: '#F1E8D7',
+    actorBorder: '#8B8170',
+    actorTextColor: '#2E2A21',
+    actorLineColor: '#B8AD97',
+    signalColor: '#57503F',
+    signalTextColor: '#2E2A21',
+    labelBoxBkgColor: '#F1E8D7',
+    labelTextColor: '#2E2A21',
+    loopTextColor: '#57503F',
+    noteBkgColor: '#FBF3DC',
+    noteBorderColor: '#D9B36C',
+    noteTextColor: '#57503F',
+    activationBkgColor: '#EFE6D2',
+    activationBorderColor: '#8B8170',
+    edgeLabelBackground: '#F7F1E4'
+  }
+});
+</script>
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#77682E">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link is-active" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">Operating Systems</a><div class="side-group"><div class="side-label">Notes</div><ul><li><a class="side-link" href="multithreading-cpp.html">Multithreading in C++</a></li><li><a class="side-link" href="semaphore-vs-mutex.html">Semaphore vs Mutex</a></li><li><a class="side-link" href="csapp-ch12.html">Concurrent Programming — CS:APP Ch. 12</a></li><li><a class="side-link is-active" href="csapp-ch9.html">Virtual Memory — CS:APP Ch. 9</a></li></ul></div><div class="side-group"><div class="side-label">Processes & Scheduling</div><ul><li><a class="side-link" href="processes.html">Processes — Lifecycle, fork &amp; Friends</a></li><li><a class="side-link" href="scheduling.html">CPU Scheduling — FIFO to MLFQ</a></li></ul></div><div class="side-group"><div class="side-label">Locks & Memory</div><ul><li><a class="side-link" href="locks-internals.html">How Locks Actually Work</a></li><li><a class="side-link" href="deadlock.html">Deadlock</a></li><li><a class="side-link" href="page-replacement.html">Page Replacement — FIFO, LRU, Clock</a></li></ul></div><div class="side-group"><div class="side-label">Files & IPC</div><ul><li><a class="side-link" href="filesystems.html">Filesystems — Inodes &amp; Journaling</a></li><li><a class="side-link" href="ipc.html">IPC — Pipes, Shared Memory, Signals</a></li></ul></div><div class="side-group"><div class="side-label">Revision</div><ul><li><a class="side-link" href="refresher.html">Rapid Refresher<span class="badge">&#9733;</span></a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">Operating Systems</a></div>
+  <div class="page-head">
+    <div class="page-kicker">Operating Systems</div>
+    <h1 class="page-title">Virtual Memory — CS:APP Ch. 9</h1>
+    <div class="page-meta">3 min read &middot; source: <code>os/self_notes/ch9.md</code></div>
+  </div>
+  <article class="prose"><p><em>Didn&#39;t finish the chapter, but read the relevant parts for interviews — stopped at implicit free lists. The summary below covers what interviews actually ask from ch. 9.</em></p>
+<h3 id="the-one-sentence-version">The one-sentence version</h3>
+<p>Every process sees a private, contiguous virtual address space; the MMU + page tables translate virtual pages to physical frames on the fly, and the OS uses that indirection for isolation, caching, sharing and lazy allocation.</p>
+<h3 id="address-translation">Address translation</h3>
+<div class="diagram"><pre class="mermaid">graph LR
+    CPU[&quot;CPU: virtual address&quot;] --&gt; TLB{&quot;TLB hit?&quot;}
+    TLB -- yes --&gt; PA[&quot;physical address&quot;]
+    TLB -- no --&gt; PT[&quot;walk page table&quot;]
+    PT --&gt; V{&quot;page present?&quot;}
+    V -- yes --&gt; PA
+    V -- no --&gt; PF[&quot;page fault → OS&quot;]
+    PF --&gt; DISK[&quot;load page / zero page / COW copy&quot;]
+    DISK --&gt; PT
+    PA --&gt; MEM[&quot;L1/L2/L3 → DRAM&quot;]</pre></div>
+<ul>
+<li>Virtual address = <strong>VPN + offset</strong>; page table maps VPN → PPN, offset passes through. Pages are typically 4 kB.</li>
+<li>The <strong>TLB</strong> is a small cache of translations inside the MMU; a miss costs a page-table walk (multi-level on x86-64: 4 levels).</li>
+<li><strong>Page fault</strong> is not an error — it&#39;s the OS&#39;s hook: page on disk (swap it in), page never touched (hand out a zeroed frame), COW write (copy the frame), or a genuine bad access (SIGSEGV).</li>
+</ul>
+<h3 id="what-the-indirection-buys">What the indirection buys</h3>
+<ul>
+<li><strong>Isolation</strong> — a process cannot even <em>name</em> another process&#39;s memory.</li>
+<li><strong>VM as a cache for disk</strong> — DRAM holds the working set; the rest lives on disk until faulted in.</li>
+<li><strong>Copy-on-write <code>fork</code></strong> — parent and child share frames marked read-only; the first write faults and copies just that page. This is why <code>fork</code> of a huge process is cheap.</li>
+<li><strong><code>mmap</code></strong> — map a file (or anonymous memory) into the address space; page faults do the reads for you. Shared libraries are mapped once, shared by all processes.</li>
+<li><strong>Overcommit / lazy allocation</strong> — <code>malloc</code> of 1 GB touches nothing until you write to it.</li>
+</ul>
+<h3 id="thrashing">Thrashing</h3>
+<p>If the working set exceeds physical RAM, the machine spends its time paging instead of computing — throughput falls off a cliff. Fix: less memory, more RAM, or better locality.</p>
+<h3 id="dynamic-memory-allocation-where-i-stopped">Dynamic memory allocation (where I stopped)</h3>
+<ul>
+<li>The heap allocator (<code>malloc/free</code>) manages the heap region; the goals are throughput and low fragmentation (<strong>internal</strong> = padding inside a block, <strong>external</strong> = free memory scattered in unusable pieces).</li>
+<li><strong>Implicit free list</strong> — every block has a header with size + allocated bit; walking the heap means jumping header to header. Placement: first fit / next fit / best fit; freeing wants <strong>coalescing</strong> (boundary tags allow O(1) merging with the previous block).</li>
+<li>Beyond that: explicit free lists, segregated fits (what real allocators do) — <em>to read on a second pass.</em></li>
+</ul>
+<h3 id="drill">Drill</h3>
+<ol>
+<li>Walk a load instruction: TLB miss, page fault, everything — the full slow path.</li>
+<li>Why is <code>fork</code> + <code>exec</code> cheap despite fork &quot;copying&quot; the address space?</li>
+<li>Internal vs external fragmentation — one example each.</li>
+<li>What actually happens on <code>malloc(1 &lt;&lt; 30)</code>?</li>
+</ol>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="csapp-ch12.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">Concurrent Programming — CS:APP Ch. 12</span></a><a class="pn-card pn-next" href="processes.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">Processes — Lifecycle, fork &amp; Friends</span></a></nav>
+</main>
+<aside class="toc"><div class="toc-title">On this page</div><ul><li class="toc-d2"><a href="#the-one-sentence-version">The one-sentence version</a></li><li class="toc-d2"><a href="#address-translation">Address translation</a></li><li class="toc-d2"><a href="#what-the-indirection-buys">What the indirection buys</a></li><li class="toc-d2"><a href="#thrashing">Thrashing</a></li><li class="toc-d2"><a href="#dynamic-memory-allocation-where-i-stopped">Dynamic memory allocation (where I stopped)</a></li><li class="toc-d2"><a href="#drill">Drill</a></li></ul></aside>
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

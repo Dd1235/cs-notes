@@ -1,0 +1,465 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sockets, Kernel Structures &amp; Zero-Copy · Computer Networks</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#3E6B63">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link is-active" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">Computer Networks</a><div class="side-group"><div class="side-label">Notes</div><ul><li><a class="side-link" href="url-to-page.html">What Happens When You Type a URL</a></li><li><a class="side-link" href="tcp-vs-udp.html">TCP vs UDP — The Deep Dive</a></li><li><a class="side-link is-active" href="sockets-and-zero-copy.html">Sockets, Kernel Structures &amp; Zero-Copy</a></li><li><a class="side-link" href="io-multiplexing.html">I/O Multiplexing — select, poll, epoll</a></li><li><a class="side-link" href="flow-vs-congestion.html">Flow Control vs Congestion Control</a></li></ul></div><div class="side-group"><div class="side-label">Addressing & Routing</div><ul><li><a class="side-link" href="ip-subnetting.html">IP Addressing &amp; Subnetting</a></li><li><a class="side-link" href="l2-switching.html">Layer 2 — Switching, VLANs, STP</a></li><li><a class="side-link" href="routing.html">Routing — Longest Prefix, OSPF, BGP</a></li></ul></div><div class="side-group"><div class="side-label">Web Protocols</div><ul><li><a class="side-link" href="tls.html">TLS — Handshake &amp; Certificates</a></li><li><a class="side-link" href="dns-deep-dive.html">DNS — Records, Resolution, Caching</a></li><li><a class="side-link" href="http-evolution.html">HTTP/1.1 → 2 → 3</a></li></ul></div><div class="side-group"><div class="side-label">Revision</div><ul><li><a class="side-link" href="refresher.html">Rapid Refresher<span class="badge">&#9733;</span></a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">Computer Networks</a></div>
+  <div class="page-head">
+    <div class="page-kicker">Computer Networks</div>
+    <h1 class="page-title">Sockets, Kernel Structures &amp; Zero-Copy</h1>
+    <div class="page-meta">8 min read &middot; source: <code>cn/2.md</code></div>
+  </div>
+  <article class="prose"><ul>
+<li>Socket is a struct in C and a file descriptor in linux</li>
+<li>when a process listens on an ip/port it produces a socket, in every computer you have multiple nic, and unlimited virtual nic, each with its own ip address</li>
+<li>the process owns the socket</li>
+<li>can be shared during fork</li>
+<li>you can listen on interfaces which is absolutely horrible idea and it is sad that it is the default</li>
+<li>ie binding a server to all network interfaces instead of a specific interface/ip</li>
+<li>if you bind to all interfaces, listen on every interface/ ipaddress on this machine</li>
+<li>if you machine has multiple ip address, accepts connections on all of them</li>
+<li>suppose you aer developing locally, anyone on your network may be able to connect.</li>
+<li>so bind to 127.0.0.1:5432 instead of 0.0.0.0:5432 if only proceses on this machine can connect.</li>
+</ul>
+<pre class="hljs"><code>socket()   // create socket object
+bind()     // associate with IP/port
+listen()   // mark as passive/listening
+accept()   // create connected sockets</code></pre>
+<ul>
+<li><p>listening socket file descriptor</p>
+</li>
+<li><p>A listening socket is just a socket that has been put into listening mode. After an incoming connection arrives, accept() creates a new connected socket for that client while the original listening socket continues accepting more connections</p>
+</li>
+<li><p>it lives in the pcb</p>
+</li>
+<li><p>for each socket we have</p>
+</li>
+<li><p>syn queue stores incoming syns</p>
+</li>
+<li><p>accept queues stores completed connections</p>
+</li>
+<li><p>the size of the queue is determined by the backlog</p>
+</li>
+<li><p>not really quees but hash tables</p>
+</li>
+<li><p>we can specify the backlog</p>
+</li>
+<li><p>connection C lives on which over process called accept</p>
+</li>
+<li><p>accept returns a file descriptor for the connection. Two new queues created with the connection.</p>
+</li>
+<li><p>send queue stores connection outgoing data, receive queue stores incoming connection data</p>
+</li>
+<li><p>if you call accept and backend doesn&#39;t accept fast enough, clients don&#39;t ack, small backlog there could be problem. Hence async is a canddiate for async io</p>
+</li>
+<li><p>socket sharding:</p>
+</li>
+<li><p>normally listening on active port/ip fails</p>
+</li>
+<li><p>but you can override it with so_reuseport</p>
+</li>
+<li><p>two distinct sockets different processes on the same ip/port pair</p>
+</li>
+<li><p>two distinct sockets different processes on the same ip/port pair</p>
+</li>
+</ul>
+<p>Normally:</p>
+<p><strong>No.</strong></p>
+<p>Only one listening socket can own a given:</p>
+<pre class="hljs"><code>(IP address, Port, Protocol)</code></pre>
+<p>tuple.</p>
+<p>For example:</p>
+<pre class="hljs"><code>TCP 0.0.0.0:8080</code></pre>
+<p>If Process A has already bound it:</p>
+<pre class="hljs"><code>bind(..., <span class="hljs-number">0.0</span>.<span class="hljs-number">0.0</span>:<span class="hljs-number">8080</span>)</code></pre>
+<p>then Process B trying the same thing gets:</p>
+<pre class="hljs"><code>EADDRINUSE
+Address already in use</code></pre>
+<hr>
+<h3 id="why">Why?</h3>
+<p>When a packet arrives:</p>
+<pre class="hljs"><code>192.168.1.10:8080</code></pre>
+<p>the kernel must know:</p>
+<pre class="hljs"><code>Which process should receive this?</code></pre>
+<p>If multiple processes owned the same listening socket, the answer would be ambiguous.</p>
+<hr>
+<h2 id="but-there-are-exceptions">But there are exceptions</h2>
+<h3 id="1-different-protocols">1. Different protocols</h3>
+<p>TCP and UDP are separate namespaces.</p>
+<p>This is perfectly legal:</p>
+<pre class="hljs"><code>Process A:
+TCP  :8080
+
+Process B:
+UDP  :8080</code></pre>
+<p>because:</p>
+<pre class="hljs"><code>(TCP, 8080)</code></pre>
+<p>and</p>
+<pre class="hljs"><code>(UDP, 8080)</code></pre>
+<p>are different.</p>
+<hr>
+<h3 id="2-different-ips">2. Different IPs</h3>
+<p>Suppose machine has:</p>
+<pre class="hljs"><code>127.0.0.1
+192.168.1.100</code></pre>
+<p>Then:</p>
+<pre class="hljs"><code>Process A:
+127.0.0.1:8080
+
+Process B:
+192.168.1.100:8080</code></pre>
+<p>is legal.</p>
+<p>The complete key is:</p>
+<pre class="hljs"><code>(IP, Port, Protocol)</code></pre>
+<p>not just port.</p>
+<hr>
+<h3 id="3-soreuseport">3. SO_REUSEPORT</h3>
+<p>Modern Linux supports:</p>
+<pre class="hljs"><code>setsockopt(fd,
+           SOL_SOCKET,
+           SO_REUSEPORT,
+           ...);</code></pre>
+<p>Now multiple processes can bind:</p>
+<pre class="hljs"><code>0.0.0.0:8080</code></pre>
+<p>simultaneously.</p>
+<p>Example:</p>
+<pre class="hljs"><code>Worker 1
+Worker 2
+Worker 3
+Worker 4</code></pre>
+<p>all listen on:</p>
+<pre class="hljs"><code>:8080</code></pre>
+<p>Kernel distributes incoming connections among them.</p>
+<hr>
+<h4 id="why-use-this">Why use this?</h4>
+<p>Multi-core scalability.</p>
+<p>Instead of:</p>
+<pre class="hljs"><code>One process accepts
+then hands work to others</code></pre>
+<p>you get:</p>
+<pre class="hljs"><code>Kernel
+   |
+   +--&gt; Worker 1
+   +--&gt; Worker 2
+   +--&gt; Worker 3</code></pre>
+<p>directly.</p>
+<p>Nginx and other high-performance servers use techniques like this.</p>
+<hr>
+<h3 id="4-fork-after-listening">4. Fork after listening</h3>
+<p>Very common.</p>
+<p>Parent:</p>
+<pre class="hljs"><code>socket()
+bind()
+listen()</code></pre>
+<p>then:</p>
+<pre class="hljs"><code>fork();
+fork();
+fork();</code></pre>
+<p>All children inherit the listening socket.</p>
+<pre class="hljs"><code>Parent
+  |
+fork
+  |
++---- Worker A
++---- Worker B
++---- Worker C</code></pre>
+<p>All share the same kernel socket object.</p>
+<p>This is <strong>not</strong> multiple independent binds.</p>
+<p>It&#39;s multiple processes sharing one listening socket.</p>
+<hr>
+<h2 id="what-happens-after-accept">What happens after accept()?</h2>
+<p>Suppose client connects:</p>
+<pre class="hljs"><code>Client
+   |
+Server:8080</code></pre>
+<p>Kernel creates a connected socket identified by:</p>
+<pre class="hljs"><code>(src IP, src port,
+ dst IP, dst port)</code></pre>
+<p>Example:</p>
+<pre class="hljs"><code>(10.0.0.5, 52000,
+ 192.168.1.100, 8080)</code></pre>
+<p>Another client:</p>
+<pre class="hljs"><code>(10.0.0.6, 53000,
+ 192.168.1.100, 8080)</code></pre>
+<p>These are different connections.</p>
+<p>That&#39;s why thousands of clients can connect to the same server port simultaneously.</p>
+<hr>
+<h2 id="interview-answer">Interview answer</h2>
+<p>Can two processes listen on the same IP/port?</p>
+<p><strong>Usually no</strong>, because the kernel allows only one bind for a given <code>(IP, port, protocol)</code> tuple.</p>
+<p>Exceptions:</p>
+<ol>
+<li>Different protocols (TCP vs UDP)</li>
+<li>Different IP addresses</li>
+<li><code>SO_REUSEPORT</code></li>
+<li>Shared listening socket inherited via <code>fork()</code></li>
+</ol>
+<p>A related interview question:</p>
+<blockquote>
+<p>If only one process can listen on port 80, how does Nginx use multiple worker processes?</p>
+</blockquote>
+<p>Answer:</p>
+<blockquote>
+<p>One listening socket is created, then workers inherit it (or use <code>SO_REUSEPORT</code>), and the kernel distributes incoming connections among them.</p>
+</blockquote>
+<p>A socket is a kernel-managed communication endpoint exposed to a process through a file descriptor. It encapsulates network state such as the protocol (TCP/UDP), local and remote addresses, ports, buffers, and connection state. Processes interact with sockets using system calls like socket(), bind(), listen(), accept(), connect(), send(), and recv().</p>
+<p>This is a very common systems/backend interview topic because it touches:</p>
+<ul>
+<li>OS</li>
+<li>networking</li>
+<li>kernel/user space</li>
+<li>performance</li>
+</ul>
+<hr>
+<h2 id="the-problem-too-many-copies">The Problem: Too Many Copies</h2>
+<p>Suppose Nginx wants to send a file:</p>
+<pre class="hljs"><code>video.mp4</code></pre>
+<p>to a client.</p>
+<p>Traditional flow:</p>
+<pre class="hljs"><code>Disk
+ ↓
+Kernel Page Cache
+ ↓ copy #1
+User Buffer
+ ↓ copy #2
+Kernel Socket Buffer
+ ↓ DMA
+NIC</code></pre>
+<hr>
+<h3 id="step-by-step">Step-by-step</h3>
+<p>Application does:</p>
+<pre class="hljs"><code>read(file_fd, buf, size);
+write(socket_fd, buf, size);</code></pre>
+<h4 id="read">read()</h4>
+<p>Kernel copies:</p>
+<pre class="hljs"><code>Kernel page cache
+    ↓
+User buffer</code></pre>
+<p>Copy #1</p>
+<hr>
+<h4 id="write">write()</h4>
+<p>Kernel copies:</p>
+<pre class="hljs"><code>User buffer
+    ↓
+Socket buffer</code></pre>
+<p>Copy #2</p>
+<hr>
+<p>Then NIC DMA engine fetches data:</p>
+<pre class="hljs"><code>Socket Buffer
+   ↓
+Network Card</code></pre>
+<p>Not a CPU copy.</p>
+<hr>
+<p>Problem:</p>
+<pre class="hljs"><code>100 MB file</code></pre>
+<p>means</p>
+<pre class="hljs"><code>100 MB copied
+100 MB copied again</code></pre>
+<p>Huge memory bandwidth waste.</p>
+<hr>
+<h2 id="zero-copy-idea">Zero Copy Idea</h2>
+<p>Question:</p>
+<blockquote>
+<p>Why bring file data into user space if the application isn&#39;t modifying it?</p>
+</blockquote>
+<p>For a static file server:</p>
+<pre class="hljs"><code>File
+  ↓
+Client</code></pre>
+<p>Application is just forwarding bytes.</p>
+<hr>
+<h2 id="sendfile">sendfile()</h2>
+<p>Linux provides:</p>
+<pre class="hljs"><code>sendfile(socket_fd,
+         file_fd,
+         ...);</code></pre>
+<p>Now:</p>
+<pre class="hljs"><code>Disk
+  ↓
+Kernel Page Cache
+  ↓
+Socket Buffer
+  ↓
+NIC</code></pre>
+<p>User space never sees the data.</p>
+<hr>
+<p>Application only says:</p>
+<pre class="hljs"><code>&quot;Send this file.&quot;</code></pre>
+<p>Kernel does the rest.</p>
+<hr>
+<h2 id="what-copies-disappear">What Copies Disappear?</h2>
+<p>Traditional:</p>
+<pre class="hljs"><code>Kernel
+ ↓
+User</code></pre>
+<p>Copy #1</p>
+<pre class="hljs"><code>User
+ ↓
+Kernel</code></pre>
+<p>Copy #2</p>
+<pre class="hljs"><code>
+Both disappear.
+
+---
+
+So:
+
+```text
+CPU copies = 0</code></pre>
+<p>Hence &quot;zero copy&quot;.</p>
+<hr>
+<h2 id="is-it-truly-zero-copies">Is It Truly Zero Copies?</h2>
+<p>Interview trick question.</p>
+<p>Not exactly.</p>
+<p>Data still moves:</p>
+<pre class="hljs"><code>RAM
+ ↓
+NIC</code></pre>
+<p>because physics exists 😄</p>
+<p>The meaning is:</p>
+<blockquote>
+<p>No CPU-mediated copies between kernel and user buffers.</p>
+</blockquote>
+<p>More accurately:</p>
+<pre class="hljs"><code>Zero extra copies.</code></pre>
+<hr>
+<h2 id="dma">DMA</h2>
+<p>The magic comes from DMA.</p>
+<h3 id="without-dma">Without DMA</h3>
+<p>CPU:</p>
+<pre class="hljs"><code>Read byte
+Write byte
+Read byte
+Write byte
+...</code></pre>
+<p>Terrible.</p>
+<hr>
+<h3 id="with-dma">With DMA</h3>
+<p>Network card says:</p>
+<pre class="hljs"><code>Give me address X
+Length Y</code></pre>
+<p>and directly reads memory.</p>
+<pre class="hljs"><code>RAM
+ ↓
+NIC</code></pre>
+<p>CPU barely involved.</p>
+<hr>
+<h2 id="mmap">mmap()</h2>
+<p>Another zero-copy-ish technique.</p>
+<p>Instead of:</p>
+<pre class="hljs"><code>read(fd, buf, size);</code></pre>
+<p>you do:</p>
+<pre class="hljs"><code>mmap(...)</code></pre>
+<p>Now file pages are mapped directly into process address space.</p>
+<pre class="hljs"><code>File
+ ↓
+Page Cache
+ ↓
+Virtual Mapping
+Process</code></pre>
+<p>No explicit copy into user buffers.</p>
+<hr>
+<h2 id="zero-copy-in-networking">Zero Copy in Networking</h2>
+<p>Suppose packet arrives.</p>
+<p>Traditional:</p>
+<pre class="hljs"><code>NIC
+ ↓
+Kernel Buffer
+ ↓ copy
+User Buffer</code></pre>
+<hr>
+<p>Modern kernels may:</p>
+<pre class="hljs"><code>NIC DMA
+ ↓
+Shared Memory Page</code></pre>
+<p>and simply remap ownership.</p>
+<p>No actual copy.</p>
+<hr>
+<h2 id="example-nginx">Example: Nginx</h2>
+<p>Why is Nginx fast at serving static files?</p>
+<p>Instead of:</p>
+<pre class="hljs"><code>read()
+write()</code></pre>
+<p>it often uses:</p>
+<pre class="hljs"><code>sendfile()</code></pre>
+<p>Flow:</p>
+<pre class="hljs"><code>File
+ ↓
+Kernel
+ ↓
+NIC DMA
+ ↓
+Client</code></pre>
+<p>Very little CPU usage.</p>
+<hr>
+<h2 id="example-kafka">Example: Kafka</h2>
+<p>A famous interview fact.</p>
+<p>Kafka stores messages on disk.</p>
+<p>When consumers fetch:</p>
+<pre class="hljs"><code>Disk
+ ↓
+Page Cache
+ ↓
+sendfile()
+ ↓
+NIC</code></pre>
+<p>Kafka can stream gigabytes/sec while using surprisingly little CPU.</p>
+<p>This is one reason Kafka is so efficient.</p>
+<hr>
+<h2 id="interview-definition">Interview Definition</h2>
+<p>A concise answer:</p>
+<blockquote>
+<p>Zero copy is an optimization that avoids unnecessary copying of data between kernel space and user space. Instead of moving bytes through application buffers, the kernel uses techniques such as <code>sendfile()</code>, <code>mmap()</code>, and DMA to transfer data directly between storage, memory, and network devices, reducing CPU overhead and memory bandwidth usage.</p>
+</blockquote>
+<hr>
+<h2 id="interview-follow-up">Interview Follow-up</h2>
+<p>If asked:</p>
+<h4 id="how-does-sendfile-achieve-zero-copy">&quot;How does sendfile() achieve zero copy?&quot;</h4>
+<p>Answer:</p>
+<blockquote>
+<p>Instead of <code>read()</code> followed by <code>write()</code>, the application asks the kernel to transfer data directly from the file cache to the socket. The data never enters user-space buffers, eliminating kernel-to-user and user-to-kernel copies.</p>
+</blockquote>
+<hr>
+<h2 id="one-subtle-thing-many-candidates-miss">One subtle thing many candidates miss</h2>
+<p>When people say:</p>
+<pre class="hljs"><code>Zero Copy</code></pre>
+<p>they usually mean:</p>
+<pre class="hljs"><code>Zero CPU copies</code></pre>
+<p>not</p>
+<pre class="hljs"><code>Zero movement of bytes</code></pre>
+<p>The bytes still travel:</p>
+<pre class="hljs"><code>Disk → RAM → NIC</code></pre>
+<p>The optimization is that the CPU doesn&#39;t repeatedly copy those bytes between buffers. That&#39;s where the big performance win comes from.</p>
+<p>for a socket:</p>
+<p>fd=7<br>↓<br>kernel socket object<br>↓<br>TCP state<br>send buffer<br>receive buffer<br>sequence numbers<br>remote endpoint</p>
+<ul>
+<li><p>Backend doesn&#39;t read fast enough -&gt; receive queue is full -&gt; client slows down -&gt; flow control</p>
+</li>
+<li><p>Kernel manages networking, socket represents port/ip, each connected client gets a connection, kernel manged data structures. To listen on the same port, the processes have to agree on something. So need the key used to listening and if reuse port is allowed.</p>
+</li>
+</ul>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="tcp-vs-udp.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">TCP vs UDP — The Deep Dive</span></a><a class="pn-card pn-next" href="io-multiplexing.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">I/O Multiplexing — select, poll, epoll</span></a></nav>
+</main>
+<aside class="toc"><div class="toc-title">On this page</div><ul><li class="toc-d2"><a href="#why">Why?</a></li><li class="toc-d1"><a href="#but-there-are-exceptions">But there are exceptions</a></li><li class="toc-d2"><a href="#1-different-protocols">1. Different protocols</a></li><li class="toc-d2"><a href="#2-different-ips">2. Different IPs</a></li><li class="toc-d2"><a href="#3-soreuseport">3. SO_REUSEPORT</a></li><li class="toc-d2"><a href="#4-fork-after-listening">4. Fork after listening</a></li><li class="toc-d1"><a href="#what-happens-after-accept">What happens after accept()?</a></li><li class="toc-d1"><a href="#interview-answer">Interview answer</a></li><li class="toc-d1"><a href="#the-problem-too-many-copies">The Problem: Too Many Copies</a></li><li class="toc-d2"><a href="#step-by-step">Step-by-step</a></li><li class="toc-d1"><a href="#zero-copy-idea">Zero Copy Idea</a></li><li class="toc-d1"><a href="#sendfile">sendfile()</a></li><li class="toc-d1"><a href="#what-copies-disappear">What Copies Disappear?</a></li><li class="toc-d1"><a href="#is-it-truly-zero-copies">Is It Truly Zero Copies?</a></li><li class="toc-d1"><a href="#dma">DMA</a></li><li class="toc-d2"><a href="#without-dma">Without DMA</a></li><li class="toc-d2"><a href="#with-dma">With DMA</a></li><li class="toc-d1"><a href="#mmap">mmap()</a></li><li class="toc-d1"><a href="#zero-copy-in-networking">Zero Copy in Networking</a></li><li class="toc-d1"><a href="#example-nginx">Example: Nginx</a></li><li class="toc-d1"><a href="#example-kafka">Example: Kafka</a></li><li class="toc-d1"><a href="#interview-definition">Interview Definition</a></li><li class="toc-d1"><a href="#interview-follow-up">Interview Follow-up</a></li><li class="toc-d1"><a href="#one-subtle-thing-many-candidates-miss">One subtle thing many candidates miss</a></li></ul></aside>
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rapid Refresher · Database Systems</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#B05730">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link is-active" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">Database Systems</a><div class="side-group"><div class="side-label">Foundations</div><ul><li><a class="side-link" href="acid.html">ACID &amp; Isolation Levels</a></li><li><a class="side-link" href="normalization.html">Normalization</a></li><li><a class="side-link" href="sql.html">SQL Essentials</a></li><li><a class="side-link" href="drop-delete-truncate.html">DROP vs DELETE vs TRUNCATE</a></li></ul></div><div class="side-group"><div class="side-label">Indexing & Storage</div><ul><li><a class="side-link" href="b-plus-trees.html">B+ Trees</a></li><li><a class="side-link" href="unique-indexes.html">Unique Indexes</a></li><li><a class="side-link" href="primary-vs-secondary-index.html">Primary vs Secondary Indexes</a></li><li><a class="side-link" href="write-ahead-logging.html">Write-Ahead Logging</a></li></ul></div><div class="side-group"><div class="side-label">Concurrency</div><ul><li><a class="side-link" href="concurrency-control.html">Concurrency Control Basics</a></li><li><a class="side-link" href="mvcc.html">MVCC in Depth</a></li><li><a class="side-link" href="mvcc-cmu.html">MVCC — CMU Lecture Notes</a></li></ul></div><div class="side-group"><div class="side-label">Scale & Patterns</div><ul><li><a class="side-link" href="sharding.html">Sharding vs Partitioning</a></li><li><a class="side-link" href="n-plus-one-problem.html">The N+1 Query Problem</a></li><li><a class="side-link" href="graph-databases.html">Graph Databases</a></li></ul></div><div class="side-group"><div class="side-label">SQL in Practice</div><ul><li><a class="side-link" href="joins.html">Joins — Semantics &amp; Algorithms</a></li><li><a class="side-link" href="window-functions.html">Window Functions</a></li></ul></div><div class="side-group"><div class="side-label">Distributed Data</div><ul><li><a class="side-link" href="cap-replication.html">CAP &amp; Replication</a></li></ul></div><div class="side-group"><div class="side-label">Revision</div><ul><li><a class="side-link is-active" href="refresher.html">Rapid Refresher<span class="badge">&#9733;</span></a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">Database Systems</a></div>
+  <div class="page-head">
+    <div class="page-kicker">Database Systems</div>
+    <h1 class="page-title">Rapid Refresher</h1>
+    <div class="page-meta">3 min read &middot; source: <code>website/content/dbms_refresher.md</code></div>
+  </div>
+  <article class="prose"><blockquote>
+<p>A last-pass revision sheet distilled from the DBMS notes. Every row here maps back to a full note — drill it, then verify against the source page.</p>
+</blockquote>
+<h2 id="acid-one-liners">ACID one-liners</h2>
+<ul>
+<li><strong>Atomicity</strong> — a transaction is all-or-nothing; rollback undoes partial work.</li>
+<li><strong>Consistency</strong> — every commit moves the DB from one valid state to another (constraints hold).</li>
+<li><strong>Isolation</strong> — concurrent transactions behave as if alone; degree is tunable (isolation levels).</li>
+<li><strong>Durability</strong> — once committed, survives crash/power loss (WAL + fsync).</li>
+</ul>
+<h2 id="isolation-levels-anomalies">Isolation levels &amp; anomalies</h2>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Dirty read</th>
+<th>Non-repeatable read</th>
+<th>Phantom</th>
+<th>Write skew</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Read Uncommitted</td>
+<td>possible</td>
+<td>possible</td>
+<td>possible</td>
+<td>possible</td>
+</tr>
+<tr>
+<td>Read Committed</td>
+<td>—</td>
+<td>possible</td>
+<td>possible</td>
+<td>possible</td>
+</tr>
+<tr>
+<td>Repeatable Read / Snapshot</td>
+<td>—</td>
+<td>—</td>
+<td>possible*</td>
+<td>possible</td>
+</tr>
+<tr>
+<td>Serializable</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+</tbody></table>
+<p>*Postgres&#39;s Repeatable Read (snapshot isolation) prevents classic phantoms but <strong>not write skew</strong> — that&#39;s the doctor on-call example.</p>
+<h2 id="normal-forms-fast">Normal forms, fast</h2>
+<ul>
+<li><strong>1NF</strong> — atomic values, no repeating groups.</li>
+<li><strong>2NF</strong> — no partial dependency on part of a composite key.</li>
+<li><strong>3NF</strong> — no transitive dependency (non-key → non-key).</li>
+<li><strong>BCNF</strong> — every determinant is a candidate key.</li>
+<li>Why: kill insertion/update/deletion anomalies. Why denormalize: read speed, fewer joins.</li>
+</ul>
+<h2 id="indexing">Indexing</h2>
+<ul>
+<li><strong>B+ tree</strong>: high fan-out, all data in leaves, leaves linked → great for range scans; O(log n) point lookups; used by nearly every RDBMS (and MongoDB).</li>
+<li><strong>Clustered (primary) index</strong>: table rows physically ordered by the key — one per table.</li>
+<li><strong>Secondary index</strong>: separate structure pointing into the heap/PK — in Postgres <em>all</em> indexes are secondary.</li>
+<li><strong>Unique index</strong>: index + uniqueness constraint enforced at write time.</li>
+</ul>
+<h2 id="drop-vs-delete-vs-truncate">DROP vs DELETE vs TRUNCATE</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>DELETE</th>
+<th>TRUNCATE</th>
+<th>DROP</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Removes</td>
+<td>rows (filterable)</td>
+<td>all rows</td>
+<td>table itself</td>
+</tr>
+<tr>
+<td>WHERE</td>
+<td>yes</td>
+<td>no</td>
+<td>no</td>
+</tr>
+<tr>
+<td>Speed</td>
+<td>slow (row-by-row, logged)</td>
+<td>fast (deallocates pages)</td>
+<td>fast</td>
+</tr>
+<tr>
+<td>Rollback</td>
+<td>yes</td>
+<td>depends on engine</td>
+<td>usually no</td>
+</tr>
+<tr>
+<td>Triggers</td>
+<td>fire</td>
+<td>don&#39;t fire</td>
+<td>—</td>
+</tr>
+</tbody></table>
+<h2 id="concurrency-control">Concurrency control</h2>
+<ul>
+<li><strong>Pessimistic</strong>: lock first (2PL — growing then shrinking phase; strict 2PL holds till commit to avoid cascading aborts).</li>
+<li><strong>Optimistic (OCC)</strong>: run, validate at commit, abort on conflict — wins when conflicts are rare.</li>
+<li><strong>Timestamp ordering</strong>, <strong>SSI</strong>, or just <strong>single-threaded</strong> (Redis).</li>
+<li><strong>MVCC</strong>: keep multiple versions — <em>readers never block writers, writers never block readers</em>. Postgres, MySQL InnoDB, Oracle; also LSM-based NoSQL where old versions are natural.</li>
+<li>MVCC is a <strong>storage scheme</strong>, still paired with a concurrency protocol (Postgres = MVCC + SSI, etc.).</li>
+</ul>
+<h2 id="wal-why-it-works">WAL — why it works</h2>
+<ul>
+<li>Rule: <strong>log the change before the data page</strong> hits disk; commit = log flushed.</li>
+<li>Sequential appends are cheap; data pages can be flushed lazily.</li>
+<li>Crash recovery: redo committed, undo uncommitted.</li>
+<li>Same idea everywhere: DB WAL, filesystem journals, Kafka, event sourcing.</li>
+</ul>
+<h2 id="scale">Scale</h2>
+<ul>
+<li><strong>Partitioning</strong>: split a table within one database. <strong>Sharding</strong>: split data across machines; app/router must route by shard key.</li>
+<li>Sharding costs: cross-shard joins, transactions, rebalancing, hot keys. Do it last.</li>
+<li><strong>N+1 problem</strong>: 1 query for a list + N queries for children. Fix: JOIN, <code>IN (...)</code> batch, or ORM eager loading (<code>select_related</code>, <code>includes</code>).</li>
+</ul>
+<h2 id="drill-questions">Drill questions</h2>
+<ol>
+<li>Which anomaly does snapshot isolation <em>not</em> prevent? Walk through the on-call doctors example.</li>
+<li>Why can a B+ tree do a range scan cheaply but a hash index cannot?</li>
+<li>Why is DELETE slow and TRUNCATE fast, mechanically?</li>
+<li>Explain &quot;readers don&#39;t block writers&quot; — what does a reader see mid-update?</li>
+<li>Why must the WAL record reach disk before the page? What breaks otherwise?</li>
+<li>Your Django page issues 101 queries for 100 posts — diagnose and give two fixes.</li>
+</ol>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="cap-replication.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">CAP &amp; Replication</span></a><span></span></nav>
+</main>
+<aside class="toc"><div class="toc-title">On this page</div><ul><li class="toc-d1"><a href="#acid-one-liners">ACID one-liners</a></li><li class="toc-d1"><a href="#isolation-levels-anomalies">Isolation levels &amp; anomalies</a></li><li class="toc-d1"><a href="#normal-forms-fast">Normal forms, fast</a></li><li class="toc-d1"><a href="#indexing">Indexing</a></li><li class="toc-d1"><a href="#drop-vs-delete-vs-truncate">DROP vs DELETE vs TRUNCATE</a></li><li class="toc-d1"><a href="#concurrency-control">Concurrency control</a></li><li class="toc-d1"><a href="#wal-why-it-works">WAL — why it works</a></li><li class="toc-d1"><a href="#scale">Scale</a></li><li class="toc-d1"><a href="#drill-questions">Drill questions</a></li></ul></aside>
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

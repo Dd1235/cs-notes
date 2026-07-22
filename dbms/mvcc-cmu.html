@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MVCC — CMU Lecture Notes · Database Systems</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#B05730">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link is-active" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">Database Systems</a><div class="side-group"><div class="side-label">Foundations</div><ul><li><a class="side-link" href="acid.html">ACID &amp; Isolation Levels</a></li><li><a class="side-link" href="normalization.html">Normalization</a></li><li><a class="side-link" href="sql.html">SQL Essentials</a></li><li><a class="side-link" href="drop-delete-truncate.html">DROP vs DELETE vs TRUNCATE</a></li></ul></div><div class="side-group"><div class="side-label">Indexing & Storage</div><ul><li><a class="side-link" href="b-plus-trees.html">B+ Trees</a></li><li><a class="side-link" href="unique-indexes.html">Unique Indexes</a></li><li><a class="side-link" href="primary-vs-secondary-index.html">Primary vs Secondary Indexes</a></li><li><a class="side-link" href="write-ahead-logging.html">Write-Ahead Logging</a></li></ul></div><div class="side-group"><div class="side-label">Concurrency</div><ul><li><a class="side-link" href="concurrency-control.html">Concurrency Control Basics</a></li><li><a class="side-link" href="mvcc.html">MVCC in Depth</a></li><li><a class="side-link is-active" href="mvcc-cmu.html">MVCC — CMU Lecture Notes</a></li></ul></div><div class="side-group"><div class="side-label">Scale & Patterns</div><ul><li><a class="side-link" href="sharding.html">Sharding vs Partitioning</a></li><li><a class="side-link" href="n-plus-one-problem.html">The N+1 Query Problem</a></li><li><a class="side-link" href="graph-databases.html">Graph Databases</a></li></ul></div><div class="side-group"><div class="side-label">SQL in Practice</div><ul><li><a class="side-link" href="joins.html">Joins — Semantics &amp; Algorithms</a></li><li><a class="side-link" href="window-functions.html">Window Functions</a></li></ul></div><div class="side-group"><div class="side-label">Distributed Data</div><ul><li><a class="side-link" href="cap-replication.html">CAP &amp; Replication</a></li></ul></div><div class="side-group"><div class="side-label">Revision</div><ul><li><a class="side-link" href="refresher.html">Rapid Refresher<span class="badge">&#9733;</span></a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">Database Systems</a></div>
+  <div class="page-head">
+    <div class="page-kicker">Database Systems</div>
+    <h1 class="page-title">MVCC — CMU Lecture Notes</h1>
+    <div class="page-meta">1 min read &middot; source: <code>dbms/mvcc_cmulec.md</code></div>
+  </div>
+  <article class="prose"><p>Core ideas from the CMU 15-445 multiversioning lecture (<a href="https://15445.courses.cs.cmu.edu/fall2025/slides/20-multiversioning.pdf" target="_blank" rel="noopener">slides</a>):</p>
+<ul>
+<li>The DBMS maintains <strong>multiple physical versions of the logical tuples</strong>.</li>
+<li><strong>Writers do not block readers, readers do not block writers.</strong></li>
+<li>Use <strong>timestamps to determine visibility</strong>: a transaction sees the newest version whose begin-timestamp is ≤ its own read timestamp (and not deleted before it).</li>
+<li>Allows <strong>time-travel queries</strong> if there is no garbage collection — you can ask &quot;what did this row look like at 3pm?&quot;</li>
+<li><strong>Financial systems would want this for auditing.</strong></li>
+</ul>
+<h3 id="version-storage-where-do-old-versions-live">Version storage (where do old versions live?)</h3>
+<ul>
+<li><strong>Append-only</strong> — every update writes a whole new tuple version into the same table space; versions chained by pointer (Postgres).</li>
+<li><strong>Time-travel storage</strong> — the main table keeps the newest version; old versions are copied out to a separate time-travel table.</li>
+<li><strong>Delta storage</strong> — the main table keeps the newest version; only the <em>changed attributes</em> (deltas) go to an undo log, and old versions are reconstructed by applying deltas backwards (MySQL InnoDB, Oracle rollback segments).</li>
+</ul>
+<h3 id="garbage-collection">Garbage collection</h3>
+<p>Old versions that no active transaction can see must eventually be reclaimed:</p>
+<ul>
+<li><strong>Tuple-level</strong> — background vacuuming scans for dead versions (Postgres <code>VACUUM</code>).</li>
+<li><strong>Transaction-level</strong> — each transaction tracks its own old versions and hands them to GC on commit.</li>
+<li>The classic failure mode: one long-running transaction pins the oldest visible timestamp, so nothing can be vacuumed and version chains grow — Postgres table bloat.</li>
+</ul>
+<h3 id="one-liner">One-liner</h3>
+<blockquote>
+<p>MVCC is a <em>storage/visibility scheme</em>, not a full concurrency protocol — the engine still pairs it with 2PL, timestamp ordering, or OCC to order the writers (see &quot;MVCC in Depth&quot;).</p>
+</blockquote>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="mvcc.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">MVCC in Depth</span></a><a class="pn-card pn-next" href="sharding.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">Sharding vs Partitioning</span></a></nav>
+</main>
+<aside class="toc"><div class="toc-title">On this page</div><ul><li class="toc-d2"><a href="#version-storage-where-do-old-versions-live">Version storage (where do old versions live?)</a></li><li class="toc-d2"><a href="#garbage-collection">Garbage collection</a></li><li class="toc-d2"><a href="#one-liner">One-liner</a></li></ul></aside>
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

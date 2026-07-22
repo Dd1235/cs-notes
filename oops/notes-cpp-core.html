@@ -1,0 +1,410 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>C++ Core · OOP &amp; C++</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#8A4E5E">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link is-active" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">OOP & C++</a><div class="side-group"><div class="side-label">Lecture Notes</div><ul><li><a class="side-link" href="volatile-macros-inline.html">volatile, Macros &amp; inline</a></li><li><a class="side-link" href="references-and-const.html">References &amp; const</a></li><li><a class="side-link" href="function-overloading.html">Function Overloading</a></li><li><a class="side-link" href="dynamic-memory.html">Dynamic Memory Management</a></li><li><a class="side-link" href="classes-and-objects.html">Classes &amp; Objects</a></li><li><a class="side-link" href="constructors.html">Constructors &amp; Information Hiding</a></li><li><a class="side-link" href="copy-semantics.html">Copy Constructor &amp; Copy Assignment</a></li><li><a class="side-link" href="constness-and-static.html">Const-ness &amp; Static Members</a></li><li><a class="side-link" href="friend-functions.html">Friend Functions &amp; Friend Classes</a></li><li><a class="side-link" href="operator-overloading.html">Operator Overloading</a></li><li><a class="side-link" href="inheritance.html">Inheritance &amp; Overriding</a></li><li><a class="side-link" href="multiple-private-inheritance.html">Multiple &amp; Private Inheritance</a></li><li><a class="side-link" href="virtual-functions.html">Virtual Functions &amp; Dynamic Binding</a></li><li><a class="side-link" href="vtables-and-const-cast.html">Virtual Pointer Tables &amp; const_cast</a></li><li><a class="side-link" href="cpp-casts.html">C++ Casts</a></li><li><a class="side-link" href="exceptions.html">Exceptions &amp; Error Handling</a></li><li><a class="side-link" href="try-catch-and-templates.html">try/catch &amp; Function Templates</a></li><li><a class="side-link" href="class-templates-functors.html">Class Templates &amp; Functors</a></li></ul></div><div class="side-group"><div class="side-label">Extras</div><ul><li><a class="side-link" href="compilation-model.html">The C++ Compilation Model</a></li><li><a class="side-link" href="template-metaprogramming.html">Template Metaprogramming</a></li><li><a class="side-link" href="build-your-own-vector.html">Exercise — Build Your Own Vector</a></li><li><a class="side-link" href="miscellany.html">Miscellany</a></li><li><a class="side-link" href="resources.html">Resources</a></li></ul></div><div class="side-group"><div class="side-label">Topic Notes</div><ul><li><a class="side-link is-active" href="notes-cpp-core.html">C++ Core</a></li><li><a class="side-link" href="notes-cpp-oop.html">C++ OOP</a></li><li><a class="side-link" href="notes-cpp-advanced.html">C++ Advanced</a></li><li><a class="side-link" href="notes-ooad-uml.html">OOAD &amp; UML</a></li><li><a class="side-link" href="notes-design-patterns.html">Design Patterns</a></li><li><a class="side-link" href="notes-testing-sdlc.html">Testing, SDLC &amp; SE</a></li><li><a class="side-link" href="notes-interview-questions.html">Interview Questions</a></li></ul></div><div class="side-group"><div class="side-label">Flashcards</div><ul><li><a class="side-link" href="cards-cpp-core.html">C++ Core Flashcards</a></li><li><a class="side-link" href="cards-oop-lifetime.html">OOP, Lifetime &amp; Memory Flashcards</a></li><li><a class="side-link" href="cards-polymorphism-stl.html">Polymorphism, Casts, Templates &amp; STL Flashcards</a></li><li><a class="side-link" href="cards-ooad-uml.html">OOAD &amp; UML Flashcards</a></li><li><a class="side-link" href="cards-design-patterns.html">Design Patterns Flashcards</a></li><li><a class="side-link" href="cards-testing-sdlc.html">Testing, SDLC &amp; SE Flashcards</a></li><li><a class="side-link" href="cards-interview-drills.html">Interview &amp; Code-Reading Drills</a></li></ul></div><div class="side-group"><div class="side-label">Under the Hood</div><ul><li><a class="side-link" href="memory-layout.html">Memory Layout, Alignment &amp; Padding</a></li></ul></div><div class="side-group"><div class="side-label">Revision</div><ul><li><a class="side-link" href="refresher.html">Rapid Refresher<span class="badge">&#9733;</span></a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">OOP & C++</a></div>
+  <div class="page-head">
+    <div class="page-kicker">OOP & C++</div>
+    <h1 class="page-title">C++ Core</h1>
+    <div class="page-meta">8 min read &middot; source: <code>oops_cpp/generated_notes/01_cpp_core.md</code></div>
+  </div>
+  <article class="prose"><h3 id="mental-model">Mental Model</h3>
+<p>C++ is a compiled, statically typed language that keeps C&#39;s low-level control while adding stronger abstraction tools: references, overloading, classes, RAII, templates, and the standard library.</p>
+<p>Interview focus:</p>
+<ul>
+<li>Know the build pipeline.</li>
+<li>Know object lifetime and memory regions.</li>
+<li>Know how declarations, definitions, linkage, and headers interact.</li>
+<li>Prefer standard library containers and algorithms over manual arrays and loops.</li>
+</ul>
+<h3 id="build-pipeline">Build Pipeline</h3>
+<ol>
+<li>Preprocessing: expands <code>#include</code>, macros, and conditional compilation.</li>
+<li>Compilation: parses each translation unit and generates object code.</li>
+<li>Assembly: emits machine-level instructions.</li>
+<li>Linking: combines object files and libraries, resolving symbols.</li>
+</ol>
+<p>Key terms:</p>
+<ul>
+<li>Source file: usually <code>.cpp</code>; contains definitions.</li>
+<li>Header file: usually <code>.h</code>, <code>.hpp</code>, <code>.hxx</code>; contains declarations, templates, inline definitions.</li>
+<li>Translation unit: one source file after preprocessing, including all headers it pulled in.</li>
+<li>Object file: compiled unit with machine code, symbol table, relocation data, and unresolved external references.</li>
+<li>Linker: connects unresolved references across translation units and libraries.</li>
+</ul>
+<h3 id="headers-linkage-and-odr">Headers, Linkage, and ODR</h3>
+<p>Declarations tell the compiler that a name exists. Definitions allocate storage or provide function bodies.</p>
+<pre class="hljs"><code><span class="hljs-comment">// declaration</span>
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">add</span><span class="hljs-params">(<span class="hljs-type">int</span>, <span class="hljs-type">int</span>)</span></span>;
+
+<span class="hljs-comment">// definition</span>
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">add</span><span class="hljs-params">(<span class="hljs-type">int</span> a, <span class="hljs-type">int</span> b)</span> </span>{
+    <span class="hljs-keyword">return</span> a + b;
+}</code></pre>
+<p>The One Definition Rule says an entity should have exactly one definition across the program, except for allowed cases such as inline functions and templates with identical definitions in multiple translation units.</p>
+<p>Header rules:</p>
+<ul>
+<li>Put declarations in headers.</li>
+<li>Put non-template function definitions in source files.</li>
+<li>Put template definitions in headers because instantiation needs the full body.</li>
+<li>Use include guards or <code>#pragma once</code>.</li>
+<li>Avoid global variables in headers unless they are <code>inline</code> variables in modern C++ or <code>extern</code> declarations with one source definition.</li>
+</ul>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">ifndef</span> FRACTION_H</span>
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> FRACTION_H</span>
+
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">Fraction</span> {
+    <span class="hljs-type">int</span> num;
+    <span class="hljs-type">int</span> den;
+};
+
+<span class="hljs-meta">#<span class="hljs-keyword">endif</span></span></code></pre>
+<p>Linkage:</p>
+<table>
+<thead>
+<tr>
+<th>Construct</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>extern int x;</code></td>
+<td>Declaration for a variable defined elsewhere</td>
+</tr>
+<tr>
+<td><code>static</code> at file scope</td>
+<td>Internal linkage, visible only in that translation unit</td>
+</tr>
+<tr>
+<td>anonymous namespace</td>
+<td>Modern way to give internal linkage to names</td>
+</tr>
+<tr>
+<td><code>extern &quot;C&quot;</code></td>
+<td>Disable C++ name mangling for C interop</td>
+</tr>
+</tbody></table>
+<h3 id="name-mangling">Name Mangling</h3>
+<p>C++ supports overloading, so symbol names encode type information.</p>
+<pre class="hljs"><code><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">f</span><span class="hljs-params">(<span class="hljs-type">int</span>)</span></span>;
+<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">f</span><span class="hljs-params">(<span class="hljs-type">double</span>)</span></span>;</code></pre>
+<p>These two functions cannot have the same linker symbol. Name mangling makes them distinct. <code>extern &quot;C&quot;</code> is used when linking with C libraries that do not use C++ mangling.</p>
+<h3 id="memory-layout">Memory Layout</h3>
+<p>Typical process memory:</p>
+<table>
+<thead>
+<tr>
+<th>Region</th>
+<th>Stores</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>text/code</td>
+<td>compiled instructions</td>
+</tr>
+<tr>
+<td>read-only data</td>
+<td>string literals, some constants</td>
+</tr>
+<tr>
+<td>data</td>
+<td>initialized globals and statics</td>
+</tr>
+<tr>
+<td>BSS</td>
+<td>zero-initialized globals and statics</td>
+</tr>
+<tr>
+<td>heap</td>
+<td>dynamic allocation via <code>new</code>, <code>malloc</code>, containers</td>
+</tr>
+<tr>
+<td>stack</td>
+<td>function calls, local automatic variables</td>
+</tr>
+</tbody></table>
+<p>Important:</p>
+<ul>
+<li>A local variable normally lives on the stack.</li>
+<li>A <code>static</code> local variable has block scope but program lifetime.</li>
+<li>Dynamically allocated objects live until released or owned by an object that releases them.</li>
+</ul>
+<pre class="hljs"><code><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">calls</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-type">int</span> x = <span class="hljs-number">0</span>;          <span class="hljs-comment">// automatic lifetime</span>
+    <span class="hljs-type">static</span> <span class="hljs-type">int</span> seen = <span class="hljs-number">0</span>; <span class="hljs-comment">// program lifetime</span>
+    ++seen;
+}</code></pre>
+<h3 id="c-recap-that-still-matters">C Recap That Still Matters</h3>
+<p>Core C tools remain relevant in C++:</p>
+<ul>
+<li>Primitive types: <code>char</code>, integer types, floating-point types, <code>bool</code>.</li>
+<li>Operators: arithmetic, relational, logical, bitwise, <code>operator=</code>.</li>
+<li>Control flow: <code>if</code>, <code>switch</code>, loops, <code>break</code>, <code>continue</code>, <code>return</code>.</li>
+<li>Arrays decay to pointers in many expressions.</li>
+<li>Structs group fields.</li>
+<li>Pointers store addresses and may be null.</li>
+<li>Functions use pass-by-value unless a pointer/reference is passed.</li>
+</ul>
+<p>Common traps:</p>
+<ul>
+<li>Array bounds are not checked.</li>
+<li>Signed integer overflow is undefined behavior.</li>
+<li>Using an uninitialized local variable is undefined behavior.</li>
+<li>Dereferencing a null or dangling pointer is undefined behavior.</li>
+<li><code>sizeof(array)</code> only works as array size in the same scope before decay.</li>
+</ul>
+<h3 id="arrays-vectors-and-strings">Arrays, Vectors, and Strings</h3>
+<p>Prefer <code>std::vector</code> over raw dynamic arrays.</p>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;vector&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string&gt;</span></span>
+
+std::vector&lt;<span class="hljs-type">int</span>&gt; a = {<span class="hljs-number">3</span>, <span class="hljs-number">1</span>, <span class="hljs-number">4</span>};
+a.<span class="hljs-built_in">push_back</span>(<span class="hljs-number">2</span>);
+
+std::string s = <span class="hljs-string">&quot;placement&quot;</span>;
+s += <span class="hljs-string">&quot; prep&quot;</span>;</code></pre>
+<table>
+<thead>
+<tr>
+<th>Need</th>
+<th>Prefer</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Fixed compile-time size</td>
+<td><code>std::array&lt;T, N&gt;</code></td>
+</tr>
+<tr>
+<td>Dynamic contiguous sequence</td>
+<td><code>std::vector&lt;T&gt;</code></td>
+</tr>
+<tr>
+<td>Text</td>
+<td><code>std::string</code></td>
+</tr>
+<tr>
+<td>Raw buffer ownership</td>
+<td><code>std::vector&lt;std::byte&gt;</code> or smart pointer</td>
+</tr>
+</tbody></table>
+<p>Raw arrays are useful for interop and low-level code, but they are easy to misuse.</p>
+<h3 id="standard-library-algorithms">Standard Library Algorithms</h3>
+<p>Sorting and searching should usually use the algorithm library.</p>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;algorithm&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;vector&gt;</span></span>
+
+std::vector&lt;<span class="hljs-type">int</span>&gt; v = {<span class="hljs-number">4</span>, <span class="hljs-number">1</span>, <span class="hljs-number">3</span>, <span class="hljs-number">2</span>};
+std::<span class="hljs-built_in">sort</span>(v.<span class="hljs-built_in">begin</span>(), v.<span class="hljs-built_in">end</span>());
+
+<span class="hljs-type">bool</span> has_three = std::<span class="hljs-built_in">binary_search</span>(v.<span class="hljs-built_in">begin</span>(), v.<span class="hljs-built_in">end</span>(), <span class="hljs-number">3</span>);
+<span class="hljs-keyword">auto</span> it = std::<span class="hljs-built_in">find</span>(v.<span class="hljs-built_in">begin</span>(), v.<span class="hljs-built_in">end</span>(), <span class="hljs-number">4</span>);</code></pre>
+<p>Interview angle:</p>
+<ul>
+<li><code>std::sort</code> is generally introsort, average <code>O(n log n)</code>.</li>
+<li><code>std::find</code> is linear.</li>
+<li>Binary search requires a sorted range.</li>
+<li>Iterators are generalized pointers into containers/ranges.</li>
+</ul>
+<h3 id="const-constexpr-and-volatile"><code>const</code>, <code>constexpr</code>, and <code>volatile</code></h3>
+<p><code>const</code> means the value cannot be modified through that name.</p>
+<pre class="hljs"><code><span class="hljs-type">int</span> x = <span class="hljs-number">5</span>;
+<span class="hljs-type">const</span> <span class="hljs-type">int</span> y = x; <span class="hljs-comment">// OK, y is read-only after initialization</span></code></pre>
+<p><code>constexpr</code> means the value or function can be evaluated at compile time when inputs allow it.</p>
+<pre class="hljs"><code><span class="hljs-function"><span class="hljs-keyword">constexpr</span> <span class="hljs-type">int</span> <span class="hljs-title">square</span><span class="hljs-params">(<span class="hljs-type">int</span> x)</span> </span>{
+    <span class="hljs-keyword">return</span> x * x;
+}
+
+<span class="hljs-keyword">constexpr</span> <span class="hljs-type">int</span> n = <span class="hljs-built_in">square</span>(<span class="hljs-number">5</span>);</code></pre>
+<p><code>volatile</code> tells the compiler the value may change outside normal program flow. It is for memory-mapped I/O and similar low-level cases, not for thread synchronization. Use atomics or locks for concurrency.</p>
+<h3 id="pointer-constness">Pointer Constness</h3>
+<p>Read declarations right-to-left around <code>*</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Declaration</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>const int* p</code></td>
+<td>pointer to const int; cannot modify <code>*p</code> through <code>p</code></td>
+</tr>
+<tr>
+<td><code>int const* p</code></td>
+<td>same as above</td>
+</tr>
+<tr>
+<td><code>int* const p</code></td>
+<td>const pointer to mutable int</td>
+</tr>
+<tr>
+<td><code>const int* const p</code></td>
+<td>const pointer to const int</td>
+</tr>
+</tbody></table>
+<pre class="hljs"><code><span class="hljs-type">int</span> a = <span class="hljs-number">10</span>;
+<span class="hljs-type">int</span> b = <span class="hljs-number">20</span>;
+
+<span class="hljs-type">const</span> <span class="hljs-type">int</span>* p = &amp;a;
+p = &amp;b;       <span class="hljs-comment">// OK</span>
+<span class="hljs-comment">// *p = 30;   // error</span>
+
+<span class="hljs-type">int</span>* <span class="hljs-type">const</span> q = &amp;a;
+*q = <span class="hljs-number">30</span>;      <span class="hljs-comment">// OK</span>
+<span class="hljs-comment">// q = &amp;b;    // error</span></code></pre>
+<h3 id="macros-vs-inline-functions">Macros vs Inline Functions</h3>
+<p>Macros are textual substitution. They do not respect types, scopes, or evaluation safety.</p>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">define</span> SQUARE(x) ((x) * (x))</span></code></pre>
+<p>Problems:</p>
+<ul>
+<li><code>SQUARE(i++)</code> increments twice.</li>
+<li>Debugging is harder.</li>
+<li>No type checking.</li>
+</ul>
+<p>Prefer:</p>
+<pre class="hljs"><code><span class="hljs-function"><span class="hljs-keyword">inline</span> <span class="hljs-type">int</span> <span class="hljs-title">square</span><span class="hljs-params">(<span class="hljs-type">int</span> x)</span> </span>{
+    <span class="hljs-keyword">return</span> x * x;
+}</code></pre>
+<p>Modern meaning of <code>inline</code>: multiple identical definitions across translation units are allowed. It does not force machine-code inlining.</p>
+<h3 id="references">References</h3>
+<p>A reference is an alias for an existing object.</p>
+<pre class="hljs"><code><span class="hljs-type">int</span> x = <span class="hljs-number">10</span>;
+<span class="hljs-type">int</span>&amp; r = x;
+r = <span class="hljs-number">20</span>; <span class="hljs-comment">// x becomes 20</span></code></pre>
+<p>Pointer vs reference:</p>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Pointer</th>
+<th>Reference</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Null possible</td>
+<td>yes</td>
+<td>no, in normal valid code</td>
+</tr>
+<tr>
+<td>Rebinding</td>
+<td>yes</td>
+<td>no</td>
+</tr>
+<tr>
+<td>Syntax</td>
+<td>explicit dereference</td>
+<td>alias syntax</td>
+</tr>
+<tr>
+<td>Good for optional target</td>
+<td>yes</td>
+<td>no</td>
+</tr>
+<tr>
+<td>Good for required parameter</td>
+<td>yes, but reference is cleaner</td>
+<td></td>
+</tr>
+</tbody></table>
+<p>Pass-by-reference avoids copies and allows modification.</p>
+<pre class="hljs"><code><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">increment</span><span class="hljs-params">(<span class="hljs-type">int</span>&amp; x)</span> </span>{
+    ++x;
+}
+
+<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">print</span><span class="hljs-params">(<span class="hljs-type">const</span> std::string&amp; s)</span> </span>{
+    <span class="hljs-comment">// no copy, cannot modify s</span>
+}</code></pre>
+<p>Return-by-reference is only safe when the referred object outlives the function call.</p>
+<pre class="hljs"><code><span class="hljs-function"><span class="hljs-type">int</span>&amp; <span class="hljs-title">first</span><span class="hljs-params">(std::vector&lt;<span class="hljs-type">int</span>&gt;&amp; v)</span> </span>{
+    <span class="hljs-keyword">return</span> v[<span class="hljs-number">0</span>];
+}
+
+<span class="hljs-comment">// Bad: returns reference to a dead local.</span>
+<span class="hljs-comment">// int&amp; bad() { int x = 0; return x; }</span></code></pre>
+<h3 id="function-defaults-and-overloading">Function Defaults and Overloading</h3>
+<p>Default arguments are filled by the caller at compile time.</p>
+<pre class="hljs"><code><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">log</span><span class="hljs-params">(std::string msg, <span class="hljs-type">int</span> level = <span class="hljs-number">1</span>)</span></span>;</code></pre>
+<p>Rules:</p>
+<ul>
+<li>Defaults must appear from right to left.</li>
+<li>Usually put defaults in the declaration, not repeated across definitions.</li>
+<li>Defaults do not create a different function signature.</li>
+</ul>
+<p>Function overloading chooses among functions with the same name and different parameter lists.</p>
+<pre class="hljs"><code><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">print</span><span class="hljs-params">(<span class="hljs-type">int</span>)</span></span>;
+<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">print</span><span class="hljs-params">(<span class="hljs-type">double</span>)</span></span>;
+<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">print</span><span class="hljs-params">(<span class="hljs-type">const</span> std::string&amp;)</span></span>;</code></pre>
+<p>Overload resolution prefers:</p>
+<ol>
+<li>Exact match.</li>
+<li>Promotion.</li>
+<li>Standard conversion.</li>
+<li>User-defined conversion.</li>
+<li>Variadic fallback.</li>
+</ol>
+<p>Avoid overload sets that require subtle conversions. They make code hard to predict.</p>
+<h3 id="dynamic-memory">Dynamic Memory</h3>
+<p><code>new</code> allocates memory and constructs an object. <code>delete</code> destroys the object and frees memory.</p>
+<pre class="hljs"><code><span class="hljs-type">int</span>* p = <span class="hljs-keyword">new</span> <span class="hljs-built_in">int</span>(<span class="hljs-number">5</span>);
+<span class="hljs-keyword">delete</span> p;</code></pre>
+<p><code>malloc</code> allocates raw memory only. It does not call constructors. <code>free</code> does not call destructors.</p>
+<pre class="hljs"><code><span class="hljs-type">void</span>* raw = std::<span class="hljs-built_in">malloc</span>(<span class="hljs-built_in">sizeof</span>(<span class="hljs-type">int</span>));
+std::<span class="hljs-built_in">free</span>(raw);</code></pre>
+<p>C++ code should usually avoid owning raw <code>new</code>/<code>delete</code> directly. Use RAII:</p>
+<ul>
+<li><code>std::vector&lt;T&gt;</code> for dynamic arrays.</li>
+<li><code>std::string</code> for text.</li>
+<li><code>std::unique_ptr&lt;T&gt;</code> for exclusive heap ownership.</li>
+<li><code>std::shared_ptr&lt;T&gt;</code> only for shared ownership with clear semantics.</li>
+</ul>
+<h3 id="undefined-behavior">Undefined Behavior</h3>
+<p>Undefined behavior means the language gives no guarantee. The compiler may optimize assuming it never happens.</p>
+<p>Common cases:</p>
+<ul>
+<li>Out-of-bounds access.</li>
+<li>Use-after-free.</li>
+<li>Double delete.</li>
+<li>Dereferencing null.</li>
+<li>Returning reference to a local.</li>
+<li>Signed integer overflow.</li>
+<li>Data race.</li>
+<li>Reading uninitialized storage.</li>
+</ul>
+<h3 id="checkpoints">Checkpoints</h3>
+<ul>
+<li>What is a translation unit?</li>
+<li>Why should templates usually be defined in headers?</li>
+<li>What does <code>static</code> mean at file scope vs inside a function?</li>
+<li>Why is <code>std::vector</code> safer than a raw dynamic array?</li>
+<li>Explain <code>const int*</code>, <code>int* const</code>, and <code>const int* const</code>.</li>
+<li>Why is a macro less safe than an inline function?</li>
+<li>When should a function parameter be <code>T</code>, <code>T&amp;</code>, <code>const T&amp;</code>, or <code>T*</code>?</li>
+<li>What happens during <code>new</code> and <code>delete</code>?</li>
+<li>Name five forms of undefined behavior.</li>
+</ul>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="resources.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">Resources</span></a><a class="pn-card pn-next" href="notes-cpp-oop.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">C++ OOP</span></a></nav>
+</main>
+<aside class="toc"><div class="toc-title">On this page</div><ul><li class="toc-d2"><a href="#mental-model">Mental Model</a></li><li class="toc-d2"><a href="#build-pipeline">Build Pipeline</a></li><li class="toc-d2"><a href="#headers-linkage-and-odr">Headers, Linkage, and ODR</a></li><li class="toc-d2"><a href="#name-mangling">Name Mangling</a></li><li class="toc-d2"><a href="#memory-layout">Memory Layout</a></li><li class="toc-d2"><a href="#c-recap-that-still-matters">C Recap That Still Matters</a></li><li class="toc-d2"><a href="#arrays-vectors-and-strings">Arrays, Vectors, and Strings</a></li><li class="toc-d2"><a href="#standard-library-algorithms">Standard Library Algorithms</a></li><li class="toc-d2"><a href="#const-constexpr-and-volatile"><code>const</code>, <code>constexpr</code>, and <code>volatile</code></a></li><li class="toc-d2"><a href="#pointer-constness">Pointer Constness</a></li><li class="toc-d2"><a href="#macros-vs-inline-functions">Macros vs Inline Functions</a></li><li class="toc-d2"><a href="#references">References</a></li><li class="toc-d2"><a href="#function-defaults-and-overloading">Function Defaults and Overloading</a></li><li class="toc-d2"><a href="#dynamic-memory">Dynamic Memory</a></li><li class="toc-d2"><a href="#undefined-behavior">Undefined Behavior</a></li><li class="toc-d2"><a href="#checkpoints">Checkpoints</a></li></ul></aside>
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

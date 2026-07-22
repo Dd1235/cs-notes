@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rapid Refresher · Probability &amp; Puzzles</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#4A648C">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link is-active" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">Probability & Puzzles</a><div class="side-group"><div class="side-label">Probability</div><ul><li><a class="side-link" href="probability-toolkit.html">Conditional Probability &amp; Bayes</a></li><li><a class="side-link" href="expectation-and-indicators.html">Expectation, Linearity &amp; Indicators</a></li><li><a class="side-link" href="coins-dice-waiting-times.html">Coins, Dice &amp; Waiting Times</a></li><li><a class="side-link" href="classic-paradoxes.html">Birthday, Monty Hall &amp; Friends</a></li><li><a class="side-link" href="random-walks-gamblers-ruin.html">Random Walks &amp; Gambler's Ruin</a></li><li><a class="side-link" href="counting-toolkit.html">Counting — Stars, Bars &amp; Derangements</a></li><li><a class="side-link" href="markov-chains-mini.html">Markov Chains, Minimally</a></li></ul></div><div class="side-group"><div class="side-label">Puzzles</div><ul><li><a class="side-link" href="logic-puzzles.html">Logic Puzzles — Ropes, Bridges, Prisoners</a></li><li><a class="side-link" href="brainteaser-bank.html">Brainteaser Bank</a></li><li><a class="side-link" href="resources.html">Books &amp; Resources</a></li></ul></div><div class="side-group"><div class="side-label">Revision</div><ul><li><a class="side-link is-active" href="refresher.html">Rapid Refresher<span class="badge">&#9733;</span></a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">Probability & Puzzles</a></div>
+  <div class="page-head">
+    <div class="page-kicker">Probability & Puzzles</div>
+    <h1 class="page-title">Rapid Refresher</h1>
+    <div class="page-meta">2 min read &middot; source: <code>website/content/quant_refresher.md</code></div>
+  </div>
+  <article class="prose"><blockquote>
+<p>Numbers you should produce instantly, and the one-line reason behind each. If a row surprises you, its page has the derivation.</p>
+</blockquote>
+<h2 id="the-answer-table">The answer table</h2>
+<table>
+<thead>
+<tr>
+<th>Question</th>
+<th>Answer</th>
+<th>The lever</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>E[trials until success], prob p</td>
+<td>1/p</td>
+<td>geometric</td>
+</tr>
+<tr>
+<td>E[flips] to see HT / HH</td>
+<td>4 / 6</td>
+<td>HT ratchets, HH resets</td>
+</tr>
+<tr>
+<td>People for 50% shared birthday</td>
+<td>23</td>
+<td>253 pairs, not 23 people</td>
+</tr>
+<tr>
+<td>P(sick | +), 1/1000 disease, 99% test</td>
+<td>≈ 9%</td>
+<td>false positives swamp</td>
+</tr>
+<tr>
+<td>Monty Hall, switch</td>
+<td>2/3</td>
+<td>host filters, doesn&#39;t randomize</td>
+</tr>
+<tr>
+<td>&quot;At least one boy&quot; → both boys</td>
+<td>1/3</td>
+<td>{BB,BG,GB}</td>
+</tr>
+<tr>
+<td>Expected own-hats among n</td>
+<td>1</td>
+<td>indicators, always 1</td>
+</tr>
+<tr>
+<td>P(no fixed point), large n</td>
+<td>1/e ≈ 37%</td>
+<td>derangements</td>
+</tr>
+<tr>
+<td>Coupon collector, n types</td>
+<td>n·Hₙ ≈ n ln n</td>
+<td>sum of geometrics</td>
+</tr>
+<tr>
+<td>Gambler&#39;s ruin, fair, ₹a of ₹N</td>
+<td>win a/N</td>
+<td>proportional to share</td>
+</tr>
+<tr>
+<td>Expected duration, fair ruin</td>
+<td>a(N−a)</td>
+<td>quadratic — walks are slow</td>
+</tr>
+<tr>
+<td>Ballot: A leads throughout</td>
+<td>(a−b)/(a+b)</td>
+<td>reflection principle</td>
+</tr>
+<tr>
+<td>Identical n balls, k boxes</td>
+<td>C(n+k−1, k−1)</td>
+<td>stars &amp; bars</td>
+</tr>
+<tr>
+<td>Clock-hand overlaps per 12 h</td>
+<td>11</td>
+<td>relative angular speed</td>
+</tr>
+<tr>
+<td>25 horses top-3</td>
+<td>7 races</td>
+<td>only 5 candidates after 6</td>
+</tr>
+<tr>
+<td>2 eggs, 100 floors</td>
+<td>14</td>
+<td>equalized worst case</td>
+</tr>
+<tr>
+<td>Bridge 1,2,5,10</td>
+<td>17</td>
+<td>slowest cross together</td>
+</tr>
+<tr>
+<td>Burning ropes 45 min</td>
+<td>both ends = half time</td>
+<td>non-uniformity irrelevant</td>
+</tr>
+</tbody></table>
+<h2 id="five-formulas">Five formulas</h2>
+<ul>
+<li>Bayes: P(H|E) = P(E|H)P(H)/P(E) — denominator via LOTP.</li>
+<li>Linearity: E[ΣXᵢ] = ΣE[Xᵢ], dependence be damned.</li>
+<li>Variance: Var(X) = E[X²] − (E[X])²; independent ⇒ variances add.</li>
+<li>Inclusion–exclusion: |A∪B| = |A|+|B|−|A∩B| (alternate signs beyond).</li>
+<li>First-step: E_state = 1 + Σ p·E_next, absorbing states = 0.</li>
+</ul>
+<h2 id="night-before-drills">Night-before drills</h2>
+<ol>
+<li>Derive HH = 6 from the two state equations, out loud, under 2 minutes.</li>
+<li>Disease test at 95% accuracy, 1/500 prevalence — do the 1000-person head count.</li>
+<li>Ruin: ₹10 vs ₹90, fair — win probability and expected length. <em>(0.1; 900.)</em></li>
+<li>State the ants-pass-through trick and the coin-flip-group trick from memory — both are pure invariants.</li>
+<li>Say the Monty Hall &quot;host knows&quot; caveat unprompted.</li>
+</ol>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="resources.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">Books &amp; Resources</span></a><span></span></nav>
+</main>
+<aside class="toc"><div class="toc-title">On this page</div><ul><li class="toc-d1"><a href="#the-answer-table">The answer table</a></li><li class="toc-d1"><a href="#five-formulas">Five formulas</a></li><li class="toc-d1"><a href="#night-before-drills">Night-before drills</a></li></ul></aside>
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

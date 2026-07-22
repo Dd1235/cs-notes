@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>References &amp; const · OOP &amp; C++</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#8A4E5E">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link is-active" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">OOP & C++</a><div class="side-group"><div class="side-label">Lecture Notes</div><ul><li><a class="side-link" href="volatile-macros-inline.html">volatile, Macros &amp; inline</a></li><li><a class="side-link is-active" href="references-and-const.html">References &amp; const</a></li><li><a class="side-link" href="function-overloading.html">Function Overloading</a></li><li><a class="side-link" href="dynamic-memory.html">Dynamic Memory Management</a></li><li><a class="side-link" href="classes-and-objects.html">Classes &amp; Objects</a></li><li><a class="side-link" href="constructors.html">Constructors &amp; Information Hiding</a></li><li><a class="side-link" href="copy-semantics.html">Copy Constructor &amp; Copy Assignment</a></li><li><a class="side-link" href="constness-and-static.html">Const-ness &amp; Static Members</a></li><li><a class="side-link" href="friend-functions.html">Friend Functions &amp; Friend Classes</a></li><li><a class="side-link" href="operator-overloading.html">Operator Overloading</a></li><li><a class="side-link" href="inheritance.html">Inheritance &amp; Overriding</a></li><li><a class="side-link" href="multiple-private-inheritance.html">Multiple &amp; Private Inheritance</a></li><li><a class="side-link" href="virtual-functions.html">Virtual Functions &amp; Dynamic Binding</a></li><li><a class="side-link" href="vtables-and-const-cast.html">Virtual Pointer Tables &amp; const_cast</a></li><li><a class="side-link" href="cpp-casts.html">C++ Casts</a></li><li><a class="side-link" href="exceptions.html">Exceptions &amp; Error Handling</a></li><li><a class="side-link" href="try-catch-and-templates.html">try/catch &amp; Function Templates</a></li><li><a class="side-link" href="class-templates-functors.html">Class Templates &amp; Functors</a></li></ul></div><div class="side-group"><div class="side-label">Extras</div><ul><li><a class="side-link" href="compilation-model.html">The C++ Compilation Model</a></li><li><a class="side-link" href="template-metaprogramming.html">Template Metaprogramming</a></li><li><a class="side-link" href="build-your-own-vector.html">Exercise — Build Your Own Vector</a></li><li><a class="side-link" href="miscellany.html">Miscellany</a></li><li><a class="side-link" href="resources.html">Resources</a></li></ul></div><div class="side-group"><div class="side-label">Topic Notes</div><ul><li><a class="side-link" href="notes-cpp-core.html">C++ Core</a></li><li><a class="side-link" href="notes-cpp-oop.html">C++ OOP</a></li><li><a class="side-link" href="notes-cpp-advanced.html">C++ Advanced</a></li><li><a class="side-link" href="notes-ooad-uml.html">OOAD &amp; UML</a></li><li><a class="side-link" href="notes-design-patterns.html">Design Patterns</a></li><li><a class="side-link" href="notes-testing-sdlc.html">Testing, SDLC &amp; SE</a></li><li><a class="side-link" href="notes-interview-questions.html">Interview Questions</a></li></ul></div><div class="side-group"><div class="side-label">Flashcards</div><ul><li><a class="side-link" href="cards-cpp-core.html">C++ Core Flashcards</a></li><li><a class="side-link" href="cards-oop-lifetime.html">OOP, Lifetime &amp; Memory Flashcards</a></li><li><a class="side-link" href="cards-polymorphism-stl.html">Polymorphism, Casts, Templates &amp; STL Flashcards</a></li><li><a class="side-link" href="cards-ooad-uml.html">OOAD &amp; UML Flashcards</a></li><li><a class="side-link" href="cards-design-patterns.html">Design Patterns Flashcards</a></li><li><a class="side-link" href="cards-testing-sdlc.html">Testing, SDLC &amp; SE Flashcards</a></li><li><a class="side-link" href="cards-interview-drills.html">Interview &amp; Code-Reading Drills</a></li></ul></div><div class="side-group"><div class="side-label">Under the Hood</div><ul><li><a class="side-link" href="memory-layout.html">Memory Layout, Alignment &amp; Padding</a></li></ul></div><div class="side-group"><div class="side-label">Revision</div><ul><li><a class="side-link" href="refresher.html">Rapid Refresher<span class="badge">&#9733;</span></a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">OOP & C++</a></div>
+  <div class="page-head">
+    <div class="page-kicker">OOP & C++</div>
+    <h1 class="page-title">References &amp; const</h1>
+    <div class="page-meta">3 min read &middot; source: <code>oops_cpp/self_notes/1.md</code></div>
+  </div>
+  <article class="prose"><ul>
+<li><p>NULL, its just 0</p>
+</li>
+<li><p>we can&#39;t have <code>int&amp; i</code> because reference must be initialized</p>
+</li>
+<li><p>can&#39;t have <code>int&amp; i = 5</code>, no address to refer to as 5 is a constant. <code>const int&amp; i = 5</code> is ok because we can refer to the constant value 5</p>
+</li>
+<li><p><code>int&amp; i = j + k</code> is not ok because j+k is a temporary value and we can&#39;t refer to it. <code>const int&amp; i = j + k</code> is ok because we can refer to the temporary value as a constant reference</p>
+</li>
+<li><p>j+k produces a temporary object (rvalue / prvalue), its ephemeral. non-const reference emas you have a stable mutable object. const int&amp; works because binding a const reference to a temporary extends the lifetime</p>
+</li>
+<li><p>c uses <em>return by value</em> , we can make in cpp <em>return by reference</em> so we get an alias of the return variable. <code>const int&amp; b = foo()</code> is ok because we can bind a const reference to the temporary returned by foo() and extend its lifetime. <code>int&amp; b = foo()</code> is not ok because we can&#39;t bind a non-const reference to a temporary.</p>
+</li>
+<li><p>Value Parameter: input : call by value</p>
+</li>
+<li><p>reference parameter: in-out : call by reference</p>
+</li>
+<li><p>const reference parameter: input : call by reference</p>
+</li>
+<li><p>return value: output: return by value, return by reference</p>
+</li>
+<li><p>we still have call by value for backward compatibility, and because integer and character may be in register and not in any memory location, so call by value is simple register copy with one cycle</p>
+</li>
+<li><p>we may get deferencing null pointer error but not deferencing null reference because that situation won&#39;t arise</p>
+</li>
+<li><p>pointer can point to null.</p>
+</li>
+<li><p>pointers allow user to operate on the address, diff pointers, increment etc. references don&#39;t. all operations are interpreted for the referent.</p>
+</li>
+<li><p>array of pointers can be defined, but array of references not allowed</p>
+</li>
+<li><p>a reference must bind immediately. But arrays require default construction possibility. Element assignment rearrangement semantics.</p>
+</li>
+<li><p>a reference is an alias in the languge semantic model.</p>
+</li>
+<li><p>like having a constant pointer without the syntactic overload of a pointer. Your referent cannot be changed.</p>
+</li>
+</ul>
+<pre class="hljs"><code><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">foo</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">int</span> x)</span></span></code></pre>
+<p>this doesn&#39;t affect caller but still local copy of x can&#39;t be modified.</p>
+<pre class="hljs"><code><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">identity</span><span class="hljs-params">(<span class="hljs-type">int</span> a = <span class="hljs-number">10</span>)</span></span>{
+    <span class="hljs-keyword">return</span> (a);
+}</code></pre>
+<p>can call identity without parameter with default value. Specify values from left, so the right parameters will get defaulted valued.</p>
+<p>Default parameters should be supplied only in a header file and not in the definition of a function.</p>
+<p>Default arguments are handled at call site, not inside the function. So caller must know the default value.</p>
+<p>Default arguments cannot be redefined.</p>
+<ul>
+<li><p>default parameter case is a special case of function overloading.</p>
+</li>
+<li><p>semantic dichotomy in c</p>
+</li>
+<li><p>array variable in the context of a call, compiler implements a call by reference</p>
+</li>
+<li><p>if you pass a struct or union it will be call by value</p>
+</li>
+</ul>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="volatile-macros-inline.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">volatile, Macros &amp; inline</span></a><a class="pn-card pn-next" href="function-overloading.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">Function Overloading</span></a></nav>
+</main>
+
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

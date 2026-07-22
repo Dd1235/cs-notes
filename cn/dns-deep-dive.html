@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DNS — Records, Resolution, Caching · Computer Networks</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#3E6B63">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link is-active" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">Computer Networks</a><div class="side-group"><div class="side-label">Notes</div><ul><li><a class="side-link" href="url-to-page.html">What Happens When You Type a URL</a></li><li><a class="side-link" href="tcp-vs-udp.html">TCP vs UDP — The Deep Dive</a></li><li><a class="side-link" href="sockets-and-zero-copy.html">Sockets, Kernel Structures &amp; Zero-Copy</a></li><li><a class="side-link" href="io-multiplexing.html">I/O Multiplexing — select, poll, epoll</a></li><li><a class="side-link" href="flow-vs-congestion.html">Flow Control vs Congestion Control</a></li></ul></div><div class="side-group"><div class="side-label">Addressing & Routing</div><ul><li><a class="side-link" href="ip-subnetting.html">IP Addressing &amp; Subnetting</a></li><li><a class="side-link" href="l2-switching.html">Layer 2 — Switching, VLANs, STP</a></li><li><a class="side-link" href="routing.html">Routing — Longest Prefix, OSPF, BGP</a></li></ul></div><div class="side-group"><div class="side-label">Web Protocols</div><ul><li><a class="side-link" href="tls.html">TLS — Handshake &amp; Certificates</a></li><li><a class="side-link is-active" href="dns-deep-dive.html">DNS — Records, Resolution, Caching</a></li><li><a class="side-link" href="http-evolution.html">HTTP/1.1 → 2 → 3</a></li></ul></div><div class="side-group"><div class="side-label">Revision</div><ul><li><a class="side-link" href="refresher.html">Rapid Refresher<span class="badge">&#9733;</span></a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">Computer Networks</a></div>
+  <div class="page-head">
+    <div class="page-kicker">Computer Networks</div>
+    <h1 class="page-title">DNS — Records, Resolution, Caching</h1>
+    <div class="page-meta">2 min read &middot; source: <code>cn/dns_deep.md</code></div>
+  </div>
+  <article class="prose"><blockquote>
+<p>The <a href="url-to-page.html">URL journey</a> hand-waved &quot;DNS resolves the name&quot;. This page is the unpacked version — record types, who asks whom, and why it&#39;s fast.</p>
+</blockquote>
+<h3 id="record-types-the-ones-interviews-use">Record types (the ones interviews use)</h3>
+<table>
+<thead>
+<tr>
+<th>Record</th>
+<th>Maps</th>
+<th>Note</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>A / AAAA</strong></td>
+<td>name → IPv4 / IPv6</td>
+<td>the workhorses</td>
+</tr>
+<tr>
+<td><strong>CNAME</strong></td>
+<td>name → another name</td>
+<td>alias; can&#39;t coexist with other records at the same name (why apex domains can&#39;t CNAME)</td>
+</tr>
+<tr>
+<td><strong>NS</strong></td>
+<td>zone → authoritative servers</td>
+<td>the delegation glue</td>
+</tr>
+<tr>
+<td><strong>MX</strong></td>
+<td>domain → mail servers + priority</td>
+<td>email routing</td>
+</tr>
+<tr>
+<td><strong>TXT</strong></td>
+<td>name → arbitrary text</td>
+<td>SPF/DKIM, domain-ownership proofs</td>
+</tr>
+<tr>
+<td><strong>SOA</strong></td>
+<td>zone metadata</td>
+<td>serial + default TTLs</td>
+</tr>
+</tbody></table>
+<h3 id="recursive-vs-iterative-who-does-the-walking">Recursive vs iterative (who does the walking)</h3>
+<p>Your machine (<strong>stub resolver</strong>) asks one <strong>recursive resolver</strong> (router/ISP/1.1.1.1) and just waits. The recursive resolver walks the tree <strong>iteratively</strong>:</p>
+<p>root server → &quot;ask the <code>.com</code> TLD servers&quot; → TLD → &quot;ask ns1.google.com (NS + glue A record)&quot; → <strong>authoritative</strong> server → the actual A record.</p>
+<p><strong>Analogy:</strong> you ask a concierge (recursive) for an address; the concierge phones city hall, the district office, then the building manager (iterative). You made one call; the concierge made three.</p>
+<h3 id="caching-why-3-hops-dont-happen-per-click">Caching — why 3 hops don&#39;t happen per click</h3>
+<p>Every record carries a <strong>TTL</strong>; every layer caches until expiry: browser → OS → recursive resolver. Ninety-something percent of lookups die in a cache. Low TTL = fast failover, more load; high TTL = the reverse — and &quot;why is my DNS change not visible?&quot; = old TTL still counting down somewhere.</p>
+<p>Negative caching exists too (NXDOMAIN is cached, per SOA), which is why typos stay broken for minutes.</p>
+<h3 id="worth-one-sentence-each">Worth one sentence each</h3>
+<ul>
+<li><strong>Transport</strong>: UDP 53 normally; <strong>TCP</strong> for zone transfers and responses &gt;512B/truncated; DoT/DoH encrypt the query path (privacy note in <a href="url-to-page.html">URL journey</a>).</li>
+<li><strong>Anycast</strong>: the 13 root &quot;servers&quot; are hundreds of instances sharing IPs — BGP routes you to the nearest (<a href="routing.html">routing</a> in action).</li>
+<li><strong>DNS-based load balancing</strong>: return different A records per query/geo — cheap, TTL-granularity failover.</li>
+<li>Attacks name-drop: cache poisoning (why source-port randomization + DNSSEC exist), DNS amplification DDoS.</li>
+</ul>
+<h3 id="drill">Drill</h3>
+<ol>
+<li><code>dig +trace example.com</code> — narrate each response before running it, then run it.</li>
+<li>Why can&#39;t <code>example.com</code> (apex) be a CNAME to a CDN, and what do providers do instead? <em>(ALIAS/ANAME flattening at the authoritative server.)</em></li>
+<li>You cut TTL from 3600 to 60 the day before a migration — why <em>the day before</em>? <em>(The old 3600 must expire from caches first.)</em></li>
+</ol>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="tls.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">TLS — Handshake &amp; Certificates</span></a><a class="pn-card pn-next" href="http-evolution.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">HTTP/1.1 → 2 → 3</span></a></nav>
+</main>
+<aside class="toc"><div class="toc-title">On this page</div><ul><li class="toc-d2"><a href="#record-types-the-ones-interviews-use">Record types (the ones interviews use)</a></li><li class="toc-d2"><a href="#recursive-vs-iterative-who-does-the-walking">Recursive vs iterative (who does the walking)</a></li><li class="toc-d2"><a href="#caching-why-3-hops-dont-happen-per-click">Caching — why 3 hops don&#39;t happen per click</a></li><li class="toc-d2"><a href="#worth-one-sentence-each">Worth one sentence each</a></li><li class="toc-d2"><a href="#drill">Drill</a></li></ul></aside>
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

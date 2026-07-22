@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rapid Refresher · OOP &amp; C++</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#8A4E5E">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link is-active" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">OOP & C++</a><div class="side-group"><div class="side-label">Lecture Notes</div><ul><li><a class="side-link" href="volatile-macros-inline.html">volatile, Macros &amp; inline</a></li><li><a class="side-link" href="references-and-const.html">References &amp; const</a></li><li><a class="side-link" href="function-overloading.html">Function Overloading</a></li><li><a class="side-link" href="dynamic-memory.html">Dynamic Memory Management</a></li><li><a class="side-link" href="classes-and-objects.html">Classes &amp; Objects</a></li><li><a class="side-link" href="constructors.html">Constructors &amp; Information Hiding</a></li><li><a class="side-link" href="copy-semantics.html">Copy Constructor &amp; Copy Assignment</a></li><li><a class="side-link" href="constness-and-static.html">Const-ness &amp; Static Members</a></li><li><a class="side-link" href="friend-functions.html">Friend Functions &amp; Friend Classes</a></li><li><a class="side-link" href="operator-overloading.html">Operator Overloading</a></li><li><a class="side-link" href="inheritance.html">Inheritance &amp; Overriding</a></li><li><a class="side-link" href="multiple-private-inheritance.html">Multiple &amp; Private Inheritance</a></li><li><a class="side-link" href="virtual-functions.html">Virtual Functions &amp; Dynamic Binding</a></li><li><a class="side-link" href="vtables-and-const-cast.html">Virtual Pointer Tables &amp; const_cast</a></li><li><a class="side-link" href="cpp-casts.html">C++ Casts</a></li><li><a class="side-link" href="exceptions.html">Exceptions &amp; Error Handling</a></li><li><a class="side-link" href="try-catch-and-templates.html">try/catch &amp; Function Templates</a></li><li><a class="side-link" href="class-templates-functors.html">Class Templates &amp; Functors</a></li></ul></div><div class="side-group"><div class="side-label">Extras</div><ul><li><a class="side-link" href="compilation-model.html">The C++ Compilation Model</a></li><li><a class="side-link" href="template-metaprogramming.html">Template Metaprogramming</a></li><li><a class="side-link" href="build-your-own-vector.html">Exercise — Build Your Own Vector</a></li><li><a class="side-link" href="miscellany.html">Miscellany</a></li><li><a class="side-link" href="resources.html">Resources</a></li></ul></div><div class="side-group"><div class="side-label">Topic Notes</div><ul><li><a class="side-link" href="notes-cpp-core.html">C++ Core</a></li><li><a class="side-link" href="notes-cpp-oop.html">C++ OOP</a></li><li><a class="side-link" href="notes-cpp-advanced.html">C++ Advanced</a></li><li><a class="side-link" href="notes-ooad-uml.html">OOAD &amp; UML</a></li><li><a class="side-link" href="notes-design-patterns.html">Design Patterns</a></li><li><a class="side-link" href="notes-testing-sdlc.html">Testing, SDLC &amp; SE</a></li><li><a class="side-link" href="notes-interview-questions.html">Interview Questions</a></li></ul></div><div class="side-group"><div class="side-label">Flashcards</div><ul><li><a class="side-link" href="cards-cpp-core.html">C++ Core Flashcards</a></li><li><a class="side-link" href="cards-oop-lifetime.html">OOP, Lifetime &amp; Memory Flashcards</a></li><li><a class="side-link" href="cards-polymorphism-stl.html">Polymorphism, Casts, Templates &amp; STL Flashcards</a></li><li><a class="side-link" href="cards-ooad-uml.html">OOAD &amp; UML Flashcards</a></li><li><a class="side-link" href="cards-design-patterns.html">Design Patterns Flashcards</a></li><li><a class="side-link" href="cards-testing-sdlc.html">Testing, SDLC &amp; SE Flashcards</a></li><li><a class="side-link" href="cards-interview-drills.html">Interview &amp; Code-Reading Drills</a></li></ul></div><div class="side-group"><div class="side-label">Under the Hood</div><ul><li><a class="side-link" href="memory-layout.html">Memory Layout, Alignment &amp; Padding</a></li></ul></div><div class="side-group"><div class="side-label">Revision</div><ul><li><a class="side-link is-active" href="refresher.html">Rapid Refresher<span class="badge">&#9733;</span></a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">OOP & C++</a></div>
+  <div class="page-head">
+    <div class="page-kicker">OOP & C++</div>
+    <h1 class="page-title">Rapid Refresher</h1>
+    <div class="page-meta">3 min read &middot; source: <code>website/content/oops_refresher.md</code></div>
+  </div>
+  <article class="prose"><blockquote>
+<p>A last-pass revision sheet distilled from the OOP/C++ notes and flashcards. The lecture notes carry the detail; this is the skeleton to hang it on.</p>
+</blockquote>
+<h2 id="the-four-pillars-said-like-an-engineer">The four pillars, said like an engineer</h2>
+<ul>
+<li><strong>Encapsulation</strong> — state + behavior together; invariants guarded behind an interface.</li>
+<li><strong>Abstraction</strong> — expose <em>what</em>, hide <em>how</em> (information hiding).</li>
+<li><strong>Inheritance</strong> — is-a specialization; reuse of interface, not just code.</li>
+<li><strong>Polymorphism</strong> — one call site, many behaviors: static (overloading/templates, compile time) vs dynamic (virtual functions, runtime).</li>
+</ul>
+<h2 id="references-value-categories">References &amp; value categories</h2>
+<ul>
+<li>A reference must be initialized; <code>int&amp; r = 5;</code> is illegal — no object to alias.</li>
+<li><code>const int&amp; r = j + k;</code> is legal: binding a <strong>const</strong> reference to a temporary <strong>extends its lifetime</strong>.</li>
+<li><code>int&amp;&amp;</code> binds to rvalues — the hook that enables move semantics.</li>
+</ul>
+<h2 id="object-lifetime-cheatsheet">Object lifetime cheatsheet</h2>
+<ul>
+<li>Construction order: bases → members (in <strong>declaration order</strong>, not initializer-list order) → constructor body. Destruction is exact reverse.</li>
+<li><strong>Copy constructor</strong> runs on initialization; <strong>copy assignment</strong> on assignment to an existing object.</li>
+<li><strong>Rule of 3/5/0</strong>: manage a raw resource → define destructor + copy ctor + copy assign (+ move pair); better, own nothing raw and define none.</li>
+<li><code>delete</code> vs <code>delete[]</code> must match <code>new</code> vs <code>new[]</code>.</li>
+</ul>
+<h2 id="virtual-dispatch-mechanically">Virtual dispatch, mechanically</h2>
+<ul>
+<li>Each polymorphic class has a <strong>vtable</strong>; each object carries a <strong>vptr</strong> set during construction.</li>
+<li><code>obj-&gt;f()</code> through a base pointer: follow vptr → vtable slot → call. One extra indirection.</li>
+<li><strong>Static type</strong> is what the compiler sees; <strong>dynamic type</strong> is what the object is.</li>
+<li>Destructor of a base class must be <strong>virtual</strong> if you delete through a base pointer.</li>
+<li>Virtual calls inside constructors don&#39;t dispatch to the derived class — the derived part doesn&#39;t exist yet.</li>
+</ul>
+<h2 id="the-four-casts">The four casts</h2>
+<table>
+<thead>
+<tr>
+<th>Cast</th>
+<th>Use</th>
+<th>Checked</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>static_cast</code></td>
+<td>implicit-style conversions, up/down without check</td>
+<td>compile time</td>
+</tr>
+<tr>
+<td><code>dynamic_cast</code></td>
+<td>safe downcast in polymorphic hierarchy</td>
+<td>runtime (nullptr / throws)</td>
+</tr>
+<tr>
+<td><code>const_cast</code></td>
+<td>add/remove const — only legal if object isn&#39;t originally const</td>
+<td>no</td>
+</tr>
+<tr>
+<td><code>reinterpret_cast</code></td>
+<td>bit reinterpretation; last resort</td>
+<td>no</td>
+</tr>
+</tbody></table>
+<h2 id="exceptions">Exceptions</h2>
+<ul>
+<li>Throw by value, <strong>catch by (const) reference</strong>.</li>
+<li>Stack unwinding destroys locals — this is why <strong>RAII</strong> works: resources release themselves on any exit path.</li>
+<li>Never let an exception escape a destructor.</li>
+</ul>
+<h2 id="templates-functors">Templates &amp; functors</h2>
+<ul>
+<li>Function/class templates = compile-time polymorphism; each instantiation is a separate type.</li>
+<li><strong>Functor</strong> = object with <code>operator()</code> — inlinable state-carrying callable; lambdas are compiler-written functors.</li>
+<li>Template metaprogramming: the compiler as interpreter — types computed during compilation.</li>
+</ul>
+<h2 id="design-patterns-most-asked">Design patterns most asked</h2>
+<ul>
+<li><strong>Singleton</strong> — one instance, global access (thread-safe: Meyers&#39; static local).</li>
+<li><strong>Factory / Abstract Factory</strong> — construction behind an interface.</li>
+<li><strong>Observer</strong> — subject notifies subscribers (pub/sub).</li>
+<li><strong>Strategy</strong> — swap algorithm at runtime via an interface.</li>
+<li><strong>Adapter / Decorator</strong> — reshape vs enrich an interface.</li>
+<li>Principle behind most: <strong>program to an interface; prefer composition over inheritance</strong> (SOLID).</li>
+</ul>
+<h2 id="drill-questions">Drill questions</h2>
+<ol>
+<li>Why does a constructor have no return type — argue via <code>this</code>.</li>
+<li><code>f()</code> is non-virtual, <code>g()</code> is virtual; base pointer to derived object calls each — what runs and why?</li>
+<li>Why is copying a vector of raw pointers with the default copy ctor a bug? Name the fix (deep copy / rule of 3 / smart pointers).</li>
+<li>Why can&#39;t <code>static_cast</code> be used to safely downcast? When would you accept it anyway?</li>
+<li>What is object slicing and how do references/pointers avoid it?</li>
+<li>Sketch the memory of an object with one virtual function and one <code>int</code>.</li>
+</ol>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="memory-layout.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">Memory Layout, Alignment &amp; Padding</span></a><span></span></nav>
+</main>
+<aside class="toc"><div class="toc-title">On this page</div><ul><li class="toc-d1"><a href="#the-four-pillars-said-like-an-engineer">The four pillars, said like an engineer</a></li><li class="toc-d1"><a href="#references-value-categories">References &amp; value categories</a></li><li class="toc-d1"><a href="#object-lifetime-cheatsheet">Object lifetime cheatsheet</a></li><li class="toc-d1"><a href="#virtual-dispatch-mechanically">Virtual dispatch, mechanically</a></li><li class="toc-d1"><a href="#the-four-casts">The four casts</a></li><li class="toc-d1"><a href="#exceptions">Exceptions</a></li><li class="toc-d1"><a href="#templates-functors">Templates &amp; functors</a></li><li class="toc-d1"><a href="#design-patterns-most-asked">Design patterns most asked</a></li><li class="toc-d1"><a href="#drill-questions">Drill questions</a></li></ul></aside>
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

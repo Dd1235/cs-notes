@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Logic Puzzles — Ropes, Bridges, Prisoners · Probability &amp; Puzzles</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#4A648C">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link is-active" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">Probability & Puzzles</a><div class="side-group"><div class="side-label">Probability</div><ul><li><a class="side-link" href="probability-toolkit.html">Conditional Probability &amp; Bayes</a></li><li><a class="side-link" href="expectation-and-indicators.html">Expectation, Linearity &amp; Indicators</a></li><li><a class="side-link" href="coins-dice-waiting-times.html">Coins, Dice &amp; Waiting Times</a></li><li><a class="side-link" href="classic-paradoxes.html">Birthday, Monty Hall &amp; Friends</a></li><li><a class="side-link" href="random-walks-gamblers-ruin.html">Random Walks &amp; Gambler's Ruin</a></li><li><a class="side-link" href="counting-toolkit.html">Counting — Stars, Bars &amp; Derangements</a></li><li><a class="side-link" href="markov-chains-mini.html">Markov Chains, Minimally</a></li></ul></div><div class="side-group"><div class="side-label">Puzzles</div><ul><li><a class="side-link is-active" href="logic-puzzles.html">Logic Puzzles — Ropes, Bridges, Prisoners</a></li><li><a class="side-link" href="brainteaser-bank.html">Brainteaser Bank</a></li><li><a class="side-link" href="resources.html">Books &amp; Resources</a></li></ul></div><div class="side-group"><div class="side-label">Revision</div><ul><li><a class="side-link" href="refresher.html">Rapid Refresher<span class="badge">&#9733;</span></a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">Probability & Puzzles</a></div>
+  <div class="page-head">
+    <div class="page-kicker">Probability & Puzzles</div>
+    <h1 class="page-title">Logic Puzzles — Ropes, Bridges, Prisoners</h1>
+    <div class="page-meta">2 min read &middot; source: <code>quant/logic_puzzles.md</code></div>
+  </div>
+  <article class="prose"><blockquote>
+<p>Interviewers don&#39;t want the memorized answer — they want to watch you find the <em>lever</em>. Each puzzle below names its lever explicitly.</p>
+</blockquote>
+<h3 id="burning-ropes">Burning ropes</h3>
+<p><em>Two ropes each burn in 60 min, but non-uniformly. Measure 45 minutes.</em></p>
+<p><strong>Lever: light from both ends → half the time, regardless of non-uniformity.</strong><br>Light rope A at both ends and rope B at one end. A finishes at 30 min; at that instant light B&#39;s other end — B&#39;s remaining 30 min halves to 15. Total 45.</p>
+<h3 id="bridge-and-torch">Bridge and torch</h3>
+<p><em>Four people cross in 1, 2, 5, 10 min; bridge holds two; one torch; pair walks at the slower speed. Minimum total?</em></p>
+<p><strong>Lever: the two slowest must cross together, and fast people ferry the torch.</strong><br>1&amp;2 cross (2) → 1 returns (1) → 5&amp;10 cross (10) → 2 returns (2) → 1&amp;2 cross (2) = <strong>17</strong>, not the greedy 19. Greedy (fastest escorts everyone) is the trap.</p>
+<h3 id="100-prisoners-and-a-light-bulb">100 prisoners and a light bulb</h3>
+<p><em>Prisoners visited in arbitrary order, one at a time, one light switch, no other communication. Someone must eventually declare &quot;all 100 have visited&quot; — safely.</em></p>
+<p><strong>Lever: break symmetry — elect one counter.</strong><br>Only the counter turns the light <strong>off</strong> (counting +1 each time he finds it on); every other prisoner turns it <strong>on</strong> exactly once in their life (only if it&#39;s off and they&#39;ve never done it). When the counter reaches 99, declare. Slow but certain.</p>
+<h3 id="ants-on-a-pole">Ants on a pole</h3>
+<p><em>n ants on a 1 m pole walk at 1 m/min in fixed directions; on collision both reverse. Latest time until the pole is empty?</em></p>
+<p><strong>Lever: two ants bouncing is equivalent to two ants passing through each other</strong> (identities swap, positions don&#39;t care). So the answer is just the worst single-ant walk: <strong>1 minute</strong>. Collisions were a decoy.</p>
+<h3 id="two-eggs-100-floors">Two eggs, 100 floors</h3>
+<p><em>Find the highest safe floor with at most 2 eggs, minimizing worst-case drops.</em></p>
+<p><strong>Lever: equalize the worst case across the first egg&#39;s outcomes</strong> — make each successive first-drop gap one smaller: 14, 27, 39, 50, … → <strong>14 drops</strong> worst case (n(n+1)/2 ≥ 100 → n = 14). The follow-up &quot;k eggs&quot; is the DP they actually want to discuss.</p>
+<h3 id="how-to-behave-when-stuck-this-is-graded-too">How to behave when stuck (this is graded too)</h3>
+<ol>
+<li>Restate constraints out loud; 2. solve a tiny version (2 prisoners, 2 floors); 3. hunt for an invariant or symmetry; 4. name the trade-off you&#39;re optimizing. Silence is the only wrong move.</li>
+</ol>
+<p><em>Seen at: <a href="../companies/de-shaw.html">D. E. Shaw</a>, <a href="../companies/citadel.html">Citadel</a>, and sporadically at <a href="../companies/rubrik.html">Rubrik</a> as &quot;collaboration&quot; probes.</em></p>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="markov-chains-mini.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">Markov Chains, Minimally</span></a><a class="pn-card pn-next" href="brainteaser-bank.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">Brainteaser Bank</span></a></nav>
+</main>
+<aside class="toc"><div class="toc-title">On this page</div><ul><li class="toc-d2"><a href="#burning-ropes">Burning ropes</a></li><li class="toc-d2"><a href="#bridge-and-torch">Bridge and torch</a></li><li class="toc-d2"><a href="#100-prisoners-and-a-light-bulb">100 prisoners and a light bulb</a></li><li class="toc-d2"><a href="#ants-on-a-pole">Ants on a pole</a></li><li class="toc-d2"><a href="#two-eggs-100-floors">Two eggs, 100 floors</a></li><li class="toc-d2"><a href="#how-to-behave-when-stuck-this-is-graded-too">How to behave when stuck (this is graded too)</a></li></ul></aside>
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

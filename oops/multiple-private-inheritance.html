@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Multiple &amp; Private Inheritance · OOP &amp; C++</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#8A4E5E">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link is-active" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">OOP & C++</a><div class="side-group"><div class="side-label">Lecture Notes</div><ul><li><a class="side-link" href="volatile-macros-inline.html">volatile, Macros &amp; inline</a></li><li><a class="side-link" href="references-and-const.html">References &amp; const</a></li><li><a class="side-link" href="function-overloading.html">Function Overloading</a></li><li><a class="side-link" href="dynamic-memory.html">Dynamic Memory Management</a></li><li><a class="side-link" href="classes-and-objects.html">Classes &amp; Objects</a></li><li><a class="side-link" href="constructors.html">Constructors &amp; Information Hiding</a></li><li><a class="side-link" href="copy-semantics.html">Copy Constructor &amp; Copy Assignment</a></li><li><a class="side-link" href="constness-and-static.html">Const-ness &amp; Static Members</a></li><li><a class="side-link" href="friend-functions.html">Friend Functions &amp; Friend Classes</a></li><li><a class="side-link" href="operator-overloading.html">Operator Overloading</a></li><li><a class="side-link" href="inheritance.html">Inheritance &amp; Overriding</a></li><li><a class="side-link is-active" href="multiple-private-inheritance.html">Multiple &amp; Private Inheritance</a></li><li><a class="side-link" href="virtual-functions.html">Virtual Functions &amp; Dynamic Binding</a></li><li><a class="side-link" href="vtables-and-const-cast.html">Virtual Pointer Tables &amp; const_cast</a></li><li><a class="side-link" href="cpp-casts.html">C++ Casts</a></li><li><a class="side-link" href="exceptions.html">Exceptions &amp; Error Handling</a></li><li><a class="side-link" href="try-catch-and-templates.html">try/catch &amp; Function Templates</a></li><li><a class="side-link" href="class-templates-functors.html">Class Templates &amp; Functors</a></li></ul></div><div class="side-group"><div class="side-label">Extras</div><ul><li><a class="side-link" href="compilation-model.html">The C++ Compilation Model</a></li><li><a class="side-link" href="template-metaprogramming.html">Template Metaprogramming</a></li><li><a class="side-link" href="build-your-own-vector.html">Exercise — Build Your Own Vector</a></li><li><a class="side-link" href="miscellany.html">Miscellany</a></li><li><a class="side-link" href="resources.html">Resources</a></li></ul></div><div class="side-group"><div class="side-label">Topic Notes</div><ul><li><a class="side-link" href="notes-cpp-core.html">C++ Core</a></li><li><a class="side-link" href="notes-cpp-oop.html">C++ OOP</a></li><li><a class="side-link" href="notes-cpp-advanced.html">C++ Advanced</a></li><li><a class="side-link" href="notes-ooad-uml.html">OOAD &amp; UML</a></li><li><a class="side-link" href="notes-design-patterns.html">Design Patterns</a></li><li><a class="side-link" href="notes-testing-sdlc.html">Testing, SDLC &amp; SE</a></li><li><a class="side-link" href="notes-interview-questions.html">Interview Questions</a></li></ul></div><div class="side-group"><div class="side-label">Flashcards</div><ul><li><a class="side-link" href="cards-cpp-core.html">C++ Core Flashcards</a></li><li><a class="side-link" href="cards-oop-lifetime.html">OOP, Lifetime &amp; Memory Flashcards</a></li><li><a class="side-link" href="cards-polymorphism-stl.html">Polymorphism, Casts, Templates &amp; STL Flashcards</a></li><li><a class="side-link" href="cards-ooad-uml.html">OOAD &amp; UML Flashcards</a></li><li><a class="side-link" href="cards-design-patterns.html">Design Patterns Flashcards</a></li><li><a class="side-link" href="cards-testing-sdlc.html">Testing, SDLC &amp; SE Flashcards</a></li><li><a class="side-link" href="cards-interview-drills.html">Interview &amp; Code-Reading Drills</a></li></ul></div><div class="side-group"><div class="side-label">Under the Hood</div><ul><li><a class="side-link" href="memory-layout.html">Memory Layout, Alignment &amp; Padding</a></li></ul></div><div class="side-group"><div class="side-label">Revision</div><ul><li><a class="side-link" href="refresher.html">Rapid Refresher<span class="badge">&#9733;</span></a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">OOP & C++</a></div>
+  <div class="page-head">
+    <div class="page-kicker">OOP & C++</div>
+    <h1 class="page-title">Multiple &amp; Private Inheritance</h1>
+    <div class="page-meta">2 min read &middot; source: <code>oops_cpp/self_notes/13.md</code></div>
+  </div>
+  <article class="prose"><ul>
+<li><p>multiple inheritance: one class being specialized from two.</p>
+</li>
+<li><p>private inheritance means nothing during software design, only during software implementation</p>
+</li>
+<li><p>class Derived : private Base;</p>
+</li>
+<li><p>if using private or protected inhertance, it is NOT a &quot;specialization / generalization &quot; case!</p>
+</li>
+<li><p>has an &quot;is implemented in terms of&quot; semantics</p>
+</li>
+<li><p>in public inheritance, derived class object can be converted intoa. base class object by compiler</p>
+</li>
+<li><p>in private inheritance, derived class object cannot be converted into a base class object by compiler.</p>
+</li>
+</ul>
+<pre class="hljs"><code><span class="hljs-keyword">class</span> <span class="hljs-title class_">Person</span> {..}
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">Student</span> : <span class="hljs-keyword">private</span> Person {..}
+<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">eat</span><span class="hljs-params">(<span class="hljs-type">const</span> Person&amp; p)</span> </span>{..}
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+    Student s;
+    <span class="hljs-built_in">eat</span>(s); <span class="hljs-comment">// error: cannot convert from Student to Person</span>
+}</code></pre>
+<p>Protected inheritance is similar to private inheritance, except that the public members of the base class become protected members of the derived class, and the protected members of the base class remain protected in the derived class. This means that the derived class can access the public and protected members of the base class, but they are not accessible to code outside the derived class.</p>
+<p>eluding concept without much practical use.</p>
+<p>Car &quot;has a&quot; Engine<br>this is composition or private inheritance?</p>
+<p>if private inheritance, everything becomes private. if external to car wants to use engines start method<br>=&gt; <code>using Engine::start;</code></p>
+<p>Private inheritance is inferior to composition, makes sense when a derived class needs access to protected base class members or needs to redefine inherited virtual function.</p>
+<ul>
+<li><p>casting is performed when a value of one type is used in place of some other type.</p>
+</li>
+<li><p><code>double result = d / i;</code> // i is cast to double and used, mixed mode arithmetic, implicit conversion</p>
+</li>
+<li><p>implit conversion will give warning</p>
+</li>
+<li><p>if you explicitly cast, there won&#39;t be warning</p>
+</li>
+<li><p>with two unrelated classes it won&#39;t work.</p>
+</li>
+<li><p>can explicty cast pointer of one type to pointer of another type, but it is not recommended.</p>
+</li>
+</ul>
+<pre class="hljs"><code><span class="hljs-keyword">class</span> <span class="hljs-title class_">A</span> {<span class="hljs-type">int</span> i};
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">B</span> {<span class="hljs-type">double</span> d};
+A a;
+B b;
+
+A *p = &amp;a;
+B *q = &amp;b;
+
+a = b; <span class="hljs-comment">// error, right hand operand of type main::B</span>
+a = (A)b; <span class="hljs-comment">// error, cannot convert</span>
+p = q; <span class="hljs-comment">// error</span>
+p = (A*)&amp;b; <span class="hljs-comment">// forced - okay</span></code></pre>
+<p>Upcasting implictly works.<br>Downcast gives error.</p>
+<p>if <code>void*</code> is used, it can point to any type. But we lose the type. Now upcasting also won&#39;t work.</p>
+<h3 id="static-and-dynamic-binding">Static and Dynamic Binding</h3>
+<ul>
+<li>virtual makes binding dynamic</li>
+</ul>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="inheritance.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">Inheritance &amp; Overriding</span></a><a class="pn-card pn-next" href="virtual-functions.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">Virtual Functions &amp; Dynamic Binding</span></a></nav>
+</main>
+
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

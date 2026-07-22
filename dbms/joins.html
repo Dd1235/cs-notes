@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Joins — Semantics &amp; Algorithms · Database Systems</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#B05730">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link is-active" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">Database Systems</a><div class="side-group"><div class="side-label">Foundations</div><ul><li><a class="side-link" href="acid.html">ACID &amp; Isolation Levels</a></li><li><a class="side-link" href="normalization.html">Normalization</a></li><li><a class="side-link" href="sql.html">SQL Essentials</a></li><li><a class="side-link" href="drop-delete-truncate.html">DROP vs DELETE vs TRUNCATE</a></li></ul></div><div class="side-group"><div class="side-label">Indexing & Storage</div><ul><li><a class="side-link" href="b-plus-trees.html">B+ Trees</a></li><li><a class="side-link" href="unique-indexes.html">Unique Indexes</a></li><li><a class="side-link" href="primary-vs-secondary-index.html">Primary vs Secondary Indexes</a></li><li><a class="side-link" href="write-ahead-logging.html">Write-Ahead Logging</a></li></ul></div><div class="side-group"><div class="side-label">Concurrency</div><ul><li><a class="side-link" href="concurrency-control.html">Concurrency Control Basics</a></li><li><a class="side-link" href="mvcc.html">MVCC in Depth</a></li><li><a class="side-link" href="mvcc-cmu.html">MVCC — CMU Lecture Notes</a></li></ul></div><div class="side-group"><div class="side-label">Scale & Patterns</div><ul><li><a class="side-link" href="sharding.html">Sharding vs Partitioning</a></li><li><a class="side-link" href="n-plus-one-problem.html">The N+1 Query Problem</a></li><li><a class="side-link" href="graph-databases.html">Graph Databases</a></li></ul></div><div class="side-group"><div class="side-label">SQL in Practice</div><ul><li><a class="side-link is-active" href="joins.html">Joins — Semantics &amp; Algorithms</a></li><li><a class="side-link" href="window-functions.html">Window Functions</a></li></ul></div><div class="side-group"><div class="side-label">Distributed Data</div><ul><li><a class="side-link" href="cap-replication.html">CAP &amp; Replication</a></li></ul></div><div class="side-group"><div class="side-label">Revision</div><ul><li><a class="side-link" href="refresher.html">Rapid Refresher<span class="badge">&#9733;</span></a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">Database Systems</a></div>
+  <div class="page-head">
+    <div class="page-kicker">Database Systems</div>
+    <h1 class="page-title">Joins — Semantics &amp; Algorithms</h1>
+    <div class="page-meta">2 min read &middot; source: <code>dbms/joins.md</code></div>
+  </div>
+  <article class="prose"><blockquote>
+<p>Two separate interview questions hide under &quot;explain joins&quot;: what rows come back (semantics), and how the engine computes them (algorithms). Answer whichever was asked.</p>
+</blockquote>
+<h3 id="semantics-what-comes-back">Semantics — what comes back</h3>
+<p>Think &quot;keep or drop the non-matches&quot;, not Venn diagrams:</p>
+<ul>
+<li><strong>INNER</strong> — only rows that matched. Non-matches from both sides dropped.</li>
+<li><strong>LEFT</strong> — every left row survives; unmatched ones carry NULLs for the right columns. (RIGHT is LEFT with the tables swapped; FULL keeps both sides&#39; orphans.)</li>
+<li><strong>CROSS</strong> — every pair, no condition: n×m rows. Usually a bug wearing a feature&#39;s clothes.</li>
+<li><strong>Anti-join idiom</strong>: <code>LEFT JOIN … WHERE right.id IS NULL</code> = &quot;left rows with <strong>no</strong> match&quot; — the interview favourite (customers who never ordered).</li>
+</ul>
+<p>The trap they always set: a <code>WHERE right.col = &#39;x&#39;</code> on a LEFT JOIN silently turns it INNER (NULLs fail the filter) — move the condition into <code>ON</code> to keep left rows.</p>
+<h3 id="algorithms-how-its-computed">Algorithms — how it&#39;s computed</h3>
+<ul>
+<li><strong>Nested loop</strong> — for each outer row, scan/probe inner. O(n·m) naive; <strong>fine when the inner probe is an index lookup</strong> (n log m). The default for small-driving-table joins.</li>
+<li><strong>Hash join</strong> — build a hash table on the smaller side, probe with the bigger. ~O(n+m), equality joins only, wants memory (spills to disk in &quot;grace&quot; partitions). The workhorse for big unordered inputs.</li>
+<li><strong>Merge join</strong> — both sides sorted on the key, zip them. O(n+m) after sorting — free if indexes/previous sorts already provide order; the reason <code>ORDER BY</code> on the join key sometimes makes the plan <em>faster</em>.</li>
+</ul>
+<p>Rule of thumb the interviewer wants: <strong>small×indexed → nested loop; big×big equality → hash; both pre-sorted → merge.</strong></p>
+<h3 id="the-30-second-worked-example">The 30-second worked example</h3>
+<p><code>Orders (1M) ⋈ Customers (10k) ON customer_id</code>: hash the 10k customers (small side!) in memory, stream the million orders through it — one pass each. Picking the <em>big</em> side to hash is the classic wrong answer.</p>
+<h3 id="drill">Drill</h3>
+<ol>
+<li>Customers with zero orders — write it two ways (anti-join; <code>NOT EXISTS</code>) and say which the optimizer likes. <em>(Usually identical plans; <code>NOT IN</code> is the dangerous one — NULL semantics.)</em></li>
+<li>Why can&#39;t a hash join serve <code>ON a.ts BETWEEN b.start AND b.end</code>? What runs instead? <em>(Hashing needs equality; nested loop / merge on ranges.)</em></li>
+<li><code>EXPLAIN</code> shows nested loop on two million-row tables and it&#39;s slow — name two likely causes. <em>(Missing index on inner key; optimizer misestimating row counts.)</em></li>
+</ol>
+<p><em>SQL rounds at <a href="../companies/intuit.html">Intuit</a> and data-flavoured <a href="../companies/de-shaw.html">D. E. Shaw</a> rounds start here.</em></p>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="graph-databases.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">Graph Databases</span></a><a class="pn-card pn-next" href="window-functions.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">Window Functions</span></a></nav>
+</main>
+<aside class="toc"><div class="toc-title">On this page</div><ul><li class="toc-d2"><a href="#semantics-what-comes-back">Semantics — what comes back</a></li><li class="toc-d2"><a href="#algorithms-how-its-computed">Algorithms — how it&#39;s computed</a></li><li class="toc-d2"><a href="#the-30-second-worked-example">The 30-second worked example</a></li><li class="toc-d2"><a href="#drill">Drill</a></li></ul></aside>
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

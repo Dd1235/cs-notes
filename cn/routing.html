@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Routing — Longest Prefix, OSPF, BGP · Computer Networks</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script type="module">
+import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+mermaid.initialize({
+  startOnLoad: true,
+  theme: 'base',
+  themeVariables: {
+    fontFamily: 'Inter, sans-serif',
+    fontSize: '14px',
+    primaryColor: '#F1E8D7',
+    primaryTextColor: '#2E2A21',
+    primaryBorderColor: '#8B8170',
+    lineColor: '#57503F',
+    secondaryColor: '#FDFAF3',
+    tertiaryColor: '#FBF6EA',
+    clusterBkg: '#FBF6EA',
+    clusterBorder: '#E2D8C3',
+    actorBkg: '#F1E8D7',
+    actorBorder: '#8B8170',
+    actorTextColor: '#2E2A21',
+    actorLineColor: '#B8AD97',
+    signalColor: '#57503F',
+    signalTextColor: '#2E2A21',
+    labelBoxBkgColor: '#F1E8D7',
+    labelTextColor: '#2E2A21',
+    loopTextColor: '#57503F',
+    noteBkgColor: '#FBF3DC',
+    noteBorderColor: '#D9B36C',
+    noteTextColor: '#57503F',
+    activationBkgColor: '#EFE6D2',
+    activationBorderColor: '#8B8170',
+    edgeLabelBackground: '#F7F1E4'
+  }
+});
+</script>
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#3E6B63">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link is-active" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">Computer Networks</a><div class="side-group"><div class="side-label">Notes</div><ul><li><a class="side-link" href="url-to-page.html">What Happens When You Type a URL</a></li><li><a class="side-link" href="tcp-vs-udp.html">TCP vs UDP — The Deep Dive</a></li><li><a class="side-link" href="sockets-and-zero-copy.html">Sockets, Kernel Structures &amp; Zero-Copy</a></li><li><a class="side-link" href="io-multiplexing.html">I/O Multiplexing — select, poll, epoll</a></li><li><a class="side-link" href="flow-vs-congestion.html">Flow Control vs Congestion Control</a></li></ul></div><div class="side-group"><div class="side-label">Addressing & Routing</div><ul><li><a class="side-link" href="ip-subnetting.html">IP Addressing &amp; Subnetting</a></li><li><a class="side-link" href="l2-switching.html">Layer 2 — Switching, VLANs, STP</a></li><li><a class="side-link is-active" href="routing.html">Routing — Longest Prefix, OSPF, BGP</a></li></ul></div><div class="side-group"><div class="side-label">Web Protocols</div><ul><li><a class="side-link" href="tls.html">TLS — Handshake &amp; Certificates</a></li><li><a class="side-link" href="dns-deep-dive.html">DNS — Records, Resolution, Caching</a></li><li><a class="side-link" href="http-evolution.html">HTTP/1.1 → 2 → 3</a></li></ul></div><div class="side-group"><div class="side-label">Revision</div><ul><li><a class="side-link" href="refresher.html">Rapid Refresher<span class="badge">&#9733;</span></a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">Computer Networks</a></div>
+  <div class="page-head">
+    <div class="page-kicker">Computer Networks</div>
+    <h1 class="page-title">Routing — Longest Prefix, OSPF, BGP</h1>
+    <div class="page-meta">2 min read &middot; source: <code>cn/routing.md</code></div>
+  </div>
+  <article class="prose"><blockquote>
+<p>A router&#39;s job in one sentence: match the destination IP against a table of prefixes, pick the <strong>longest</strong> match, forward out that interface. The rest is how the table gets filled.</p>
+</blockquote>
+<h3 id="longest-prefix-match">Longest-prefix match</h3>
+<p>Destination <code>10.1.2.7</code>, table has <code>10.0.0.0/8 → eth0</code> and <code>10.1.2.0/24 → eth1</code> → the <strong>/24 wins</strong> (more specific). <code>0.0.0.0/0</code> is the default route — matches everything, loses to anything. (This lookup is what routing hardware optimizes with tries/TCAM — a nice bridge if asked &quot;where do tries show up in real life&quot;.)</p>
+<h3 id="two-worlds-of-routing-protocols">Two worlds of routing protocols</h3>
+<p><strong>Inside one organization (IGP)</strong> vs <strong>between organizations (EGP)</strong> — different problems, different algorithms:</p>
+<div class="diagram"><pre class="mermaid">graph LR
+    subgraph AS1 [&quot;AS 65001 — your ISP (OSPF inside)&quot;]
+        R1[&quot;R1&quot;] --- R2[&quot;R2&quot;] --- R3[&quot;R3&quot;]
+        R1 --- R3
+    end
+    subgraph AS2 [&quot;AS 15169 — Google (its own IGP)&quot;]
+        G1[&quot;edge router&quot;]
+    end
+    R3 --&gt;|&quot;BGP: 'I can reach 8.8.8.0/24 via path 15169'&quot;| G1</pre></div>
+<h3 id="ospf-link-state-inside">OSPF — link-state, inside</h3>
+<p>Every router floods &quot;here are my links and their costs&quot; to all others; each builds the <strong>full map</strong> and runs <strong>Dijkstra</strong> locally for shortest paths. Fast convergence, needs trust and shared metrics — perfect inside one company. (RIP is the older distance-vector cousin: &quot;my neighbor said 3 hops, so I say 4&quot; — slow convergence, count-to-infinity; know it as contrast.)</p>
+<p><strong>Analogy:</strong> OSPF = everyone gets the complete city map and computes their own routes. Distance-vector = navigating by rumors from adjacent intersections.</p>
+<h3 id="bgp-path-vector-between">BGP — path-vector, between</h3>
+<p>The internet is ~80k <strong>autonomous systems</strong> (ASes) that don&#39;t trust each other and route by <strong>policy</strong> (money), not distance. BGP advertisements carry the full <strong>AS path</strong> (&quot;reach 8.8.8.0/24 via [15169]&quot;); loop prevention = &quot;my own AS number is already in the path, discard&quot;. Route choice is policy-ranked (local preference, path length, …) — a business decision, not a shortest path.</p>
+<p>Why it matters beyond trivia: BGP misconfigurations take countries offline (route leaks/hijacks — the classic YouTube-via-Pakistan story), and &quot;why is BGP slow to converge&quot; is a real Arista conversation.</p>
+<h3 id="drill">Drill</h3>
+<ol>
+<li>Table: <code>/0 → A</code>, <code>10/8 → B</code>, <code>10.1/16 → C</code>. Where do <code>10.1.5.5</code>, <code>10.2.0.1</code>, <code>8.8.8.8</code> go? <em>(C, B, A.)</em></li>
+<li>Why can&#39;t OSPF run the internet? <em>(No universal metric, no policy, flooding doesn&#39;t scale across 80k untrusting ASes.)</em></li>
+<li>Traceroute shows your packet leaving via a different ISP than expected — which BGP knob likely explains it? <em>(Local preference.)</em></li>
+</ol>
+<p><em><a href="../companies/arista.html">Arista</a> interview conversations live exactly here.</em></p>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="l2-switching.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">Layer 2 — Switching, VLANs, STP</span></a><a class="pn-card pn-next" href="tls.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">TLS — Handshake &amp; Certificates</span></a></nav>
+</main>
+<aside class="toc"><div class="toc-title">On this page</div><ul><li class="toc-d2"><a href="#longest-prefix-match">Longest-prefix match</a></li><li class="toc-d2"><a href="#two-worlds-of-routing-protocols">Two worlds of routing protocols</a></li><li class="toc-d2"><a href="#ospf-link-state-inside">OSPF — link-state, inside</a></li><li class="toc-d2"><a href="#bgp-path-vector-between">BGP — path-vector, between</a></li><li class="toc-d2"><a href="#drill">Drill</a></li></ul></aside>
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Coins, Dice &amp; Waiting Times · Probability &amp; Puzzles</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script type="module">
+import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+mermaid.initialize({
+  startOnLoad: true,
+  theme: 'base',
+  themeVariables: {
+    fontFamily: 'Inter, sans-serif',
+    fontSize: '14px',
+    primaryColor: '#F1E8D7',
+    primaryTextColor: '#2E2A21',
+    primaryBorderColor: '#8B8170',
+    lineColor: '#57503F',
+    secondaryColor: '#FDFAF3',
+    tertiaryColor: '#FBF6EA',
+    clusterBkg: '#FBF6EA',
+    clusterBorder: '#E2D8C3',
+    actorBkg: '#F1E8D7',
+    actorBorder: '#8B8170',
+    actorTextColor: '#2E2A21',
+    actorLineColor: '#B8AD97',
+    signalColor: '#57503F',
+    signalTextColor: '#2E2A21',
+    labelBoxBkgColor: '#F1E8D7',
+    labelTextColor: '#2E2A21',
+    loopTextColor: '#57503F',
+    noteBkgColor: '#FBF3DC',
+    noteBorderColor: '#D9B36C',
+    noteTextColor: '#57503F',
+    activationBkgColor: '#EFE6D2',
+    activationBorderColor: '#8B8170',
+    edgeLabelBackground: '#F7F1E4'
+  }
+});
+</script>
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#4A648C">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link is-active" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">Probability & Puzzles</a><div class="side-group"><div class="side-label">Probability</div><ul><li><a class="side-link" href="probability-toolkit.html">Conditional Probability &amp; Bayes</a></li><li><a class="side-link" href="expectation-and-indicators.html">Expectation, Linearity &amp; Indicators</a></li><li><a class="side-link is-active" href="coins-dice-waiting-times.html">Coins, Dice &amp; Waiting Times</a></li><li><a class="side-link" href="classic-paradoxes.html">Birthday, Monty Hall &amp; Friends</a></li><li><a class="side-link" href="random-walks-gamblers-ruin.html">Random Walks &amp; Gambler's Ruin</a></li><li><a class="side-link" href="counting-toolkit.html">Counting — Stars, Bars &amp; Derangements</a></li><li><a class="side-link" href="markov-chains-mini.html">Markov Chains, Minimally</a></li></ul></div><div class="side-group"><div class="side-label">Puzzles</div><ul><li><a class="side-link" href="logic-puzzles.html">Logic Puzzles — Ropes, Bridges, Prisoners</a></li><li><a class="side-link" href="brainteaser-bank.html">Brainteaser Bank</a></li><li><a class="side-link" href="resources.html">Books &amp; Resources</a></li></ul></div><div class="side-group"><div class="side-label">Revision</div><ul><li><a class="side-link" href="refresher.html">Rapid Refresher<span class="badge">&#9733;</span></a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">Probability & Puzzles</a></div>
+  <div class="page-head">
+    <div class="page-kicker">Probability & Puzzles</div>
+    <h1 class="page-title">Coins, Dice &amp; Waiting Times</h1>
+    <div class="page-meta">2 min read &middot; source: <code>quant/waiting_times.md</code></div>
+  </div>
+  <article class="prose"><blockquote>
+<p>&quot;Expected number of flips until X&quot; questions are all first-step analysis: condition on the first flip, write one equation per state, solve.</p>
+</blockquote>
+<h3 id="geometric-distribution">Geometric distribution</h3>
+<p>Trials until first success, success probability p: E = <strong>1/p</strong>.<br>Expected rolls to see a 6: six rolls. Expected flips to see heads: 2.</p>
+<p><strong>Analogy:</strong> if a slot machine pays out 5% of the time, you <em>expect</em> 20 pulls — 1/p is just &quot;how many tries per success on average&quot;.</p>
+<h3 id="the-famous-asymmetry-hh-vs-ht">The famous asymmetry: HH vs HT</h3>
+<p>Expected flips to see <strong>HT</strong>: 4. To see <strong>HH</strong>: <strong>6</strong>. Same letters, different answers.</p>
+<div class="diagram"><pre class="mermaid">graph LR
+    S[&quot;start&quot;] --&gt;|&quot;T (½)&quot;| S
+    S --&gt;|&quot;H (½)&quot;| A[&quot;seen H&quot;]
+    A --&gt;|&quot;H (½)&quot;| DONE[&quot;HH ✓&quot;]
+    A --&gt;|&quot;T (½)&quot;| S2[&quot;back to start&quot;]
+    S2 --&gt; S</pre></div>
+<p>First-step equations for HH: E₀ = 1 + ½E₀ + ½E₁ and E₁ = 1 + ½·0 + ½E₀ → E₀ = 6.</p>
+<p><strong>Why HT is easier:</strong> once you have an H, you can never lose progress toward HT (another H keeps you one step away; T finishes). For HH, a T after H sends you all the way back. Progress toward HT is a ratchet; toward HH it&#39;s fragile.</p>
+<h3 id="penneys-game-the-party-trick">Penney&#39;s game (the party trick)</h3>
+<p>For any 3-flip pattern you pick, I can pick one that beats it head-to-head with probability up to 7/8 — take your first two flips, flip the first, put it in front (you pick HHT, I pick <strong>T</strong>HH). Sequence-waiting is <strong>non-transitive</strong>, like rock-paper-scissors.</p>
+<h3 id="dice-quick-hits">Dice quick hits</h3>
+<ul>
+<li>Expected number of rolls to see all six faces: coupon collector, 6·H₆ = <strong>14.7</strong>.</li>
+<li>Roll until you get a number ≥ 5: p = 1/3, E = 3 rolls.</li>
+<li>Expected value of one roll: 3.5; of max of two rolls: 161/36 ≈ 4.47 (compute P(max ≤ k) = (k/6)² first — the CDF trick).</li>
+</ul>
+<h3 id="drill">Drill</h3>
+<ol>
+<li>Expected flips until HTH? Set up the 3-state equations. <em>(10)</em></li>
+<li>A die is rolled until two consecutive rolls are equal — expected rolls? <em>(7: after the first roll you wait for a 1/6 match.)</em></li>
+<li>You flip until heads; you&#39;re paid 2^(number of flips). What&#39;s E[payout] and why is the answer disturbing? <em>(St. Petersburg — infinite.)</em></li>
+</ol>
+<p><em>Seen at: <a href="../companies/citadel.html">Citadel</a>, <a href="../companies/de-shaw.html">D. E. Shaw</a> — state-equation waiting problems are the single most common quant probability genre.</em></p>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="expectation-and-indicators.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">Expectation, Linearity &amp; Indicators</span></a><a class="pn-card pn-next" href="classic-paradoxes.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">Birthday, Monty Hall &amp; Friends</span></a></nav>
+</main>
+<aside class="toc"><div class="toc-title">On this page</div><ul><li class="toc-d2"><a href="#geometric-distribution">Geometric distribution</a></li><li class="toc-d2"><a href="#the-famous-asymmetry-hh-vs-ht">The famous asymmetry: HH vs HT</a></li><li class="toc-d2"><a href="#penneys-game-the-party-trick">Penney&#39;s game (the party trick)</a></li><li class="toc-d2"><a href="#dice-quick-hits">Dice quick hits</a></li><li class="toc-d2"><a href="#drill">Drill</a></li></ul></aside>
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

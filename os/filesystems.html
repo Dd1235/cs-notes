@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Filesystems — Inodes &amp; Journaling · Operating Systems</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script type="module">
+import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+mermaid.initialize({
+  startOnLoad: true,
+  theme: 'base',
+  themeVariables: {
+    fontFamily: 'Inter, sans-serif',
+    fontSize: '14px',
+    primaryColor: '#F1E8D7',
+    primaryTextColor: '#2E2A21',
+    primaryBorderColor: '#8B8170',
+    lineColor: '#57503F',
+    secondaryColor: '#FDFAF3',
+    tertiaryColor: '#FBF6EA',
+    clusterBkg: '#FBF6EA',
+    clusterBorder: '#E2D8C3',
+    actorBkg: '#F1E8D7',
+    actorBorder: '#8B8170',
+    actorTextColor: '#2E2A21',
+    actorLineColor: '#B8AD97',
+    signalColor: '#57503F',
+    signalTextColor: '#2E2A21',
+    labelBoxBkgColor: '#F1E8D7',
+    labelTextColor: '#2E2A21',
+    loopTextColor: '#57503F',
+    noteBkgColor: '#FBF3DC',
+    noteBorderColor: '#D9B36C',
+    noteTextColor: '#57503F',
+    activationBkgColor: '#EFE6D2',
+    activationBorderColor: '#8B8170',
+    edgeLabelBackground: '#F7F1E4'
+  }
+});
+</script>
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#77682E">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link is-active" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">Operating Systems</a><div class="side-group"><div class="side-label">Notes</div><ul><li><a class="side-link" href="multithreading-cpp.html">Multithreading in C++</a></li><li><a class="side-link" href="semaphore-vs-mutex.html">Semaphore vs Mutex</a></li><li><a class="side-link" href="csapp-ch12.html">Concurrent Programming — CS:APP Ch. 12</a></li><li><a class="side-link" href="csapp-ch9.html">Virtual Memory — CS:APP Ch. 9</a></li></ul></div><div class="side-group"><div class="side-label">Processes & Scheduling</div><ul><li><a class="side-link" href="processes.html">Processes — Lifecycle, fork &amp; Friends</a></li><li><a class="side-link" href="scheduling.html">CPU Scheduling — FIFO to MLFQ</a></li></ul></div><div class="side-group"><div class="side-label">Locks & Memory</div><ul><li><a class="side-link" href="locks-internals.html">How Locks Actually Work</a></li><li><a class="side-link" href="deadlock.html">Deadlock</a></li><li><a class="side-link" href="page-replacement.html">Page Replacement — FIFO, LRU, Clock</a></li></ul></div><div class="side-group"><div class="side-label">Files & IPC</div><ul><li><a class="side-link is-active" href="filesystems.html">Filesystems — Inodes &amp; Journaling</a></li><li><a class="side-link" href="ipc.html">IPC — Pipes, Shared Memory, Signals</a></li></ul></div><div class="side-group"><div class="side-label">Revision</div><ul><li><a class="side-link" href="refresher.html">Rapid Refresher<span class="badge">&#9733;</span></a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">Operating Systems</a></div>
+  <div class="page-head">
+    <div class="page-kicker">Operating Systems</div>
+    <h1 class="page-title">Filesystems — Inodes &amp; Journaling</h1>
+    <div class="page-meta">2 min read &middot; source: <code>os/filesystems.md</code></div>
+  </div>
+  <article class="prose"><blockquote>
+<p>Two ideas carry every filesystem interview: &quot;a file is an inode, a name is a pointer to one&quot; and &quot;crash consistency is WAL wearing a different hat&quot;.</p>
+</blockquote>
+<h3 id="the-inode">The inode</h3>
+<p>An <strong>inode</strong> holds everything about a file <em>except its name</em>: size, permissions, timestamps, link count, and — the heart — <strong>pointers to the data blocks</strong> (direct pointers, then indirect/double-indirect blocks for big files; that multi-level scheme is why max file sizes exist).</p>
+<p>A <strong>directory is just a file</strong> whose contents are <code>name → inode number</code> pairs. Path resolution <code>/home/dee/notes.md</code> = walk inodes: root&#39;s table → <code>home</code>&#39;s inode → its table → <code>dee</code> → its table → <code>notes.md</code>. (This is why deep paths cost reads and why the kernel caches lookups — the dcache.)</p>
+<h3 id="hard-links-vs-symlinks">Hard links vs symlinks</h3>
+<ul>
+<li><strong>Hard link</strong>: another name → <em>same inode</em>. Link count++; data dies only when count hits 0 <em>and</em> no process holds it open. Two equal names, no &quot;original&quot;.</li>
+<li><strong>Symlink</strong>: a tiny file <em>containing a path</em>. Can dangle, can cross filesystems.</li>
+</ul>
+<p>Interview classic: <code>rm</code> a 10 GB log a running process still has open — why does disk space not come back? <em>(Link count 0, open count 1 — the inode lives until close. Fix: truncate, don&#39;t unlink.)</em></p>
+<h3 id="crash-consistency">Crash consistency</h3>
+<p>Appending a block touches three things: data block, inode, block bitmap. Crash between writes = inconsistency (e.g. bitmap says allocated, inode never points to it — leaked block; worse orderings corrupt files).</p>
+<p><strong>Journaling</strong> = <a href="../dbms/write-ahead-logging.html">write-ahead logging</a>, same idea, different layer:</p>
+<div class="diagram"><pre class="mermaid">graph LR
+    W[&quot;write intent to journal&lt;br/&gt;(what I'm about to do)&quot;] --&gt; C[&quot;journal commit record&quot;] --&gt; P[&quot;checkpoint: apply to real&lt;br/&gt;inode/bitmap/data locations&quot;] --&gt; F[&quot;free journal entry&quot;]
+    C -.-&gt;|&quot;crash after commit?&lt;br/&gt;replay journal&quot;| P
+    W -.-&gt;|&quot;crash before commit?&lt;br/&gt;discard, old state intact&quot;| X[&quot;no-op&quot;]</pre></div>
+<p>Modes: <strong>data journaling</strong> (everything through the journal — safe, slow) vs <strong>metadata journaling</strong> (ext4 default: journal metadata only, write data first so metadata never points at garbage).</p>
+<h3 id="name-drops-that-land">Name-drops that land</h3>
+<p>ext4 (journaling), XFS (large files), <strong>copy-on-write filesystems</strong> ZFS/Btrfs/APFS (never overwrite in place — snapshots fall out for free), and <strong>log-structured</strong> filesystems as the LSM-tree ancestor.</p>
+<p>Reference: <a href="https://pages.cs.wisc.edu/~remzi/OSTEP/file-implementation.pdf" target="_blank" rel="noopener">OSTEP ch 40 — File System Implementation</a> &amp; <a href="https://pages.cs.wisc.edu/~remzi/OSTEP/file-journaling.pdf" target="_blank" rel="noopener">ch 42 — Journaling</a>.</p>
+<h3 id="drill">Drill</h3>
+<ol>
+<li><code>ls -l</code> shows link count 3 for a file — draw the picture.</li>
+<li>Why can&#39;t hard links cross filesystems? <em>(Inode numbers are per-filesystem.)</em></li>
+<li>Exactly which crash windows does metadata journaling leave open, and why is that accepted?</li>
+</ol>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="page-replacement.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">Page Replacement — FIFO, LRU, Clock</span></a><a class="pn-card pn-next" href="ipc.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">IPC — Pipes, Shared Memory, Signals</span></a></nav>
+</main>
+<aside class="toc"><div class="toc-title">On this page</div><ul><li class="toc-d2"><a href="#the-inode">The inode</a></li><li class="toc-d2"><a href="#hard-links-vs-symlinks">Hard links vs symlinks</a></li><li class="toc-d2"><a href="#crash-consistency">Crash consistency</a></li><li class="toc-d2"><a href="#name-drops-that-land">Name-drops that land</a></li><li class="toc-d2"><a href="#drill">Drill</a></li></ul></aside>
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

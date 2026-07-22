@@ -1,0 +1,478 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>C++ Advanced · OOP &amp; C++</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#8A4E5E">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link is-active" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">OOP & C++</a><div class="side-group"><div class="side-label">Lecture Notes</div><ul><li><a class="side-link" href="volatile-macros-inline.html">volatile, Macros &amp; inline</a></li><li><a class="side-link" href="references-and-const.html">References &amp; const</a></li><li><a class="side-link" href="function-overloading.html">Function Overloading</a></li><li><a class="side-link" href="dynamic-memory.html">Dynamic Memory Management</a></li><li><a class="side-link" href="classes-and-objects.html">Classes &amp; Objects</a></li><li><a class="side-link" href="constructors.html">Constructors &amp; Information Hiding</a></li><li><a class="side-link" href="copy-semantics.html">Copy Constructor &amp; Copy Assignment</a></li><li><a class="side-link" href="constness-and-static.html">Const-ness &amp; Static Members</a></li><li><a class="side-link" href="friend-functions.html">Friend Functions &amp; Friend Classes</a></li><li><a class="side-link" href="operator-overloading.html">Operator Overloading</a></li><li><a class="side-link" href="inheritance.html">Inheritance &amp; Overriding</a></li><li><a class="side-link" href="multiple-private-inheritance.html">Multiple &amp; Private Inheritance</a></li><li><a class="side-link" href="virtual-functions.html">Virtual Functions &amp; Dynamic Binding</a></li><li><a class="side-link" href="vtables-and-const-cast.html">Virtual Pointer Tables &amp; const_cast</a></li><li><a class="side-link" href="cpp-casts.html">C++ Casts</a></li><li><a class="side-link" href="exceptions.html">Exceptions &amp; Error Handling</a></li><li><a class="side-link" href="try-catch-and-templates.html">try/catch &amp; Function Templates</a></li><li><a class="side-link" href="class-templates-functors.html">Class Templates &amp; Functors</a></li></ul></div><div class="side-group"><div class="side-label">Extras</div><ul><li><a class="side-link" href="compilation-model.html">The C++ Compilation Model</a></li><li><a class="side-link" href="template-metaprogramming.html">Template Metaprogramming</a></li><li><a class="side-link" href="build-your-own-vector.html">Exercise — Build Your Own Vector</a></li><li><a class="side-link" href="miscellany.html">Miscellany</a></li><li><a class="side-link" href="resources.html">Resources</a></li></ul></div><div class="side-group"><div class="side-label">Topic Notes</div><ul><li><a class="side-link" href="notes-cpp-core.html">C++ Core</a></li><li><a class="side-link" href="notes-cpp-oop.html">C++ OOP</a></li><li><a class="side-link is-active" href="notes-cpp-advanced.html">C++ Advanced</a></li><li><a class="side-link" href="notes-ooad-uml.html">OOAD &amp; UML</a></li><li><a class="side-link" href="notes-design-patterns.html">Design Patterns</a></li><li><a class="side-link" href="notes-testing-sdlc.html">Testing, SDLC &amp; SE</a></li><li><a class="side-link" href="notes-interview-questions.html">Interview Questions</a></li></ul></div><div class="side-group"><div class="side-label">Flashcards</div><ul><li><a class="side-link" href="cards-cpp-core.html">C++ Core Flashcards</a></li><li><a class="side-link" href="cards-oop-lifetime.html">OOP, Lifetime &amp; Memory Flashcards</a></li><li><a class="side-link" href="cards-polymorphism-stl.html">Polymorphism, Casts, Templates &amp; STL Flashcards</a></li><li><a class="side-link" href="cards-ooad-uml.html">OOAD &amp; UML Flashcards</a></li><li><a class="side-link" href="cards-design-patterns.html">Design Patterns Flashcards</a></li><li><a class="side-link" href="cards-testing-sdlc.html">Testing, SDLC &amp; SE Flashcards</a></li><li><a class="side-link" href="cards-interview-drills.html">Interview &amp; Code-Reading Drills</a></li></ul></div><div class="side-group"><div class="side-label">Under the Hood</div><ul><li><a class="side-link" href="memory-layout.html">Memory Layout, Alignment &amp; Padding</a></li></ul></div><div class="side-group"><div class="side-label">Revision</div><ul><li><a class="side-link" href="refresher.html">Rapid Refresher<span class="badge">&#9733;</span></a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">OOP & C++</a></div>
+  <div class="page-head">
+    <div class="page-kicker">OOP & C++</div>
+    <h1 class="page-title">C++ Advanced</h1>
+    <div class="page-meta">8 min read &middot; source: <code>oops_cpp/generated_notes/03_cpp_advanced.md</code></div>
+  </div>
+  <article class="prose"><h3 id="inheritance">Inheritance</h3>
+<p>Inheritance models an <code>is-a</code> relationship when used publicly.</p>
+<pre class="hljs"><code><span class="hljs-keyword">class</span> <span class="hljs-title class_">Shape</span> {
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-type">double</span> <span class="hljs-title">area</span><span class="hljs-params">()</span> <span class="hljs-type">const</span> </span>= <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">virtual</span> ~<span class="hljs-built_in">Shape</span>() = <span class="hljs-keyword">default</span>;
+};
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">Circle</span> : <span class="hljs-keyword">public</span> Shape {
+    <span class="hljs-type">double</span> r_;
+
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-function"><span class="hljs-keyword">explicit</span> <span class="hljs-title">Circle</span><span class="hljs-params">(<span class="hljs-type">double</span> r)</span> : r_(r) {</span>}
+    <span class="hljs-function"><span class="hljs-type">double</span> <span class="hljs-title">area</span><span class="hljs-params">()</span> <span class="hljs-type">const</span> <span class="hljs-keyword">override</span> </span>{ <span class="hljs-keyword">return</span> <span class="hljs-number">3.14159</span> * r_ * r_; }
+};</code></pre>
+<p>Access under inheritance:</p>
+<table>
+<thead>
+<tr>
+<th>Inheritance</th>
+<th>Public base members become</th>
+<th>Protected base members become</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>public</code></td>
+<td>public</td>
+<td>protected</td>
+</tr>
+<tr>
+<td><code>protected</code></td>
+<td>protected</td>
+<td>protected</td>
+</tr>
+<tr>
+<td><code>private</code></td>
+<td>private</td>
+<td>private</td>
+</tr>
+</tbody></table>
+<p>Use public inheritance for substitutability. Use composition when the relationship is &quot;has-a&quot; or &quot;implemented using&quot;.</p>
+<h3 id="overloading-overriding-hiding">Overloading, Overriding, Hiding</h3>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Overloading</td>
+<td>same name, different parameters in same scope</td>
+</tr>
+<tr>
+<td>Overriding</td>
+<td>derived virtual function replaces base virtual behavior</td>
+</tr>
+<tr>
+<td>Hiding</td>
+<td>derived declaration hides base overload set by name</td>
+</tr>
+</tbody></table>
+<pre class="hljs"><code><span class="hljs-keyword">struct</span> <span class="hljs-title class_">Base</span> {
+    <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-type">void</span> <span class="hljs-title">f</span><span class="hljs-params">(<span class="hljs-type">int</span>)</span></span>;
+    <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">g</span><span class="hljs-params">(<span class="hljs-type">double</span>)</span></span>;
+};
+
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">Derived</span> : Base {
+    <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">f</span><span class="hljs-params">(<span class="hljs-type">int</span>)</span> <span class="hljs-keyword">override</span></span>;
+    <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">g</span><span class="hljs-params">(<span class="hljs-type">int</span>)</span></span>; <span class="hljs-comment">// hides Base::g(double)</span>
+};</code></pre>
+<p>Use <code>override</code>. It lets the compiler catch signature mistakes.</p>
+<h3 id="static-and-dynamic-binding">Static and Dynamic Binding</h3>
+<p>Static binding happens at compile time. Dynamic binding happens at runtime through virtual dispatch.</p>
+<pre class="hljs"><code><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">print_area</span><span class="hljs-params">(<span class="hljs-type">const</span> Shape&amp; s)</span> </span>{
+    std::cout &lt;&lt; s.<span class="hljs-built_in">area</span>(); <span class="hljs-comment">// virtual call</span>
+}</code></pre>
+<p>Virtual dispatch requires:</p>
+<ul>
+<li>A virtual function in the base class.</li>
+<li>A call through pointer/reference to base.</li>
+<li>A dynamic object whose most-derived type may differ.</li>
+</ul>
+<h3 id="vtable-and-vptr">VTable and VPtr</h3>
+<p>Typical implementation:</p>
+<ul>
+<li>Each polymorphic class has a vtable containing function pointers.</li>
+<li>Each polymorphic object stores a hidden vptr pointing to its class vtable.</li>
+<li>A virtual call indexes the vtable at runtime.</li>
+</ul>
+<p>This is an implementation model, not a standard-mandated layout, but it is the common interview explanation.</p>
+<p>Costs:</p>
+<ul>
+<li>One hidden pointer per polymorphic object in common implementations.</li>
+<li>Indirect call overhead.</li>
+<li>Some optimization opportunities become harder.</li>
+</ul>
+<h3 id="virtual-destructors">Virtual Destructors</h3>
+<p>If a class is meant to be deleted through a base pointer, give it a virtual destructor.</p>
+<pre class="hljs"><code><span class="hljs-keyword">struct</span> <span class="hljs-title class_">Base</span> {
+    <span class="hljs-keyword">virtual</span> ~<span class="hljs-built_in">Base</span>() = <span class="hljs-keyword">default</span>;
+};
+
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">Derived</span> : Base {
+    std::vector&lt;<span class="hljs-type">int</span>&gt; data;
+};
+
+Base* p = <span class="hljs-keyword">new</span> Derived;
+<span class="hljs-keyword">delete</span> p; <span class="hljs-comment">// OK only if Base destructor is virtual</span></code></pre>
+<p>Without a virtual base destructor, deleting through a base pointer is undefined behavior.</p>
+<h3 id="abstract-base-classes">Abstract Base Classes</h3>
+<p>A pure virtual function makes a class abstract.</p>
+<pre class="hljs"><code><span class="hljs-keyword">class</span> <span class="hljs-title class_">Reader</span> {
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-function"><span class="hljs-keyword">virtual</span> std::string <span class="hljs-title">read</span><span class="hljs-params">()</span> </span>= <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">virtual</span> ~<span class="hljs-built_in">Reader</span>() = <span class="hljs-keyword">default</span>;
+};</code></pre>
+<p>Abstract base classes are useful for interfaces. Keep interfaces small.</p>
+<h3 id="object-slicing">Object Slicing</h3>
+<p>Passing a derived object by value to a base parameter slices off the derived part.</p>
+<pre class="hljs"><code><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">bad</span><span class="hljs-params">(Shape s)</span></span>;        <span class="hljs-comment">// impossible here because Shape is abstract</span>
+<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">good</span><span class="hljs-params">(<span class="hljs-type">const</span> Shape&amp; s)</span></span>;</code></pre>
+<p>Use references or smart pointers for polymorphic objects.</p>
+<h3 id="casts">Casts</h3>
+<table>
+<thead>
+<tr>
+<th>Cast</th>
+<th>Use</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>static_cast</code></td>
+<td>safe compile-time conversions you intend</td>
+</tr>
+<tr>
+<td><code>dynamic_cast</code></td>
+<td>checked downcast across polymorphic types</td>
+</tr>
+<tr>
+<td><code>const_cast</code></td>
+<td>add/remove constness; dangerous if object is truly const</td>
+</tr>
+<tr>
+<td><code>reinterpret_cast</code></td>
+<td>low-level bit reinterpretation; highly risky</td>
+</tr>
+</tbody></table>
+<pre class="hljs"><code>Base* b = <span class="hljs-keyword">new</span> Derived;
+
+<span class="hljs-keyword">if</span> (<span class="hljs-keyword">auto</span>* d = <span class="hljs-built_in">dynamic_cast</span>&lt;Derived*&gt;(b)) {
+    <span class="hljs-comment">// checked success</span>
+}</code></pre>
+<p>Prefer designs that avoid downcasting. Downcasting often means the interface is weak.</p>
+<h3 id="rtti-and-typeid">RTTI and <code>typeid</code></h3>
+<p><code>typeid(expr)</code> gives runtime type information for polymorphic expressions.</p>
+<pre class="hljs"><code><span class="hljs-keyword">if</span> (<span class="hljs-built_in">typeid</span>(*b) == <span class="hljs-built_in">typeid</span>(Derived)) {
+    <span class="hljs-comment">// exact dynamic type check</span>
+}</code></pre>
+<p>Prefer virtual functions over explicit type checks.</p>
+<h3 id="multiple-inheritance-and-diamond-problem">Multiple Inheritance and Diamond Problem</h3>
+<p>Multiple inheritance can model combining interfaces, but concrete multiple inheritance is harder.</p>
+<p>Diamond:</p>
+<pre class="hljs"><code><span class="hljs-keyword">struct</span> <span class="hljs-title class_">A</span> { <span class="hljs-type">int</span> x; };
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">B</span> : <span class="hljs-keyword">public</span> A {};
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">C</span> : <span class="hljs-keyword">public</span> A {};
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">D</span> : <span class="hljs-keyword">public</span> B, <span class="hljs-keyword">public</span> C {}; <span class="hljs-comment">// two A subobjects</span></code></pre>
+<p>Virtual inheritance shares one base subobject:</p>
+<pre class="hljs"><code><span class="hljs-keyword">struct</span> <span class="hljs-title class_">B</span> : <span class="hljs-keyword">virtual</span> <span class="hljs-keyword">public</span> A {};
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">C</span> : <span class="hljs-keyword">virtual</span> <span class="hljs-keyword">public</span> A {};
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">D</span> : <span class="hljs-keyword">public</span> B, <span class="hljs-keyword">public</span> C {};</code></pre>
+<p>Guideline: multiple interface inheritance is usually fine; multiple stateful base classes require strong justification.</p>
+<h3 id="exceptions">Exceptions</h3>
+<p>Exceptions separate error handling from normal control flow.</p>
+<pre class="hljs"><code><span class="hljs-function"><span class="hljs-type">double</span> <span class="hljs-title">divide</span><span class="hljs-params">(<span class="hljs-type">double</span> a, <span class="hljs-type">double</span> b)</span> </span>{
+    <span class="hljs-keyword">if</span> (b == <span class="hljs-number">0.0</span>) <span class="hljs-keyword">throw</span> std::<span class="hljs-built_in">invalid_argument</span>(<span class="hljs-string">&quot;division by zero&quot;</span>);
+    <span class="hljs-keyword">return</span> a / b;
+}</code></pre>
+<p>Catch by const reference:</p>
+<pre class="hljs"><code><span class="hljs-keyword">try</span> {
+    <span class="hljs-built_in">work</span>();
+} <span class="hljs-built_in">catch</span> (<span class="hljs-type">const</span> std::exception&amp; e) {
+    std::cerr &lt;&lt; e.<span class="hljs-built_in">what</span>();
+}</code></pre>
+<p>Stack unwinding:</p>
+<ul>
+<li>When an exception propagates, destructors of fully constructed local objects run.</li>
+<li>RAII makes cleanup safe during unwinding.</li>
+<li>Destructors should not emit exceptions.</li>
+</ul>
+<p>Exception safety levels:</p>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>No guarantee</td>
+<td>object may be corrupted</td>
+</tr>
+<tr>
+<td>Basic guarantee</td>
+<td>invariants hold; no leaks</td>
+</tr>
+<tr>
+<td>Strong guarantee</td>
+<td>operation succeeds or state is unchanged</td>
+</tr>
+<tr>
+<td>No-throw guarantee</td>
+<td>operation will not throw</td>
+</tr>
+</tbody></table>
+<p>Use <code>noexcept</code> for functions that must not throw, especially move operations when true.</p>
+<h3 id="templates">Templates</h3>
+<p>Templates generate code for types used with them.</p>
+<p>Function template:</p>
+<pre class="hljs"><code><span class="hljs-keyword">template</span> &lt;<span class="hljs-keyword">typename</span> T&gt;
+<span class="hljs-function">T <span class="hljs-title">max_value</span><span class="hljs-params">(<span class="hljs-type">const</span> T&amp; a, <span class="hljs-type">const</span> T&amp; b)</span> </span>{
+    <span class="hljs-keyword">return</span> b &lt; a ? a : b;
+}</code></pre>
+<p>Class template:</p>
+<pre class="hljs"><code><span class="hljs-keyword">template</span> &lt;<span class="hljs-keyword">typename</span> T&gt;
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">Box</span> {
+    T value_;
+
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-function"><span class="hljs-keyword">explicit</span> <span class="hljs-title">Box</span><span class="hljs-params">(T value)</span> : value_(std::move(value)) {</span>}
+    <span class="hljs-function"><span class="hljs-type">const</span> T&amp; <span class="hljs-title">get</span><span class="hljs-params">()</span> <span class="hljs-type">const</span> </span>{ <span class="hljs-keyword">return</span> value_; }
+};</code></pre>
+<p>Important:</p>
+<ul>
+<li><code>typename</code> and <code>class</code> are equivalent for type template parameters.</li>
+<li>Templates are usually defined in headers.</li>
+<li>Compilation errors can be long because instantiation happens at use sites.</li>
+<li>Concepts in modern C++ can constrain template parameters.</li>
+</ul>
+<h3 id="stl-model">STL Model</h3>
+<p>The STL separates:</p>
+<ul>
+<li>Containers: store data.</li>
+<li>Iterators: navigate ranges.</li>
+<li>Algorithms: operate on iterator ranges.</li>
+<li>Function objects/lambdas: customize behavior.</li>
+</ul>
+<pre class="hljs"><code>std::vector&lt;<span class="hljs-type">int</span>&gt; v = {<span class="hljs-number">4</span>, <span class="hljs-number">1</span>, <span class="hljs-number">3</span>, <span class="hljs-number">2</span>};
+std::<span class="hljs-built_in">sort</span>(v.<span class="hljs-built_in">begin</span>(), v.<span class="hljs-built_in">end</span>(), std::greater&lt;<span class="hljs-type">int</span>&gt;{});</code></pre>
+<p>This design gives generic algorithms independent of specific container types.</p>
+<h3 id="containers">Containers</h3>
+<table>
+<thead>
+<tr>
+<th>Container</th>
+<th>Use</th>
+<th>Important complexity</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>vector</code></td>
+<td>dynamic contiguous array</td>
+<td>random access <code>O(1)</code>, push back amortized <code>O(1)</code></td>
+</tr>
+<tr>
+<td><code>deque</code></td>
+<td>double-ended sequence</td>
+<td>push front/back <code>O(1)</code></td>
+</tr>
+<tr>
+<td><code>list</code></td>
+<td>linked list</td>
+<td>insert/erase with iterator <code>O(1)</code>, no random access</td>
+</tr>
+<tr>
+<td><code>map</code></td>
+<td>ordered key-value tree</td>
+<td>search/insert/erase <code>O(log n)</code></td>
+</tr>
+<tr>
+<td><code>unordered_map</code></td>
+<td>hash table</td>
+<td>average search/insert/erase <code>O(1)</code></td>
+</tr>
+<tr>
+<td><code>set</code></td>
+<td>ordered unique keys</td>
+<td>search/insert/erase <code>O(log n)</code></td>
+</tr>
+<tr>
+<td><code>stack</code></td>
+<td>LIFO adaptor</td>
+<td>top/push/pop</td>
+</tr>
+<tr>
+<td><code>queue</code></td>
+<td>FIFO adaptor</td>
+<td>front/push/pop</td>
+</tr>
+<tr>
+<td><code>priority_queue</code></td>
+<td>heap adaptor</td>
+<td>top <code>O(1)</code>, push/pop <code>O(log n)</code></td>
+</tr>
+</tbody></table>
+<p>Vector vs list:</p>
+<table>
+<thead>
+<tr>
+<th>Point</th>
+<th><code>vector</code></th>
+<th><code>list</code></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Memory locality</td>
+<td>excellent</td>
+<td>poor</td>
+</tr>
+<tr>
+<td>Random access</td>
+<td>yes</td>
+<td>no</td>
+</tr>
+<tr>
+<td>Middle insert with known iterator</td>
+<td>shifts elements</td>
+<td>relinks nodes</td>
+</tr>
+<tr>
+<td>Typical performance</td>
+<td>often better</td>
+<td>useful when stable iterators and frequent splices matter</td>
+</tr>
+</tbody></table>
+<h3 id="iterators">Iterators</h3>
+<p>Iterator categories:</p>
+<ul>
+<li>Input: read forward once.</li>
+<li>Output: write forward once.</li>
+<li>Forward: multi-pass forward.</li>
+<li>Bidirectional: forward and backward.</li>
+<li>Random access: arithmetic jumps.</li>
+<li>Contiguous: memory-contiguous random access.</li>
+</ul>
+<p>Algorithm requirements depend on iterator category. <code>std::sort</code> needs random-access iterators, so it works for <code>vector</code> but not <code>list</code>.</p>
+<h3 id="algorithms-and-predicates">Algorithms and Predicates</h3>
+<pre class="hljs"><code>std::vector&lt;<span class="hljs-type">int</span>&gt; v = {<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>};
+
+<span class="hljs-keyword">auto</span> even = [](<span class="hljs-type">int</span> x) { <span class="hljs-keyword">return</span> x % <span class="hljs-number">2</span> == <span class="hljs-number">0</span>; };
+<span class="hljs-keyword">auto</span> it = std::<span class="hljs-built_in">find_if</span>(v.<span class="hljs-built_in">begin</span>(), v.<span class="hljs-built_in">end</span>(), even);
+<span class="hljs-type">int</span> sum = std::<span class="hljs-built_in">accumulate</span>(v.<span class="hljs-built_in">begin</span>(), v.<span class="hljs-built_in">end</span>(), <span class="hljs-number">0</span>);</code></pre>
+<p>Useful algorithms:</p>
+<ul>
+<li><code>find</code>, <code>find_if</code></li>
+<li><code>sort</code>, <code>stable_sort</code></li>
+<li><code>binary_search</code>, <code>lower_bound</code>, <code>upper_bound</code></li>
+<li><code>copy</code>, <code>copy_if</code></li>
+<li><code>remove</code>, <code>remove_if</code> with erase-remove idiom</li>
+<li><code>accumulate</code></li>
+<li><code>transform</code></li>
+<li><code>for_each</code></li>
+</ul>
+<p>Erase-remove idiom:</p>
+<pre class="hljs"><code>v.<span class="hljs-built_in">erase</span>(std::<span class="hljs-built_in">remove_if</span>(v.<span class="hljs-built_in">begin</span>(), v.<span class="hljs-built_in">end</span>(), even), v.<span class="hljs-built_in">end</span>());</code></pre>
+<h3 id="functors-and-lambdas">Functors and Lambdas</h3>
+<p>A functor is an object callable with <code>operator()</code>.</p>
+<pre class="hljs"><code><span class="hljs-keyword">struct</span> <span class="hljs-title class_">IsGreaterThan</span> {
+    <span class="hljs-type">int</span> limit;
+
+    <span class="hljs-function"><span class="hljs-type">bool</span> <span class="hljs-title">operator</span><span class="hljs-params">()</span><span class="hljs-params">(<span class="hljs-type">int</span> x)</span> <span class="hljs-type">const</span> </span>{
+        <span class="hljs-keyword">return</span> x &gt; limit;
+    }
+};
+
+std::vector&lt;<span class="hljs-type">int</span>&gt; v = {<span class="hljs-number">1</span>, <span class="hljs-number">4</span>, <span class="hljs-number">7</span>};
+<span class="hljs-keyword">auto</span> it = std::<span class="hljs-built_in">find_if</span>(v.<span class="hljs-built_in">begin</span>(), v.<span class="hljs-built_in">end</span>(), IsGreaterThan{<span class="hljs-number">5</span>});</code></pre>
+<p>Why functors:</p>
+<ul>
+<li>Can store state.</li>
+<li>Can be inlined by the compiler.</li>
+<li>Useful as policy objects.</li>
+</ul>
+<p>Lambda equivalent:</p>
+<pre class="hljs"><code><span class="hljs-type">int</span> limit = <span class="hljs-number">5</span>;
+<span class="hljs-keyword">auto</span> it = std::<span class="hljs-built_in">find_if</span>(v.<span class="hljs-built_in">begin</span>(), v.<span class="hljs-built_in">end</span>(),
+                       [limit](<span class="hljs-type">int</span> x) { <span class="hljs-keyword">return</span> x &gt; limit; });</code></pre>
+<p>Function pointer vs functor vs lambda:</p>
+<table>
+<thead>
+<tr>
+<th>Callable</th>
+<th>Stores state</th>
+<th>Type-safe</th>
+<th>Usually inline-friendly</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>function pointer</td>
+<td>no</td>
+<td>yes</td>
+<td>limited</td>
+</tr>
+<tr>
+<td>functor</td>
+<td>yes</td>
+<td>yes</td>
+<td>yes</td>
+</tr>
+<tr>
+<td>lambda</td>
+<td>yes, via capture</td>
+<td>yes</td>
+<td>yes</td>
+</tr>
+<tr>
+<td><code>std::function</code></td>
+<td>yes</td>
+<td>yes</td>
+<td>type-erased overhead</td>
+</tr>
+</tbody></table>
+<h3 id="policy-parameterization">Policy Parameterization</h3>
+<p>Algorithms can accept behavior as a parameter.</p>
+<pre class="hljs"><code>std::<span class="hljs-built_in">sort</span>(names.<span class="hljs-built_in">begin</span>(), names.<span class="hljs-built_in">end</span>(),
+          [](<span class="hljs-type">const</span> std::string&amp; a, <span class="hljs-type">const</span> std::string&amp; b) {
+              <span class="hljs-keyword">return</span> a.<span class="hljs-built_in">size</span>() &lt; b.<span class="hljs-built_in">size</span>();
+          });</code></pre>
+<p>This avoids hardcoded branching and lets one algorithm support many policies.</p>
+<h3 id="checkpoints">Checkpoints</h3>
+<ul>
+<li>What makes a function call virtual?</li>
+<li>Why should base destructors often be virtual?</li>
+<li>Explain object slicing.</li>
+<li>When would you use <code>dynamic_cast</code>?</li>
+<li>What is the diamond problem?</li>
+<li>What happens during stack unwinding?</li>
+<li>Why catch exceptions by const reference?</li>
+<li>Why are template definitions usually in headers?</li>
+<li>Why does <code>std::sort</code> work on <code>vector</code> but not <code>list</code>?</li>
+<li>What is a functor, and why can it outperform a function pointer?</li>
+</ul>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="notes-cpp-oop.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">C++ OOP</span></a><a class="pn-card pn-next" href="notes-ooad-uml.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">OOAD &amp; UML</span></a></nav>
+</main>
+<aside class="toc"><div class="toc-title">On this page</div><ul><li class="toc-d2"><a href="#inheritance">Inheritance</a></li><li class="toc-d2"><a href="#overloading-overriding-hiding">Overloading, Overriding, Hiding</a></li><li class="toc-d2"><a href="#static-and-dynamic-binding">Static and Dynamic Binding</a></li><li class="toc-d2"><a href="#vtable-and-vptr">VTable and VPtr</a></li><li class="toc-d2"><a href="#virtual-destructors">Virtual Destructors</a></li><li class="toc-d2"><a href="#abstract-base-classes">Abstract Base Classes</a></li><li class="toc-d2"><a href="#object-slicing">Object Slicing</a></li><li class="toc-d2"><a href="#casts">Casts</a></li><li class="toc-d2"><a href="#rtti-and-typeid">RTTI and <code>typeid</code></a></li><li class="toc-d2"><a href="#multiple-inheritance-and-diamond-problem">Multiple Inheritance and Diamond Problem</a></li><li class="toc-d2"><a href="#exceptions">Exceptions</a></li><li class="toc-d2"><a href="#templates">Templates</a></li><li class="toc-d2"><a href="#stl-model">STL Model</a></li><li class="toc-d2"><a href="#containers">Containers</a></li><li class="toc-d2"><a href="#iterators">Iterators</a></li><li class="toc-d2"><a href="#algorithms-and-predicates">Algorithms and Predicates</a></li><li class="toc-d2"><a href="#functors-and-lambdas">Functors and Lambdas</a></li><li class="toc-d2"><a href="#policy-parameterization">Policy Parameterization</a></li><li class="toc-d2"><a href="#checkpoints">Checkpoints</a></li></ul></aside>
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

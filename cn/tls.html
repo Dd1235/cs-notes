@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TLS — Handshake &amp; Certificates · Computer Networks</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#3E6B63">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link is-active" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">Computer Networks</a><div class="side-group"><div class="side-label">Notes</div><ul><li><a class="side-link" href="url-to-page.html">What Happens When You Type a URL</a></li><li><a class="side-link" href="tcp-vs-udp.html">TCP vs UDP — The Deep Dive</a></li><li><a class="side-link" href="sockets-and-zero-copy.html">Sockets, Kernel Structures &amp; Zero-Copy</a></li><li><a class="side-link" href="io-multiplexing.html">I/O Multiplexing — select, poll, epoll</a></li><li><a class="side-link" href="flow-vs-congestion.html">Flow Control vs Congestion Control</a></li></ul></div><div class="side-group"><div class="side-label">Addressing & Routing</div><ul><li><a class="side-link" href="ip-subnetting.html">IP Addressing &amp; Subnetting</a></li><li><a class="side-link" href="l2-switching.html">Layer 2 — Switching, VLANs, STP</a></li><li><a class="side-link" href="routing.html">Routing — Longest Prefix, OSPF, BGP</a></li></ul></div><div class="side-group"><div class="side-label">Web Protocols</div><ul><li><a class="side-link is-active" href="tls.html">TLS — Handshake &amp; Certificates</a></li><li><a class="side-link" href="dns-deep-dive.html">DNS — Records, Resolution, Caching</a></li><li><a class="side-link" href="http-evolution.html">HTTP/1.1 → 2 → 3</a></li></ul></div><div class="side-group"><div class="side-label">Revision</div><ul><li><a class="side-link" href="refresher.html">Rapid Refresher<span class="badge">&#9733;</span></a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">Computer Networks</a></div>
+  <div class="page-head">
+    <div class="page-kicker">Computer Networks</div>
+    <h1 class="page-title">TLS — Handshake &amp; Certificates</h1>
+    <div class="page-meta">2 min read &middot; source: <code>cn/tls.md</code></div>
+  </div>
+  <article class="prose"><blockquote>
+<p>Two problems, two tools: agree on a secret with a stranger (asymmetric crypto, once) then talk fast (symmetric crypto, everything after). TLS is the choreography between them.</p>
+</blockquote>
+<h3 id="why-two-kinds-of-crypto">Why two kinds of crypto</h3>
+<ul>
+<li><strong>Symmetric</strong> (AES): same key both sides — fast (hardware instructions), but how do you share the key over a tapped wire?</li>
+<li><strong>Asymmetric</strong> (RSA/elliptic-curve): public/private pairs — solves key sharing, but ~1000× slower.</li>
+<li>So: use asymmetric <strong>once</strong> to establish a shared symmetric key, then AES for the actual data. Every TLS connection is this pattern.</li>
+</ul>
+<h3 id="tls-13-handshake-one-round-trip">TLS 1.3 handshake (one round trip)</h3>
+<ol>
+<li><strong>ClientHello</strong>: supported ciphers + client&#39;s <strong>Diffie-Hellman</strong> public share (+ ALPN: &quot;I speak h2/h3&quot; — from the <a href="url-to-page.html">URL journey</a>).</li>
+<li><strong>ServerHello</strong>: server&#39;s DH share → both sides now compute the same shared secret (DH: mix public paints with private paint; eavesdroppers see only the mixed publics and can&#39;t unmix). Server also sends its <strong>certificate</strong> and proves it holds the private key by signing the transcript.</li>
+<li>Client verifies the certificate chain, both derive symmetric session keys — <strong>encrypted app data flows on the next packet</strong>.</li>
+</ol>
+<p>TLS 1.2 needed two round trips and supported non-forward-secret RSA key exchange; 1.3 removed all that (and 0-RTT resumption exists for repeat visitors, with replay caveats). &quot;Handshake = 1-RTT in 1.3&quot; is the number to know.</p>
+<h3 id="certificates-why-you-trust-a-stranger">Certificates — why you trust a stranger</h3>
+<p>DH stops <em>eavesdroppers</em> but not a <strong>man-in-the-middle</strong> doing DH with each side separately. Certificates fix identity: the server&#39;s public key is signed by a <strong>CA</strong>, whose key is signed up a chain ending at a <strong>root CA</strong> shipped inside your OS/browser.</p>
+<p>Verification = walk the chain: signature valid → name matches (SAN covers <code>*.google.com</code>) → dates valid → not revoked. Any failure = the browser warning screen.</p>
+<p><strong>Analogy:</strong> a certificate is a passport: you trust it not because you know the traveler, but because you recognize the issuing government&#39;s seal — and forging the seal is the hard part.</p>
+<h3 id="interview-one-liners">Interview one-liners</h3>
+<ul>
+<li>&quot;What does HTTPS actually give you?&quot; — confidentiality (encryption), integrity (AEAD/MACs), <strong>authentication of the server</strong> (certs). Client auth is optional/rare (mTLS in service meshes).</li>
+<li><strong>Forward secrecy</strong>: keys are ephemeral per-connection — stealing the server&#39;s long-term key later can&#39;t decrypt recorded traffic. This is why 1.3 made DH mandatory.</li>
+<li>Where&#39;s the overhead? One extra RTT at setup + cheap AES after. &quot;TLS is slow&quot; stopped being true a decade ago.</li>
+</ul>
+<h3 id="drill">Drill</h3>
+<ol>
+<li>Draw the 1.3 handshake and mark the exact packet where encryption begins.</li>
+<li>Corporate proxies decrypt employee HTTPS — what must they install on laptops and why does it work? <em>(A private root CA into the trust store — you&#39;ve re-rooted trust.)</em></li>
+<li>Why does forward secrecy require ephemeral DH rather than RSA key transport?</li>
+</ol>
+<p><em>Relevant to <a href="../companies/stripe.html">Stripe</a> (API infrastructure) and <a href="../companies/arista.html">Arista</a>.</em></p>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="routing.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">Routing — Longest Prefix, OSPF, BGP</span></a><a class="pn-card pn-next" href="dns-deep-dive.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">DNS — Records, Resolution, Caching</span></a></nav>
+</main>
+<aside class="toc"><div class="toc-title">On this page</div><ul><li class="toc-d2"><a href="#why-two-kinds-of-crypto">Why two kinds of crypto</a></li><li class="toc-d2"><a href="#tls-13-handshake-one-round-trip">TLS 1.3 handshake (one round trip)</a></li><li class="toc-d2"><a href="#certificates-why-you-trust-a-stranger">Certificates — why you trust a stranger</a></li><li class="toc-d2"><a href="#interview-one-liners">Interview one-liners</a></li><li class="toc-d2"><a href="#drill">Drill</a></li></ul></aside>
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

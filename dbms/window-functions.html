@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Window Functions · Database Systems</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#B05730">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link is-active" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">Database Systems</a><div class="side-group"><div class="side-label">Foundations</div><ul><li><a class="side-link" href="acid.html">ACID &amp; Isolation Levels</a></li><li><a class="side-link" href="normalization.html">Normalization</a></li><li><a class="side-link" href="sql.html">SQL Essentials</a></li><li><a class="side-link" href="drop-delete-truncate.html">DROP vs DELETE vs TRUNCATE</a></li></ul></div><div class="side-group"><div class="side-label">Indexing & Storage</div><ul><li><a class="side-link" href="b-plus-trees.html">B+ Trees</a></li><li><a class="side-link" href="unique-indexes.html">Unique Indexes</a></li><li><a class="side-link" href="primary-vs-secondary-index.html">Primary vs Secondary Indexes</a></li><li><a class="side-link" href="write-ahead-logging.html">Write-Ahead Logging</a></li></ul></div><div class="side-group"><div class="side-label">Concurrency</div><ul><li><a class="side-link" href="concurrency-control.html">Concurrency Control Basics</a></li><li><a class="side-link" href="mvcc.html">MVCC in Depth</a></li><li><a class="side-link" href="mvcc-cmu.html">MVCC — CMU Lecture Notes</a></li></ul></div><div class="side-group"><div class="side-label">Scale & Patterns</div><ul><li><a class="side-link" href="sharding.html">Sharding vs Partitioning</a></li><li><a class="side-link" href="n-plus-one-problem.html">The N+1 Query Problem</a></li><li><a class="side-link" href="graph-databases.html">Graph Databases</a></li></ul></div><div class="side-group"><div class="side-label">SQL in Practice</div><ul><li><a class="side-link" href="joins.html">Joins — Semantics &amp; Algorithms</a></li><li><a class="side-link is-active" href="window-functions.html">Window Functions</a></li></ul></div><div class="side-group"><div class="side-label">Distributed Data</div><ul><li><a class="side-link" href="cap-replication.html">CAP &amp; Replication</a></li></ul></div><div class="side-group"><div class="side-label">Revision</div><ul><li><a class="side-link" href="refresher.html">Rapid Refresher<span class="badge">&#9733;</span></a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">Database Systems</a></div>
+  <div class="page-head">
+    <div class="page-kicker">Database Systems</div>
+    <h1 class="page-title">Window Functions</h1>
+    <div class="page-meta">2 min read &middot; source: <code>dbms/window_functions.md</code></div>
+  </div>
+  <article class="prose"><blockquote>
+<p><code>GROUP BY</code> collapses rows; a window function computes over a group <strong>while keeping every row</strong>. That single sentence separates candidates in SQL rounds.</p>
+</blockquote>
+<h3 id="the-shape">The shape</h3>
+<pre class="hljs"><code><span class="hljs-keyword">function</span>() <span class="hljs-keyword">OVER</span> (<span class="hljs-keyword">PARTITION</span> <span class="hljs-keyword">BY</span> … <span class="hljs-keyword">ORDER</span> <span class="hljs-keyword">BY</span> … [frame])</code></pre>
+<ul>
+<li><strong>PARTITION BY</strong> — restart the calculation per group (per user, per month).</li>
+<li><strong>ORDER BY</strong> — gives meaning to rank, lag, and running totals.</li>
+<li><strong>Frame</strong> (<code>ROWS BETWEEN …</code>) — which neighbours feed the calculation; default with ORDER BY is &quot;start through current row&quot; (= running).</li>
+</ul>
+<p><strong>Analogy:</strong> GROUP BY files students into class-average rows; a window function writes the class average <em>on each student&#39;s report card</em> — detail retained, context added.</p>
+<h3 id="the-worked-trio-memorize-these-shapes">The worked trio (memorize these shapes)</h3>
+<p><strong>1 · Top-3 spenders per month</strong> — rank inside groups, then filter (window results can&#39;t go in WHERE — wrap in a subquery/CTE):</p>
+<pre class="hljs"><code><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> (
+  <span class="hljs-keyword">SELECT</span> user_id, <span class="hljs-keyword">month</span>, spend,
+         <span class="hljs-built_in">DENSE_RANK</span>() <span class="hljs-keyword">OVER</span> (<span class="hljs-keyword">PARTITION</span> <span class="hljs-keyword">BY</span> <span class="hljs-keyword">month</span> <span class="hljs-keyword">ORDER</span> <span class="hljs-keyword">BY</span> spend <span class="hljs-keyword">DESC</span>) <span class="hljs-keyword">AS</span> rnk
+  <span class="hljs-keyword">FROM</span> monthly_spend
+) t <span class="hljs-keyword">WHERE</span> rnk <span class="hljs-operator">&lt;=</span> <span class="hljs-number">3</span>;</code></pre>
+<p><strong>2 · Running total per account:</strong></p>
+<pre class="hljs"><code><span class="hljs-keyword">SELECT</span> ts, amount,
+       <span class="hljs-built_in">SUM</span>(amount) <span class="hljs-keyword">OVER</span> (<span class="hljs-keyword">PARTITION</span> <span class="hljs-keyword">BY</span> account_id <span class="hljs-keyword">ORDER</span> <span class="hljs-keyword">BY</span> ts) <span class="hljs-keyword">AS</span> balance
+<span class="hljs-keyword">FROM</span> transactions;</code></pre>
+<p><strong>3 · Day-over-day change (LAG):</strong></p>
+<pre class="hljs"><code><span class="hljs-keyword">SELECT</span> <span class="hljs-keyword">day</span>, revenue,
+       revenue <span class="hljs-operator">-</span> <span class="hljs-built_in">LAG</span>(revenue) <span class="hljs-keyword">OVER</span> (<span class="hljs-keyword">ORDER</span> <span class="hljs-keyword">BY</span> <span class="hljs-keyword">day</span>) <span class="hljs-keyword">AS</span> delta
+<span class="hljs-keyword">FROM</span> daily_revenue;</code></pre>
+<h3 id="the-rank-trio-disambiguated">The rank trio, disambiguated</h3>
+<p>On values 100, 90, 90, 80: <code>ROW_NUMBER</code> → 1,2,3,4 (arbitrary tiebreak) · <code>RANK</code> → 1,2,2,<strong>4</strong> (gaps) · <code>DENSE_RANK</code> → 1,2,2,<strong>3</strong> (no gaps). One line each; interviewers accept nothing fuzzier.</p>
+<p>Also in the family: <code>NTILE(4)</code> (quartiles), <code>FIRST_VALUE/LAST_VALUE</code> (beware the default frame cutting off LAST_VALUE — say <code>ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING</code>).</p>
+<h3 id="de-dup-the-production-idiom">De-dup, the production idiom</h3>
+<p>Latest row per key: <code>ROW_NUMBER() OVER (PARTITION BY key ORDER BY updated_at DESC)</code> → keep <code>rn = 1</code>. This one query is half of all data-engineering screens.</p>
+<h3 id="drill">Drill</h3>
+<ol>
+<li>Second-highest salary per department — with <code>DENSE_RANK</code>, and why is it cleaner than the self-join version?</li>
+<li>7-day moving average of revenue — write the frame clause.</li>
+<li>Users&#39; <em>first</em> order value and its gap to their average order — one query, two window functions.</li>
+</ol>
+<p><em>The <a href="../companies/intuit.html">Intuit</a> SQL round staple; also <a href="../companies/stripe.html">Stripe</a> data questions.</em></p>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="joins.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">Joins — Semantics &amp; Algorithms</span></a><a class="pn-card pn-next" href="cap-replication.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">CAP &amp; Replication</span></a></nav>
+</main>
+<aside class="toc"><div class="toc-title">On this page</div><ul><li class="toc-d2"><a href="#the-shape">The shape</a></li><li class="toc-d2"><a href="#the-worked-trio-memorize-these-shapes">The worked trio (memorize these shapes)</a></li><li class="toc-d2"><a href="#the-rank-trio-disambiguated">The rank trio, disambiguated</a></li><li class="toc-d2"><a href="#de-dup-the-production-idiom">De-dup, the production idiom</a></li><li class="toc-d2"><a href="#drill">Drill</a></li></ul></aside>
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dynamic Memory Management · OOP &amp; C++</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#8A4E5E">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link is-active" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">OOP & C++</a><div class="side-group"><div class="side-label">Lecture Notes</div><ul><li><a class="side-link" href="volatile-macros-inline.html">volatile, Macros &amp; inline</a></li><li><a class="side-link" href="references-and-const.html">References &amp; const</a></li><li><a class="side-link" href="function-overloading.html">Function Overloading</a></li><li><a class="side-link is-active" href="dynamic-memory.html">Dynamic Memory Management</a></li><li><a class="side-link" href="classes-and-objects.html">Classes &amp; Objects</a></li><li><a class="side-link" href="constructors.html">Constructors &amp; Information Hiding</a></li><li><a class="side-link" href="copy-semantics.html">Copy Constructor &amp; Copy Assignment</a></li><li><a class="side-link" href="constness-and-static.html">Const-ness &amp; Static Members</a></li><li><a class="side-link" href="friend-functions.html">Friend Functions &amp; Friend Classes</a></li><li><a class="side-link" href="operator-overloading.html">Operator Overloading</a></li><li><a class="side-link" href="inheritance.html">Inheritance &amp; Overriding</a></li><li><a class="side-link" href="multiple-private-inheritance.html">Multiple &amp; Private Inheritance</a></li><li><a class="side-link" href="virtual-functions.html">Virtual Functions &amp; Dynamic Binding</a></li><li><a class="side-link" href="vtables-and-const-cast.html">Virtual Pointer Tables &amp; const_cast</a></li><li><a class="side-link" href="cpp-casts.html">C++ Casts</a></li><li><a class="side-link" href="exceptions.html">Exceptions &amp; Error Handling</a></li><li><a class="side-link" href="try-catch-and-templates.html">try/catch &amp; Function Templates</a></li><li><a class="side-link" href="class-templates-functors.html">Class Templates &amp; Functors</a></li></ul></div><div class="side-group"><div class="side-label">Extras</div><ul><li><a class="side-link" href="compilation-model.html">The C++ Compilation Model</a></li><li><a class="side-link" href="template-metaprogramming.html">Template Metaprogramming</a></li><li><a class="side-link" href="build-your-own-vector.html">Exercise — Build Your Own Vector</a></li><li><a class="side-link" href="miscellany.html">Miscellany</a></li><li><a class="side-link" href="resources.html">Resources</a></li></ul></div><div class="side-group"><div class="side-label">Topic Notes</div><ul><li><a class="side-link" href="notes-cpp-core.html">C++ Core</a></li><li><a class="side-link" href="notes-cpp-oop.html">C++ OOP</a></li><li><a class="side-link" href="notes-cpp-advanced.html">C++ Advanced</a></li><li><a class="side-link" href="notes-ooad-uml.html">OOAD &amp; UML</a></li><li><a class="side-link" href="notes-design-patterns.html">Design Patterns</a></li><li><a class="side-link" href="notes-testing-sdlc.html">Testing, SDLC &amp; SE</a></li><li><a class="side-link" href="notes-interview-questions.html">Interview Questions</a></li></ul></div><div class="side-group"><div class="side-label">Flashcards</div><ul><li><a class="side-link" href="cards-cpp-core.html">C++ Core Flashcards</a></li><li><a class="side-link" href="cards-oop-lifetime.html">OOP, Lifetime &amp; Memory Flashcards</a></li><li><a class="side-link" href="cards-polymorphism-stl.html">Polymorphism, Casts, Templates &amp; STL Flashcards</a></li><li><a class="side-link" href="cards-ooad-uml.html">OOAD &amp; UML Flashcards</a></li><li><a class="side-link" href="cards-design-patterns.html">Design Patterns Flashcards</a></li><li><a class="side-link" href="cards-testing-sdlc.html">Testing, SDLC &amp; SE Flashcards</a></li><li><a class="side-link" href="cards-interview-drills.html">Interview &amp; Code-Reading Drills</a></li></ul></div><div class="side-group"><div class="side-label">Under the Hood</div><ul><li><a class="side-link" href="memory-layout.html">Memory Layout, Alignment &amp; Padding</a></li></ul></div><div class="side-group"><div class="side-label">Revision</div><ul><li><a class="side-link" href="refresher.html">Rapid Refresher<span class="badge">&#9733;</span></a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">OOP & C++</a></div>
+  <div class="page-head">
+    <div class="page-kicker">OOP & C++</div>
+    <h1 class="page-title">Dynamic Memory Management</h1>
+    <div class="page-meta">4 min read &middot; source: <code>oops_cpp/self_notes/5.md</code></div>
+  </div>
+  <article class="prose"><ul>
+<li>malloc() and free() in C</li>
+<li>don&#39;t know the size of the memory needed, at runtime can acquire more memory from the os, once done we can free them</li>
+<li>linkedlist may not know how many nodes will be there etc.</li>
+</ul>
+<p>C++</p>
+<ul>
+<li>new and delete</li>
+<li>Array new[] and delete[]</li>
+<li>Placement new()</li>
+<li>Restrictions</li>
+<li>Overloading new and delete</li>
+</ul>
+<p>Malloc is part of <code>stdlib.h</code>, needs to be provided size of memory in bytes, <code>cstdlib</code> in C++<br><code>int *p = (int *)malloc(sizeof(int))</code><br><code>free(p)</code></p>
+<p>pointer to allocated memory returned as void* -&gt; needs to be cast as int*<br>malloc() returns NULL if it fails to allocate memory, so we should check for that before using the pointer.<br>malloc cannot be initialized.</p>
+<p>calloc() and realloc() are available in both languages.</p>
+<p><code>int* p = new int(4)</code><br><code>delete p</code><br>Operator new for allocation on heap. No size specification needed, only type. Allocated memory returned as int*, no casting required. Can be initiazlied.<br>Operator delete for deallocation from heap.</p>
+<p>It&#39;s a core language feature, no header needed.</p>
+<pre class="hljs"><code>int *p = (int *)operator new(sizeof(int));
+operator delete(p)</code></pre>
+<p>these are the operator functions and hence can be overloaded. operator new behaves much like malloc and needs the szie.</p>
+<pre class="hljs"><code>operator+
+operator[]
+operator()
+operator int
+operator&lt;&lt;</code></pre>
+<p>these are all special declaractor forms.</p>
+<p>There is a major different between <code>operator new</code> and <code>operator new()</code></p>
+<p>Operator new function behaves like malloc. Operator new also constructs the poerator.<br>Operator delete first calls the destructor of the class and then deallocates the memory.</p>
+<pre class="hljs"><code>
+int *a = (int*)malloc(sizeof(int)*3);
+int *b = new int[3]; // different version of new operator for arrays
+free(a);
+delete [] b;</code></pre>
+<pre class="hljs"><code>// buf is on the stack frame
+unsigned char buf[sizeof(int)*2]; // buffer on stack
+// placement new in buffer buf
+int *pInt = new (buf) int (3); // placement new
+int *qInt = new (buf+sizeof(int)) int (5);</code></pre>
+<p>new : 1) allocate memory, 2) call constructor<br>delete: 1) call destructor, 2) deallocate memory</p>
+<p>placement new - skip 1, you provide the memory yourself.</p>
+<pre class="hljs"><code>int* p = new int(5);
+
+// becomes roughly
+
+void* mem = operator new(sizeof(int));
+new (mem) int(5);</code></pre>
+<p>pass in the pointer to the memory where you want to construct the object.</p>
+<p>If you have done placement new, cannot be deleted with delete. If you have allocated on stack, cannot use delete.</p>
+<pre class="hljs"><code>malloc() -&gt; free()
+operator new -&gt; operator delete
+operator new[] -&gt; operator delete[]
+operator new -&gt; placement new -&gt; no delete</code></pre>
+<p>passing NULL to delete is secure<br>The new operator allocates exact amount of memory from heap.</p>
+<p>new, new[], delete, delete[] have separate semantics.</p>
+<p>This allows delayed constructions.</p>
+<p><code>vector&lt;T&gt;</code> internally allocates raw memory first. We don&#39;t need 1000 constructors running. So raw memory block first, only few objects constructed.</p>
+<p>T arr[100] would construct all 1000 immediately.<br>Disaster for performance or resources.</p>
+<pre class="hljs"><code>void* operator new(size_t n){
+    cout &lt;&lt; &quot;Overloaded new&quot; &lt;&lt; endl;
+    void *ptr;
+    ptr = malloc(n);
+    return ptr;
+}
+void operator delete(void* ptr){
+    cout &lt;&lt; &quot;Overloaded delete&quot; &lt;&lt; endl;
+    free(ptr);
+}</code></pre>
+<p>new is much better than just the <code>operator new()</code>, it takes in the type instead of the size, and returns pointer corresponding to that type.<br>But can&#39;t overload this functionality, we don&#39;t have higher order function in C++. We can&#39;t pass in type as a parameter to a function. So we can only overload the operator new() and not the new operator itself. We can write a wrapper function around the operator new() to achieve similar functionality, but it won&#39;t be as elegant as overloading the new operator itself.</p>
+<p>this was all the procedural extension.</p>
+<h2 id="object-oriented-programming">Object Oriented Programming</h2>
+<ul>
+<li><p>class is a user defined type. This isn&#39;t in C.</p>
+</li>
+<li><p>there is typedef in C, which is aliasing.</p>
+</li>
+<li><p>class offers the encapsulation / data abstraction of oop</p>
+</li>
+<li><p>type builders: *, [], (), struct, union, enum class, in&amp;, vector<int> (template)</p>
+</li>
+</ul>
+<p>namespace =&gt;</p>
+<p>if two classes both have member called data, you wont get confused because A::data and B::data. This is the main purpose of namespace, to avoid name clashes.</p>
+<ul>
+<li>for name resolution</li>
+<li>every class is a namespace, every namespace is not a class.</li>
+</ul>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="function-overloading.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">Function Overloading</span></a><a class="pn-card pn-next" href="classes-and-objects.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">Classes &amp; Objects</span></a></nav>
+</main>
+
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

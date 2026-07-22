@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Brainteaser Bank · Probability &amp; Puzzles</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#4A648C">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link is-active" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">Probability & Puzzles</a><div class="side-group"><div class="side-label">Probability</div><ul><li><a class="side-link" href="probability-toolkit.html">Conditional Probability &amp; Bayes</a></li><li><a class="side-link" href="expectation-and-indicators.html">Expectation, Linearity &amp; Indicators</a></li><li><a class="side-link" href="coins-dice-waiting-times.html">Coins, Dice &amp; Waiting Times</a></li><li><a class="side-link" href="classic-paradoxes.html">Birthday, Monty Hall &amp; Friends</a></li><li><a class="side-link" href="random-walks-gamblers-ruin.html">Random Walks &amp; Gambler's Ruin</a></li><li><a class="side-link" href="counting-toolkit.html">Counting — Stars, Bars &amp; Derangements</a></li><li><a class="side-link" href="markov-chains-mini.html">Markov Chains, Minimally</a></li></ul></div><div class="side-group"><div class="side-label">Puzzles</div><ul><li><a class="side-link" href="logic-puzzles.html">Logic Puzzles — Ropes, Bridges, Prisoners</a></li><li><a class="side-link is-active" href="brainteaser-bank.html">Brainteaser Bank</a></li><li><a class="side-link" href="resources.html">Books &amp; Resources</a></li></ul></div><div class="side-group"><div class="side-label">Revision</div><ul><li><a class="side-link" href="refresher.html">Rapid Refresher<span class="badge">&#9733;</span></a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">Probability & Puzzles</a></div>
+  <div class="page-head">
+    <div class="page-kicker">Probability & Puzzles</div>
+    <h1 class="page-title">Brainteaser Bank</h1>
+    <div class="page-meta">2 min read &middot; source: <code>quant/brainteaser_bank.md</code></div>
+  </div>
+  <article class="prose"><blockquote>
+<p>Ten classics, rapid-fire. Cover the answer column, commit to an answer out loud, then check. The one-line <em>why</em> is what you say in the interview.</p>
+</blockquote>
+<h3 id="the-bank">The bank</h3>
+<p><strong>1 · 25 horses, 5 tracks, no stopwatch — find top 3.</strong><br><strong>7 races.</strong> Five heats + final of heat-winners orders the winner; the only candidates for 2nd/3rd are 5 specific horses (2nd/3rd of winner&#39;s heat, 2nd of runner-up&#39;s heat, 3rd-place heat winner…) — race them once.</p>
+<p><strong>2 · 12 balls, one is off-weight (unknown direction), 3 weighings.</strong><br>Split 4-4-4; each weighing has 3 outcomes, 3³ = 27 ≥ 24 possibilities — information-theoretically tight. Say <em>that</em>; deriving the full schedule live is rarely required.</p>
+<p><strong>3 · 3 jugs: 8 L full, 5 L, 3 L empty — split into 4+4.</strong><br>BFS on states: (8,0,0)→(3,5,0)→(3,2,3)→(6,2,0)→(6,0,2)→(1,5,2)→(1,4,3)→(4,4,0). The meta-answer: jug puzzles are shortest-path search, and reachable amounts are multiples of gcd.</p>
+<p><strong>4 · Clock hands overlap how many times in 12 h?</strong><br><strong>11</strong> — the minute hand laps the hour hand 11 times per 12 h, so overlaps are every 12/11 h ≈ 65 min 27 s.</p>
+<p><strong>5 · A duck in a circular pond, fox on the rim runs 4× swim speed.</strong><br>The duck circles at radius &lt; r/4 (where its angular speed beats the fox&#39;s), gets opposite the fox, then dashes: needs 3r/4 &lt; π·r/4·(fox time). Escape is possible because <strong>angular speed ∝ 1/radius</strong>.</p>
+<p><strong>6 · Two trains 100 km apart, 50 km/h each; fly at 75 km/h bounces between.</strong><br>Total collision time 1 h → fly travels <strong>75 km</strong>. Sum the time, not the series (the von Neumann joke).</p>
+<p><strong>7 · Handshake parity: can 7 people each shake exactly 3 hands?</strong><br>No — sum of degrees is odd (21), but handshakes contribute 2 each. <strong>Parity/invariant arguments kill &quot;can it happen?&quot; questions.</strong></p>
+<p><strong>8 · Chessboard with two opposite corners removed — tile with 31 dominoes?</strong><br>No — both removed squares are the same color; each domino covers one of each. <strong>Coloring invariant.</strong></p>
+<p><strong>9 · 10 coins, 4 heads-up, you&#39;re blindfolded — split into two groups with equal heads.</strong><br>Take any 4 coins as group A and <strong>flip all of them</strong>. If k of the 4 were heads, A now has 4−k heads — exactly what B has. Works with zero information.</p>
+<p><strong>10 · Monty-Hall-adjacent: 3 cards (BB, BW, WW), drawn card shows black face — P(other side black)?</strong><br><strong>2/3</strong> — count <em>faces</em>, not cards: 3 black faces exist, 2 belong to BB.</p>
+<h3 id="pattern-index">Pattern index</h3>
+<p>Information bounds (2) · search over states (3) · relative motion (4, 6) · geometry of speed (5) · invariants/parity (7, 8, 9) · condition on faces not objects (10) · tournament structure (1).</p>
+<p><em>Seen at: quant OAs and HR-adjacent rounds everywhere; <a href="../companies/citadel.html">Citadel</a> phone screens still open with these.</em></p>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="logic-puzzles.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">Logic Puzzles — Ropes, Bridges, Prisoners</span></a><a class="pn-card pn-next" href="resources.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">Books &amp; Resources</span></a></nav>
+</main>
+
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

@@ -1,0 +1,474 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>I/O Multiplexing — select, poll, epoll · Computer Networks</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script type="module">
+import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+mermaid.initialize({
+  startOnLoad: true,
+  theme: 'base',
+  themeVariables: {
+    fontFamily: 'Inter, sans-serif',
+    fontSize: '14px',
+    primaryColor: '#F1E8D7',
+    primaryTextColor: '#2E2A21',
+    primaryBorderColor: '#8B8170',
+    lineColor: '#57503F',
+    secondaryColor: '#FDFAF3',
+    tertiaryColor: '#FBF6EA',
+    clusterBkg: '#FBF6EA',
+    clusterBorder: '#E2D8C3',
+    actorBkg: '#F1E8D7',
+    actorBorder: '#8B8170',
+    actorTextColor: '#2E2A21',
+    actorLineColor: '#B8AD97',
+    signalColor: '#57503F',
+    signalTextColor: '#2E2A21',
+    labelBoxBkgColor: '#F1E8D7',
+    labelTextColor: '#2E2A21',
+    loopTextColor: '#57503F',
+    noteBkgColor: '#FBF3DC',
+    noteBorderColor: '#D9B36C',
+    noteTextColor: '#57503F',
+    activationBkgColor: '#EFE6D2',
+    activationBorderColor: '#8B8170',
+    edgeLabelBackground: '#F7F1E4'
+  }
+});
+</script>
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#3E6B63">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link is-active" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">Computer Networks</a><div class="side-group"><div class="side-label">Notes</div><ul><li><a class="side-link" href="url-to-page.html">What Happens When You Type a URL</a></li><li><a class="side-link" href="tcp-vs-udp.html">TCP vs UDP — The Deep Dive</a></li><li><a class="side-link" href="sockets-and-zero-copy.html">Sockets, Kernel Structures &amp; Zero-Copy</a></li><li><a class="side-link is-active" href="io-multiplexing.html">I/O Multiplexing — select, poll, epoll</a></li><li><a class="side-link" href="flow-vs-congestion.html">Flow Control vs Congestion Control</a></li></ul></div><div class="side-group"><div class="side-label">Addressing & Routing</div><ul><li><a class="side-link" href="ip-subnetting.html">IP Addressing &amp; Subnetting</a></li><li><a class="side-link" href="l2-switching.html">Layer 2 — Switching, VLANs, STP</a></li><li><a class="side-link" href="routing.html">Routing — Longest Prefix, OSPF, BGP</a></li></ul></div><div class="side-group"><div class="side-label">Web Protocols</div><ul><li><a class="side-link" href="tls.html">TLS — Handshake &amp; Certificates</a></li><li><a class="side-link" href="dns-deep-dive.html">DNS — Records, Resolution, Caching</a></li><li><a class="side-link" href="http-evolution.html">HTTP/1.1 → 2 → 3</a></li></ul></div><div class="side-group"><div class="side-label">Revision</div><ul><li><a class="side-link" href="refresher.html">Rapid Refresher<span class="badge">&#9733;</span></a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">Computer Networks</a></div>
+  <div class="page-head">
+    <div class="page-kicker">Computer Networks</div>
+    <h1 class="page-title">I/O Multiplexing — select, poll, epoll</h1>
+    <div class="page-meta">6 min read &middot; source: <code>cn/3.md</code></div>
+  </div>
+  <article class="prose"><ul>
+<li><p>IO multiplexing</p>
+</li>
+<li><p>IO with many sources</p>
+</li>
+<li><p>server</p>
+</li>
+<li><p>read / receive from socket is a blocking operation</p>
+</li>
+<li><p>thread per client does not scale</p>
+</li>
+<li><p>io monitoring calls: select/poll/epoll api</p>
+</li>
+<li><p>pass the file descriptors, when there is a data, some of the sockets are ready for io</p>
+</li>
+</ul>
+<p>This is one of the most common OS/networking interview topics.</p>
+<p>The problem they solve is:</p>
+<blockquote>
+<p>&quot;I have 10,000 sockets. How do I know which ones have data available without creating 10,000 threads?&quot;</p>
+</blockquote>
+<hr>
+<h2 id="the-problem">The Problem</h2>
+<p>Suppose a server has:</p>
+<pre class="hljs"><code>Client1
+Client2
+Client3
+...
+Client10000</code></pre>
+<p>connected.</p>
+<p>Each connection has a socket FD:</p>
+<pre class="hljs"><code>4
+5
+6
+...
+10003</code></pre>
+<p>You want to know:</p>
+<pre class="hljs"><code>Which socket is ready to read?</code></pre>
+<p>without doing:</p>
+<pre class="hljs"><code>read(fd1);
+read(fd2);
+read(fd3);
+...</code></pre>
+<p>because:</p>
+<ol>
+<li>Most sockets are idle.</li>
+<li>Blocking on one socket prevents checking others.</li>
+</ol>
+<hr>
+<h2 id="naive-solution-one-thread-per-connection">Naive Solution: One Thread Per Connection</h2>
+<pre class="hljs"><code>Thread 1 -&gt; Client 1
+Thread 2 -&gt; Client 2
+Thread 3 -&gt; Client 3
+...</code></pre>
+<p>Works for small numbers.</p>
+<p>Problems:</p>
+<ul>
+<li>memory</li>
+<li>context switches</li>
+<li>scheduler overhead</li>
+</ul>
+<p>10k connections becomes painful.</p>
+<hr>
+<h2 id="io-multiplexing">I/O Multiplexing</h2>
+<p>Idea:</p>
+<pre class="hljs"><code>One thread
+Many sockets</code></pre>
+<p>Ask kernel:</p>
+<blockquote>
+<p>&quot;Tell me which FDs are ready.&quot;</p>
+</blockquote>
+<p>Kernel waits.</p>
+<p>When something becomes ready:</p>
+<pre class="hljs"><code>socket 57
+socket 108
+socket 902</code></pre>
+<p>Kernel returns those.</p>
+<hr>
+<h2 id="select">select()</h2>
+<p>Oldest solution.</p>
+<pre class="hljs"><code>select(...)</code></pre>
+<p>You give:</p>
+<pre class="hljs"><code>fd 4
+fd 5
+fd 6
+...
+fd N</code></pre>
+<p>Kernel checks them.</p>
+<hr>
+<p>Conceptually:</p>
+<pre class="hljs"><code>Application
+   |
+select()
+   |
+Kernel scans
+   |
+Ready FDs returned</code></pre>
+<hr>
+<p>Example</p>
+<pre class="hljs"><code>fd_set readfds;
+
+FD_SET(sock1, &amp;readfds);
+FD_SET(sock2, &amp;readfds);
+
+select(...);</code></pre>
+<p>Kernel modifies set:</p>
+<pre class="hljs"><code>sock2 ready</code></pre>
+<hr>
+<h2 id="problems-with-select">Problems with select()</h2>
+<h3 id="1-on-scan">1. O(n) Scan</h3>
+<p>Every call:</p>
+<pre class="hljs"><code>Check fd1
+Check fd2
+Check fd3
+...
+Check fd10000</code></pre>
+<p>Even if only one socket is active.</p>
+<hr>
+<h3 id="2-copy-overhead">2. Copy Overhead</h3>
+<p>Every call:</p>
+<pre class="hljs"><code>User -&gt; Kernel
+Kernel -&gt; User</code></pre>
+<p>copies FD sets.</p>
+<hr>
+<h3 id="3-fd-limit">3. FD Limit</h3>
+<p>Usually:</p>
+<pre class="hljs"><code>FD_SETSIZE</code></pre>
+<p>often:</p>
+<pre class="hljs"><code>1024</code></pre>
+<p>Classic interview point.</p>
+<hr>
+<h2 id="poll">poll()</h2>
+<p>Improved version.</p>
+<p>Uses:</p>
+<pre class="hljs"><code>poll(...)</code></pre>
+<p>instead of bitsets.</p>
+<hr>
+<p>Instead of:</p>
+<pre class="hljs"><code>fd_set</code></pre>
+<p>you provide:</p>
+<pre class="hljs"><code><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">pollfd</span>[]</span></code></pre>
+<hr>
+<p>Example</p>
+<pre class="hljs"><code>pollfds[<span class="hljs-number">0</span>].fd = sock1;
+pollfds[<span class="hljs-number">1</span>].fd = sock2;</code></pre>
+<p>Kernel fills:</p>
+<pre class="hljs"><code>POLLIN
+POLLOUT</code></pre>
+<p>etc.</p>
+<hr>
+<p>Advantages:</p>
+<ul>
+<li>no 1024 limit</li>
+<li>cleaner API</li>
+</ul>
+<hr>
+<p>But...</p>
+<h2 id="poll-still-has-on">poll() still has O(n)</h2>
+<p>Every call:</p>
+<pre class="hljs"><code>Scan all FDs</code></pre>
+<p>Again.</p>
+<p>For:</p>
+<pre class="hljs"><code>100,000 sockets</code></pre>
+<p>still expensive.</p>
+<hr>
+<h2 id="why-on-is-bad">Why O(n) Is Bad</h2>
+<p>Suppose:</p>
+<pre class="hljs"><code>100,000 sockets</code></pre>
+<p>Only:</p>
+<pre class="hljs"><code>1 socket</code></pre>
+<p>receives data.</p>
+<p>Kernel still scans:</p>
+<pre class="hljs"><code>100,000 entries</code></pre>
+<p>every time.</p>
+<p>Wasteful.</p>
+<hr>
+<h2 id="epoll">epoll()</h2>
+<p>Linux solution.</p>
+<p>This is what interviewers usually care about.</p>
+<p>Idea:</p>
+<blockquote>
+<p>Don&#39;t ask the kernel to scan every FD every time.</p>
+</blockquote>
+<p>Instead:</p>
+<blockquote>
+<p>Register interest once.</p>
+</blockquote>
+<hr>
+<p>Create epoll instance:</p>
+<pre class="hljs"><code>epoll_create1(...)</code></pre>
+<hr>
+<p>Register FDs:</p>
+<pre class="hljs"><code>epoll_ctl(...)</code></pre>
+<p>Example:</p>
+<pre class="hljs"><code>socket 1
+socket 2
+socket 3</code></pre>
+<p>added once.</p>
+<hr>
+<p>Wait:</p>
+<pre class="hljs"><code>epoll_wait(...)</code></pre>
+<p>Kernel returns only active sockets.</p>
+<hr>
+<p>Conceptually</p>
+<p>select/poll:</p>
+<pre class="hljs"><code>Every call:
+scan all sockets</code></pre>
+<hr>
+<p>epoll:</p>
+<pre class="hljs"><code>Register once
+
+Kernel tracks readiness
+
+Return only ready sockets</code></pre>
+<hr>
+<h2 id="why-epoll-is-faster">Why epoll Is Faster</h2>
+<p>Suppose:</p>
+<pre class="hljs"><code>100,000 sockets</code></pre>
+<p>Only:</p>
+<pre class="hljs"><code>socket 987</code></pre>
+<p>has data.</p>
+<hr>
+<p>select/poll:</p>
+<pre class="hljs"><code>scan 100,000
+find 1</code></pre>
+<hr>
+<p>epoll:</p>
+<pre class="hljs"><code>ready list already maintained</code></pre>
+<p>returns:</p>
+<pre class="hljs"><code>socket 987</code></pre>
+<p>directly.</p>
+<hr>
+<p>This is often described as:</p>
+<pre class="hljs"><code>O(number_of_ready_fds)</code></pre>
+<p>instead of:</p>
+<pre class="hljs"><code>O(total_fds)</code></pre>
+<p>(technically a bit more nuanced, but good enough for interviews).</p>
+<hr>
+<h2 id="internal-picture">Internal Picture</h2>
+<p>select:</p>
+<pre class="hljs"><code>User
+ |
+fd list
+ |
+Kernel scans
+ |
+return</code></pre>
+<p>every call.</p>
+<hr>
+<p>epoll:</p>
+<pre class="hljs"><code>Register FD once
+       |
+Kernel stores interest list
+       |
+Ready events added internally
+       |
+epoll_wait returns ready list</code></pre>
+<div class="diagram"><pre class="mermaid">graph TD
+    subgraph sel [&quot;select / poll — every call&quot;]
+        U1[&quot;user: full fd list&quot;] --&gt;|&quot;copy in&quot;| K1[&quot;kernel scans ALL fds — O(n)&quot;]
+        K1 --&gt;|&quot;copy out&quot;| U2[&quot;user re-scans results&quot;]
+    end
+    subgraph ep [&quot;epoll — amortized&quot;]
+        R[&quot;epoll_ctl: register fd ONCE&quot;] --&gt; IL[&quot;kernel interest list (rbtree)&quot;]
+        NIC[&quot;data arrives (interrupt)&quot;] --&gt; RL[&quot;kernel appends to ready list&quot;]
+        IL -.-&gt; RL
+        W[&quot;epoll_wait&quot;] --&gt;|&quot;returns ONLY ready fds — O(ready)&quot;| U3[&quot;user&quot;]
+        RL --&gt; W
+    end</pre></div>
+<hr>
+<h2 id="level-triggered-vs-edge-triggered">Level Triggered vs Edge Triggered</h2>
+<p>Very common follow-up.</p>
+<hr>
+<h3 id="level-triggered-default">Level Triggered (default)</h3>
+<p>If data exists:</p>
+<pre class="hljs"><code>Socket buffer:
+HELLO</code></pre>
+<p>you&#39;ll keep getting notifications.</p>
+<pre class="hljs"><code>Readable
+Readable
+Readable
+Readable</code></pre>
+<p>until data consumed.</p>
+<hr>
+<p>Example:</p>
+<pre class="hljs"><code>HELLO</code></pre>
+<p>Read only:</p>
+<pre class="hljs"><code>HE</code></pre>
+<p>Remaining:</p>
+<pre class="hljs"><code>LLO</code></pre>
+<p>Kernel continues notifying.</p>
+<hr>
+<p>Easy to use.</p>
+<hr>
+<h3 id="edge-triggered">Edge Triggered</h3>
+<p>Notify only on transition.</p>
+<pre class="hljs"><code>No Data
+  ↓
+Has Data</code></pre>
+<p>one notification.</p>
+<hr>
+<p>Example:</p>
+<pre class="hljs"><code>HELLO</code></pre>
+<p>Kernel:</p>
+<pre class="hljs"><code>Readable!</code></pre>
+<p>once.</p>
+<hr>
+<p>You read:</p>
+<pre class="hljs"><code>HE</code></pre>
+<p>leave:</p>
+<pre class="hljs"><code>LLO</code></pre>
+<p>No further notification.</p>
+<p>You must drain socket completely.</p>
+<hr>
+<p>Interview answer:</p>
+<blockquote>
+<p>Edge-triggered reduces notification overhead but requires non-blocking sockets and careful handling to avoid missing data.</p>
+</blockquote>
+<hr>
+<h2 id="example-server">Example Server</h2>
+<p>Nginx:</p>
+<pre class="hljs"><code>1 worker
+   |
+epoll_wait()
+   |
+thousands of connections</code></pre>
+<hr>
+<p>Node.js</p>
+<p>Under Linux:</p>
+<pre class="hljs"><code>libuv
+  ↓
+epoll</code></pre>
+<hr>
+<p>Redis</p>
+<p>Uses:</p>
+<pre class="hljs"><code>epoll</code></pre>
+<p>on Linux.</p>
+<hr>
+<h2 id="complexity-summary">Complexity Summary</h2>
+<table>
+<thead>
+<tr>
+<th>Mechanism</th>
+<th>FD Limit</th>
+<th>Scan Cost</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>select</td>
+<td>~1024</td>
+<td>O(n)</td>
+</tr>
+<tr>
+<td>poll</td>
+<td>No practical limit</td>
+<td>O(n)</td>
+</tr>
+<tr>
+<td>epoll</td>
+<td>Huge</td>
+<td>O(ready_fds)</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="interview-answers">Interview Answers</h2>
+<h4 id="why-is-poll-better-than-select">Why is poll better than select?</h4>
+<ul>
+<li>No FD_SETSIZE limit</li>
+<li>Cleaner API</li>
+</ul>
+<p>But still O(n).</p>
+<hr>
+<h4 id="why-is-epoll-better-than-poll">Why is epoll better than poll?</h4>
+<p>Because epoll registers FDs once and the kernel maintains a ready list, avoiding a full scan of all descriptors on every wait.</p>
+<hr>
+<h4 id="why-does-nginx-use-epoll">Why does Nginx use epoll?</h4>
+<p>Because it can efficiently handle tens or hundreds of thousands of mostly idle connections with a small number of threads.</p>
+<hr>
+<h4 id="what-is-io-multiplexing">What is I/O Multiplexing?</h4>
+<blockquote>
+<p>I/O multiplexing allows a single thread to monitor many file descriptors and be notified when any become ready for I/O, avoiding one-thread-per-connection designs.</p>
+</blockquote>
+<p>That&#39;s usually enough depth for Google, Rubrik, DE Shaw, Databricks, or similar backend interviews.</p>
+<ul>
+<li><p>epoll data structure in kernel, red black tree for ready fd.</p>
+</li>
+<li><p>call epoll_ctl once per socket, add each to my epoll instance</p>
+</li>
+<li><p>give back each of these that are intersted</p>
+</li>
+<li><p>interest list is red black tree</p>
+</li>
+<li><p>ready list is a doubly linked list</p>
+</li>
+<li><p>default: level trigerred vs edge triggered</p>
+</li>
+<li><p>epoll_wait -&gt; for each event, dispatch event, and handle</p>
+</li>
+<li><p>nginx (reverse proxy) , redis, node.js libuv runtime, haproxy (l4/l7 load balances) all run on epoll_wait()</p>
+</li>
+<li><p>every epoll_wait() read() write() is a syscall</p>
+</li>
+<li><p>io_uring - ring buffers in memory, even the syscalls you optimize</p>
+</li>
+</ul>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="sockets-and-zero-copy.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">Sockets, Kernel Structures &amp; Zero-Copy</span></a><a class="pn-card pn-next" href="flow-vs-congestion.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">Flow Control vs Congestion Control</span></a></nav>
+</main>
+<aside class="toc"><div class="toc-title">On this page</div><ul><li class="toc-d1"><a href="#the-problem">The Problem</a></li><li class="toc-d1"><a href="#naive-solution-one-thread-per-connection">Naive Solution: One Thread Per Connection</a></li><li class="toc-d1"><a href="#io-multiplexing">I/O Multiplexing</a></li><li class="toc-d1"><a href="#select">select()</a></li><li class="toc-d1"><a href="#problems-with-select">Problems with select()</a></li><li class="toc-d2"><a href="#1-on-scan">1. O(n) Scan</a></li><li class="toc-d2"><a href="#2-copy-overhead">2. Copy Overhead</a></li><li class="toc-d2"><a href="#3-fd-limit">3. FD Limit</a></li><li class="toc-d1"><a href="#poll">poll()</a></li><li class="toc-d1"><a href="#poll-still-has-on">poll() still has O(n)</a></li><li class="toc-d1"><a href="#why-on-is-bad">Why O(n) Is Bad</a></li><li class="toc-d1"><a href="#epoll">epoll()</a></li><li class="toc-d1"><a href="#why-epoll-is-faster">Why epoll Is Faster</a></li><li class="toc-d1"><a href="#internal-picture">Internal Picture</a></li><li class="toc-d1"><a href="#level-triggered-vs-edge-triggered">Level Triggered vs Edge Triggered</a></li><li class="toc-d2"><a href="#level-triggered-default">Level Triggered (default)</a></li><li class="toc-d2"><a href="#edge-triggered">Edge Triggered</a></li><li class="toc-d1"><a href="#example-server">Example Server</a></li><li class="toc-d1"><a href="#complexity-summary">Complexity Summary</a></li><li class="toc-d1"><a href="#interview-answers">Interview Answers</a></li></ul></aside>
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

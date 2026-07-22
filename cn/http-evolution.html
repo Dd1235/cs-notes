@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HTTP/1.1 → 2 → 3 · Computer Networks</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#3E6B63">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link is-active" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">Computer Networks</a><div class="side-group"><div class="side-label">Notes</div><ul><li><a class="side-link" href="url-to-page.html">What Happens When You Type a URL</a></li><li><a class="side-link" href="tcp-vs-udp.html">TCP vs UDP — The Deep Dive</a></li><li><a class="side-link" href="sockets-and-zero-copy.html">Sockets, Kernel Structures &amp; Zero-Copy</a></li><li><a class="side-link" href="io-multiplexing.html">I/O Multiplexing — select, poll, epoll</a></li><li><a class="side-link" href="flow-vs-congestion.html">Flow Control vs Congestion Control</a></li></ul></div><div class="side-group"><div class="side-label">Addressing & Routing</div><ul><li><a class="side-link" href="ip-subnetting.html">IP Addressing &amp; Subnetting</a></li><li><a class="side-link" href="l2-switching.html">Layer 2 — Switching, VLANs, STP</a></li><li><a class="side-link" href="routing.html">Routing — Longest Prefix, OSPF, BGP</a></li></ul></div><div class="side-group"><div class="side-label">Web Protocols</div><ul><li><a class="side-link" href="tls.html">TLS — Handshake &amp; Certificates</a></li><li><a class="side-link" href="dns-deep-dive.html">DNS — Records, Resolution, Caching</a></li><li><a class="side-link is-active" href="http-evolution.html">HTTP/1.1 → 2 → 3</a></li></ul></div><div class="side-group"><div class="side-label">Revision</div><ul><li><a class="side-link" href="refresher.html">Rapid Refresher<span class="badge">&#9733;</span></a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">Computer Networks</a></div>
+  <div class="page-head">
+    <div class="page-kicker">Computer Networks</div>
+    <h1 class="page-title">HTTP/1.1 → 2 → 3</h1>
+    <div class="page-meta">2 min read &middot; source: <code>cn/http_evolution.md</code></div>
+  </div>
+  <article class="prose"><blockquote>
+<p>One protocol, three generations, each killing the previous generation&#39;s bottleneck. The recurring villain: <strong>head-of-line blocking</strong>, murdered twice, at two different layers.</p>
+</blockquote>
+<h3 id="http11-one-request-at-a-time-per-connection">HTTP/1.1 — one request at a time per connection</h3>
+<p>Keep-alive reuses the TCP connection (vs 1.0&#39;s connect-per-request), but each connection is a strict request→response pipeline. A slow response blocks everything queued behind it — <strong>application-level head-of-line blocking</strong>. (Pipelining tried to fix this and failed — responses had to return in order; browsers never shipped it on.)</p>
+<p>Browser workaround: ~6 parallel TCP connections per host. Site workarounds you should name: domain sharding, sprite sheets, JS bundling — all <em>protocol</em> workarounds masquerading as best practices.</p>
+<h3 id="http2-multiplexing-over-one-tcp">HTTP/2 — multiplexing over one TCP</h3>
+<p>One TCP connection, many independent <strong>streams</strong>: requests/responses chopped into frames, interleaved, reassembled. Slow response no longer blocks others — plus header compression (HPACK) and server push (now deprecated — fine to say so).</p>
+<p>The catch: TCP underneath is one ordered byte stream (<a href="tcp-vs-udp.html">TCP notes</a>). <strong>One lost packet stalls ALL streams</strong> until retransmission — the blocking moved down a layer: <strong>transport-level head-of-line blocking</strong>. On lossy networks H2 can lose to H1&#39;s six naive connections.</p>
+<h3 id="http3-quic-over-udp">HTTP/3 — QUIC, over UDP</h3>
+<p>Fix TCP&#39;s HOL by leaving TCP: <strong>QUIC</strong> runs over UDP and reimplements reliability <em>per-stream</em> in userspace, with TLS 1.3 baked in.</p>
+<ul>
+<li>Lost packet stalls <strong>only its own stream</strong> — the villain finally dies.</li>
+<li>Handshake: TCP+TLS&#39;s 2–3 RTTs collapse to <strong>1 RTT</strong> (0-RTT on resumption).</li>
+<li><strong>Connection ID</strong> instead of the (IP, port) 4-tuple → survive switching Wi-Fi→cellular without reconnecting.</li>
+<li>Deployment reality: userspace evolution (no kernel/middlebox ossification), but UDP-hostile networks fall back to H2 — which is why every H3 client keeps a TCP fallback.</li>
+</ul>
+<h3 id="the-table-you-draw">The table you draw</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>H1.1</th>
+<th>H2</th>
+<th>H3</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Transport</td>
+<td>TCP</td>
+<td>TCP</td>
+<td><strong>QUIC/UDP</strong></td>
+</tr>
+<tr>
+<td>Parallelism</td>
+<td>6 connections</td>
+<td>streams, 1 conn</td>
+<td>streams, 1 conn</td>
+</tr>
+<tr>
+<td>HOL blocking</td>
+<td>at app layer</td>
+<td>at TCP layer</td>
+<td>per-stream only</td>
+</tr>
+<tr>
+<td>Setup RTTs (with TLS)</td>
+<td>2–3</td>
+<td>2–3</td>
+<td>1 (0 resumed)</td>
+</tr>
+</tbody></table>
+<h3 id="drill">Drill</h3>
+<ol>
+<li>One image request times out on H1 vs H2 vs H3 — what happens to the <em>other</em> requests in each?</li>
+<li>Why did H2 make bundling/sharding anti-patterns overnight?</li>
+<li>Why must QUIC live in userspace over UDP rather than as TCP v2? <em>(Middleboxes ossified TCP; UDP passes through; iteration without kernel upgrades.)</em></li>
+</ol>
+<p><em><a href="../companies/stripe.html">Stripe</a> API discussions and system-design rounds touch this constantly.</em></p>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="dns-deep-dive.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">DNS — Records, Resolution, Caching</span></a><a class="pn-card pn-next" href="refresher.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">Rapid Refresher</span></a></nav>
+</main>
+<aside class="toc"><div class="toc-title">On this page</div><ul><li class="toc-d2"><a href="#http11-one-request-at-a-time-per-connection">HTTP/1.1 — one request at a time per connection</a></li><li class="toc-d2"><a href="#http2-multiplexing-over-one-tcp">HTTP/2 — multiplexing over one TCP</a></li><li class="toc-d2"><a href="#http3-quic-over-udp">HTTP/3 — QUIC, over UDP</a></li><li class="toc-d2"><a href="#the-table-you-draw">The table you draw</a></li><li class="toc-d2"><a href="#drill">Drill</a></li></ul></aside>
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

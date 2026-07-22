@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Testing, SDLC &amp; SE Flashcards · OOP &amp; C++</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#8A4E5E">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link is-active" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">OOP & C++</a><div class="side-group"><div class="side-label">Lecture Notes</div><ul><li><a class="side-link" href="volatile-macros-inline.html">volatile, Macros &amp; inline</a></li><li><a class="side-link" href="references-and-const.html">References &amp; const</a></li><li><a class="side-link" href="function-overloading.html">Function Overloading</a></li><li><a class="side-link" href="dynamic-memory.html">Dynamic Memory Management</a></li><li><a class="side-link" href="classes-and-objects.html">Classes &amp; Objects</a></li><li><a class="side-link" href="constructors.html">Constructors &amp; Information Hiding</a></li><li><a class="side-link" href="copy-semantics.html">Copy Constructor &amp; Copy Assignment</a></li><li><a class="side-link" href="constness-and-static.html">Const-ness &amp; Static Members</a></li><li><a class="side-link" href="friend-functions.html">Friend Functions &amp; Friend Classes</a></li><li><a class="side-link" href="operator-overloading.html">Operator Overloading</a></li><li><a class="side-link" href="inheritance.html">Inheritance &amp; Overriding</a></li><li><a class="side-link" href="multiple-private-inheritance.html">Multiple &amp; Private Inheritance</a></li><li><a class="side-link" href="virtual-functions.html">Virtual Functions &amp; Dynamic Binding</a></li><li><a class="side-link" href="vtables-and-const-cast.html">Virtual Pointer Tables &amp; const_cast</a></li><li><a class="side-link" href="cpp-casts.html">C++ Casts</a></li><li><a class="side-link" href="exceptions.html">Exceptions &amp; Error Handling</a></li><li><a class="side-link" href="try-catch-and-templates.html">try/catch &amp; Function Templates</a></li><li><a class="side-link" href="class-templates-functors.html">Class Templates &amp; Functors</a></li></ul></div><div class="side-group"><div class="side-label">Extras</div><ul><li><a class="side-link" href="compilation-model.html">The C++ Compilation Model</a></li><li><a class="side-link" href="template-metaprogramming.html">Template Metaprogramming</a></li><li><a class="side-link" href="build-your-own-vector.html">Exercise — Build Your Own Vector</a></li><li><a class="side-link" href="miscellany.html">Miscellany</a></li><li><a class="side-link" href="resources.html">Resources</a></li></ul></div><div class="side-group"><div class="side-label">Topic Notes</div><ul><li><a class="side-link" href="notes-cpp-core.html">C++ Core</a></li><li><a class="side-link" href="notes-cpp-oop.html">C++ OOP</a></li><li><a class="side-link" href="notes-cpp-advanced.html">C++ Advanced</a></li><li><a class="side-link" href="notes-ooad-uml.html">OOAD &amp; UML</a></li><li><a class="side-link" href="notes-design-patterns.html">Design Patterns</a></li><li><a class="side-link" href="notes-testing-sdlc.html">Testing, SDLC &amp; SE</a></li><li><a class="side-link" href="notes-interview-questions.html">Interview Questions</a></li></ul></div><div class="side-group"><div class="side-label">Flashcards</div><ul><li><a class="side-link" href="cards-cpp-core.html">C++ Core Flashcards</a></li><li><a class="side-link" href="cards-oop-lifetime.html">OOP, Lifetime &amp; Memory Flashcards</a></li><li><a class="side-link" href="cards-polymorphism-stl.html">Polymorphism, Casts, Templates &amp; STL Flashcards</a></li><li><a class="side-link" href="cards-ooad-uml.html">OOAD &amp; UML Flashcards</a></li><li><a class="side-link" href="cards-design-patterns.html">Design Patterns Flashcards</a></li><li><a class="side-link is-active" href="cards-testing-sdlc.html">Testing, SDLC &amp; SE Flashcards</a></li><li><a class="side-link" href="cards-interview-drills.html">Interview &amp; Code-Reading Drills</a></li></ul></div><div class="side-group"><div class="side-label">Under the Hood</div><ul><li><a class="side-link" href="memory-layout.html">Memory Layout, Alignment &amp; Padding</a></li></ul></div><div class="side-group"><div class="side-label">Revision</div><ul><li><a class="side-link" href="refresher.html">Rapid Refresher<span class="badge">&#9733;</span></a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">OOP & C++</a></div>
+  <div class="page-head">
+    <div class="page-kicker">OOP & C++</div>
+    <h1 class="page-title">Testing, SDLC &amp; SE Flashcards</h1>
+    <div class="page-meta">6 min read &middot; source: <code>oops_cpp/flashcards/06_testing_sdlc_se.md</code></div>
+  </div>
+  <article class="prose"><h3 id="s001">S001</h3>
+<p>Tags: software-engineering</p>
+<p>Prompt: Why do software projects fail?</p>
+<p>Answer: Unclear requirements, poor communication, underestimated complexity, weak design boundaries, inadequate testing, uncontrolled change, and schedule pressure that creates technical debt.</p>
+<h3 id="s002">S002</h3>
+<p>Tags: software-engineering</p>
+<p>Prompt: What is the engineering response to software complexity?</p>
+<p>Answer: Understand requirements, model before building, design for change, test continuously, and manage scope/time/cost/quality.</p>
+<h3 id="s003">S003</h3>
+<p>Tags: sdlc</p>
+<p>Prompt: Typical SDLC stages?</p>
+<p>Answer: Requirement gathering/analysis, design, implementation, testing, deployment, and maintenance.</p>
+<h3 id="s004">S004</h3>
+<p>Tags: requirements</p>
+<p>Prompt: Qualities of good requirements?</p>
+<p>Answer: Clear, testable, consistent, complete enough for the iteration, traceable, and prioritized.</p>
+<h3 id="s005">S005</h3>
+<p>Tags: requirements</p>
+<p>Prompt: Functional vs non-functional requirement?</p>
+<p>Answer: Functional describes what the system does. Non-functional describes quality constraints such as latency, security, reliability, or usability.</p>
+<h3 id="s006">S006</h3>
+<p>Tags: requirements</p>
+<p>Prompt: Turn &quot;system should be fast&quot; into a testable requirement.</p>
+<p>Answer: Example: &quot;Search returns results within 200 ms for 95 percent of requests under target load.&quot;</p>
+<h3 id="s007">S007</h3>
+<p>Tags: requirements</p>
+<p>Prompt: What are domain constraints and interface requirements?</p>
+<p>Answer: Domain constraints are business/environment rules. Interface requirements describe interactions with external systems.</p>
+<h3 id="s008">S008</h3>
+<p>Tags: sdlc-models</p>
+<p>Prompt: Waterfall: idea, best fit, risk.</p>
+<p>Answer: Sequential phases; best when requirements are stable; risk is late feedback.</p>
+<h3 id="s009">S009</h3>
+<p>Tags: sdlc-models</p>
+<p>Prompt: Iterative-incremental: idea, best fit, risk.</p>
+<p>Answer: Build in increments; best when partial delivery is useful; risk is architecture drift if design discipline is weak.</p>
+<h3 id="s010">S010</h3>
+<p>Tags: sdlc-models</p>
+<p>Prompt: V-model: idea, best fit, risk.</p>
+<p>Answer: Development phases paired with corresponding test levels; best for high-assurance systems; risk is rigidity.</p>
+<h3 id="s011">S011</h3>
+<p>Tags: sdlc-models</p>
+<p>Prompt: RAD: idea, best fit, risk.</p>
+<p>Answer: Rapid prototyping and quick feedback; best for UI/business apps; risk is weak architecture if rushed.</p>
+<h3 id="s012">S012</h3>
+<p>Tags: sdlc-models</p>
+<p>Prompt: Spiral model: idea, best fit, risk.</p>
+<p>Answer: Risk-driven cycles; best for high-risk complex systems; risk is management overhead.</p>
+<h3 id="s013">S013</h3>
+<p>Tags: sdlc-models</p>
+<p>Prompt: Agile: idea, best fit, risk.</p>
+<p>Answer: Adaptive iterations and frequent feedback; best for changing requirements; risk is weak execution if discipline is missing.</p>
+<h3 id="s014">S014</h3>
+<p>Tags: tdd</p>
+<p>Prompt: TDD: idea, strength, risk.</p>
+<p>Answer: Write tests before code; helps clarify unit behavior and regression safety; poor tests can mislead and overfit implementation.</p>
+<h3 id="s015">S015</h3>
+<p>Tags: agile, scrum</p>
+<p>Prompt: Agile values emphasized in the notes?</p>
+<p>Answer: Working software, customer collaboration, responding to change, and individuals/interactions.</p>
+<h3 id="s016">S016</h3>
+<p>Tags: scrum</p>
+<p>Prompt: Scrum artifacts/events to know.</p>
+<p>Answer: Product backlog, sprint backlog, sprint planning, daily sync, sprint review, retrospective, and burndown chart.</p>
+<h3 id="s017">S017</h3>
+<p>Tags: agile</p>
+<p>Prompt: Correct the misconception: &quot;Agile means no planning.&quot;</p>
+<p>Answer: Agile means short-feedback planning with frequent inspection and adaptation, not absence of planning.</p>
+<h3 id="s018">S018</h3>
+<p>Tags: verification-validation</p>
+<p>Prompt: Verification vs validation?</p>
+<p>Answer: Verification asks &quot;are we building the product right?&quot; Validation asks &quot;are we building the right product?&quot;</p>
+<h3 id="s019">S019</h3>
+<p>Tags: testing-vocabulary</p>
+<p>Prompt: Error, fault/bug, and failure?</p>
+<p>Answer: Error is a human mistake. Fault/bug is a defect in an artifact. Failure is observed incorrect behavior during execution/use.</p>
+<h3 id="s020">S020</h3>
+<p>Tags: testing-vocabulary</p>
+<p>Prompt: Test case, test suite, oracle, regression?</p>
+<p>Answer: A test case has inputs/steps/expected result. A test suite is a collection of tests. An oracle decides pass/fail. Regression is previously working behavior breaking.</p>
+<h3 id="s021">S021</h3>
+<p>Tags: black-box-testing</p>
+<p>Prompt: What is black-box testing?</p>
+<p>Answer: Testing based on external behavior/specification without using implementation knowledge.</p>
+<h3 id="s022">S022</h3>
+<p>Tags: black-box-testing</p>
+<p>Prompt: Equivalence partitioning?</p>
+<p>Answer: Group inputs expected to behave similarly and test representative values from each group.</p>
+<h3 id="s023">S023</h3>
+<p>Tags: black-box-testing</p>
+<p>Prompt: Boundary value analysis?</p>
+<p>Answer: Test edges such as min, max, just inside, just outside, and typical middle values because defects often occur at boundaries.</p>
+<h3 id="s024">S024</h3>
+<p>Tags: black-box-testing</p>
+<p>Prompt: If valid age is <code>18..60</code>, what values are useful boundary tests?</p>
+<p>Answer: <code>17</code>, <code>18</code>, <code>60</code>, <code>61</code>, plus a normal middle value such as <code>30</code>.</p>
+<h3 id="s025">S025</h3>
+<p>Tags: black-box-testing</p>
+<p>Prompt: Decision table testing?</p>
+<p>Answer: Test combinations of conditions and the corresponding actions, useful when behavior depends on multiple boolean/rule inputs.</p>
+<h3 id="s026">S026</h3>
+<p>Tags: black-box-testing</p>
+<p>Prompt: State transition testing?</p>
+<p>Answer: Test valid and invalid transitions between states, including events that should be rejected in a given state.</p>
+<h3 id="s027">S027</h3>
+<p>Tags: white-box-testing</p>
+<p>Prompt: What is white-box testing?</p>
+<p>Answer: Testing with knowledge of implementation structure, control flow, paths, and code branches.</p>
+<h3 id="s028">S028</h3>
+<p>Tags: coverage</p>
+<p>Prompt: Name white-box coverage types.</p>
+<p>Answer: Statement coverage, branch/decision coverage, condition coverage, path coverage, and loop boundary coverage.</p>
+<h3 id="s029">S029</h3>
+<p>Tags: coverage</p>
+<p>Prompt: Why is high coverage not sufficient?</p>
+<p>Answer: Code can execute without meaningful assertions or without covering important input combinations and failure modes.</p>
+<h3 id="s030">S030</h3>
+<p>Tags: test-levels</p>
+<p>Prompt: Unit, integration, system, acceptance testing?</p>
+<p>Answer: Unit tests small functions/classes. Integration tests component interactions. System tests whole-system behavior. Acceptance tests user/business expectations.</p>
+<h3 id="s031">S031</h3>
+<p>Tags: test-levels</p>
+<p>Prompt: Regression, smoke, performance, and security testing?</p>
+<p>Answer: Regression protects old behavior. Smoke checks build sanity. Performance measures latency/throughput/resources. Security tests abuse cases/vulnerabilities.</p>
+<h3 id="s032">S032</h3>
+<p>Tags: test-plan</p>
+<p>Prompt: What belongs in a test plan?</p>
+<p>Answer: Scope, features under/not under test, strategy, test data, environment, entry/exit criteria, risks, and responsibilities.</p>
+<h3 id="s033">S033</h3>
+<p>Tags: debugging</p>
+<p>Prompt: Practical debugging flow?</p>
+<p>Answer: Reproduce, minimize, form hypothesis, inspect logs/state, add failing test if possible, fix root cause, keep regression test.</p>
+<h3 id="s034">S034</h3>
+<p>Tags: debugging</p>
+<p>Prompt: Why avoid random changes during debugging?</p>
+<p>Answer: Debugging should be controlled hypothesis testing; random edits can hide the root cause and create new defects.</p>
+<h3 id="s035">S035</h3>
+<p>Tags: bug-tracking</p>
+<p>Prompt: What makes a useful bug report?</p>
+<p>Answer: Title, steps to reproduce, expected behavior, actual behavior, environment, severity/priority, and logs/screenshots when relevant.</p>
+<h3 id="s036">S036</h3>
+<p>Tags: bug-tracking</p>
+<p>Prompt: Severity vs priority?</p>
+<p>Answer: Severity is impact. Priority is scheduling/urgency.</p>
+<h3 id="s037">S037</h3>
+<p>Tags: maintenance</p>
+<p>Prompt: Corrective, adaptive, perfective, preventive maintenance?</p>
+<p>Answer: Corrective fixes defects. Adaptive adjusts to environment changes. Perfective improves performance/usability/features. Preventive refactors to reduce future risk.</p>
+<h3 id="s038">S038</h3>
+<p>Tags: maintenance</p>
+<p>Prompt: Why does maintainability matter?</p>
+<p>Answer: Most real software cost occurs after initial release, so designs must support change, testing, and comprehension.</p>
+<h3 id="s039">S039</h3>
+<p>Tags: version-control</p>
+<p>Prompt: What does version control support?</p>
+<p>Answer: History, collaboration, branching, code review, rollback, and traceability.</p>
+<h3 id="s040">S040</h3>
+<p>Tags: release</p>
+<p>Prompt: What belongs in release discipline?</p>
+<p>Answer: Versioning, changelog, automated checks, deployment plan, rollback plan, and post-deployment monitoring.</p>
+<h3 id="s041">S041</h3>
+<p>Tags: project-management</p>
+<p>Prompt: What is the project management triangle, and where does quality fit?</p>
+<p>Answer: Scope, time, and cost trade off. Quality is affected by all three; if scope grows while time/cost stay fixed, quality usually suffers.</p>
+<h3 id="s042">S042</h3>
+<p>Tags: project-management</p>
+<p>Prompt: Responsibilities of a project manager?</p>
+<p>Answer: Clarify goals, track progress/risks, manage dependencies, communicate status, support people, and resolve tradeoffs.</p>
+<h3 id="s043">S043</h3>
+<p>Tags: smart-se</p>
+<p>Prompt: Examples of AI in software engineering.</p>
+<p>Answer: Code search/completion, test generation, bug triage, requirements clustering, static-analysis assistance, and documentation help.</p>
+<h3 id="s044">S044</h3>
+<p>Tags: ai-engineering</p>
+<p>Prompt: Extra engineering concerns for AI systems?</p>
+<p>Answer: Data quality/versioning, model evaluation, bias/drift monitoring, reproducibility, explainability, deployment/rollback, benchmarks, human review, and production monitoring.</p>
+<h3 id="s045">S045</h3>
+<p>Tags: ai-engineering</p>
+<p>Prompt: What does &quot;treat model, data, prompts, evaluation, and product behavior as one engineered system&quot; mean?</p>
+<p>Answer: AI behavior is not only code. Data, model choice, prompt/configuration, evaluation, monitoring, and user-facing behavior must be versioned and tested together.</p>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="cards-design-patterns.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">Design Patterns Flashcards</span></a><a class="pn-card pn-next" href="cards-interview-drills.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">Interview &amp; Code-Reading Drills</span></a></nav>
+</main>
+<aside class="toc"><div class="toc-title">On this page</div><ul><li class="toc-d2"><a href="#s001">S001</a></li><li class="toc-d2"><a href="#s002">S002</a></li><li class="toc-d2"><a href="#s003">S003</a></li><li class="toc-d2"><a href="#s004">S004</a></li><li class="toc-d2"><a href="#s005">S005</a></li><li class="toc-d2"><a href="#s006">S006</a></li><li class="toc-d2"><a href="#s007">S007</a></li><li class="toc-d2"><a href="#s008">S008</a></li><li class="toc-d2"><a href="#s009">S009</a></li><li class="toc-d2"><a href="#s010">S010</a></li><li class="toc-d2"><a href="#s011">S011</a></li><li class="toc-d2"><a href="#s012">S012</a></li><li class="toc-d2"><a href="#s013">S013</a></li><li class="toc-d2"><a href="#s014">S014</a></li><li class="toc-d2"><a href="#s015">S015</a></li><li class="toc-d2"><a href="#s016">S016</a></li><li class="toc-d2"><a href="#s017">S017</a></li><li class="toc-d2"><a href="#s018">S018</a></li><li class="toc-d2"><a href="#s019">S019</a></li><li class="toc-d2"><a href="#s020">S020</a></li><li class="toc-d2"><a href="#s021">S021</a></li><li class="toc-d2"><a href="#s022">S022</a></li><li class="toc-d2"><a href="#s023">S023</a></li><li class="toc-d2"><a href="#s024">S024</a></li><li class="toc-d2"><a href="#s025">S025</a></li><li class="toc-d2"><a href="#s026">S026</a></li><li class="toc-d2"><a href="#s027">S027</a></li><li class="toc-d2"><a href="#s028">S028</a></li><li class="toc-d2"><a href="#s029">S029</a></li><li class="toc-d2"><a href="#s030">S030</a></li><li class="toc-d2"><a href="#s031">S031</a></li><li class="toc-d2"><a href="#s032">S032</a></li><li class="toc-d2"><a href="#s033">S033</a></li><li class="toc-d2"><a href="#s034">S034</a></li><li class="toc-d2"><a href="#s035">S035</a></li><li class="toc-d2"><a href="#s036">S036</a></li><li class="toc-d2"><a href="#s037">S037</a></li><li class="toc-d2"><a href="#s038">S038</a></li><li class="toc-d2"><a href="#s039">S039</a></li><li class="toc-d2"><a href="#s040">S040</a></li><li class="toc-d2"><a href="#s041">S041</a></li><li class="toc-d2"><a href="#s042">S042</a></li><li class="toc-d2"><a href="#s043">S043</a></li><li class="toc-d2"><a href="#s044">S044</a></li><li class="toc-d2"><a href="#s045">S045</a></li></ul></aside>
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Processes — Lifecycle, fork &amp; Friends · Operating Systems</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script type="module">
+import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+mermaid.initialize({
+  startOnLoad: true,
+  theme: 'base',
+  themeVariables: {
+    fontFamily: 'Inter, sans-serif',
+    fontSize: '14px',
+    primaryColor: '#F1E8D7',
+    primaryTextColor: '#2E2A21',
+    primaryBorderColor: '#8B8170',
+    lineColor: '#57503F',
+    secondaryColor: '#FDFAF3',
+    tertiaryColor: '#FBF6EA',
+    clusterBkg: '#FBF6EA',
+    clusterBorder: '#E2D8C3',
+    actorBkg: '#F1E8D7',
+    actorBorder: '#8B8170',
+    actorTextColor: '#2E2A21',
+    actorLineColor: '#B8AD97',
+    signalColor: '#57503F',
+    signalTextColor: '#2E2A21',
+    labelBoxBkgColor: '#F1E8D7',
+    labelTextColor: '#2E2A21',
+    loopTextColor: '#57503F',
+    noteBkgColor: '#FBF3DC',
+    noteBorderColor: '#D9B36C',
+    noteTextColor: '#57503F',
+    activationBkgColor: '#EFE6D2',
+    activationBorderColor: '#8B8170',
+    edgeLabelBackground: '#F7F1E4'
+  }
+});
+</script>
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#77682E">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link is-active" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">Operating Systems</a><div class="side-group"><div class="side-label">Notes</div><ul><li><a class="side-link" href="multithreading-cpp.html">Multithreading in C++</a></li><li><a class="side-link" href="semaphore-vs-mutex.html">Semaphore vs Mutex</a></li><li><a class="side-link" href="csapp-ch12.html">Concurrent Programming — CS:APP Ch. 12</a></li><li><a class="side-link" href="csapp-ch9.html">Virtual Memory — CS:APP Ch. 9</a></li></ul></div><div class="side-group"><div class="side-label">Processes & Scheduling</div><ul><li><a class="side-link is-active" href="processes.html">Processes — Lifecycle, fork &amp; Friends</a></li><li><a class="side-link" href="scheduling.html">CPU Scheduling — FIFO to MLFQ</a></li></ul></div><div class="side-group"><div class="side-label">Locks & Memory</div><ul><li><a class="side-link" href="locks-internals.html">How Locks Actually Work</a></li><li><a class="side-link" href="deadlock.html">Deadlock</a></li><li><a class="side-link" href="page-replacement.html">Page Replacement — FIFO, LRU, Clock</a></li></ul></div><div class="side-group"><div class="side-label">Files & IPC</div><ul><li><a class="side-link" href="filesystems.html">Filesystems — Inodes &amp; Journaling</a></li><li><a class="side-link" href="ipc.html">IPC — Pipes, Shared Memory, Signals</a></li></ul></div><div class="side-group"><div class="side-label">Revision</div><ul><li><a class="side-link" href="refresher.html">Rapid Refresher<span class="badge">&#9733;</span></a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">Operating Systems</a></div>
+  <div class="page-head">
+    <div class="page-kicker">Operating Systems</div>
+    <h1 class="page-title">Processes — Lifecycle, fork &amp; Friends</h1>
+    <div class="page-meta">2 min read &middot; source: <code>os/processes.md</code></div>
+  </div>
+  <article class="prose"><blockquote>
+<p>A process is a running program plus the OS&#39;s bookkeeping about it. The bookkeeping is the interview material.</p>
+</blockquote>
+<h3 id="program-vs-process">Program vs process</h3>
+<p>A <strong>program</strong> is a dead file on disk. A <strong>process</strong> is that file <em>brought to life</em>: address space, registers, PC, open files, credentials. Ten processes can run one program — same recipe, ten separate cakes.</p>
+<p>The OS tracks each in a <strong>PCB</strong> (process control block): PID, state, saved registers, page-table pointer, open-FD table, scheduling info.</p>
+<h3 id="the-state-machine">The state machine</h3>
+<div class="diagram"><pre class="mermaid">stateDiagram-v2
+    [*] --&gt; Ready: fork()
+    Ready --&gt; Running: scheduled
+    Running --&gt; Ready: timer preemption
+    Running --&gt; Blocked: I/O or wait()
+    Blocked --&gt; Ready: I/O completes
+    Running --&gt; Zombie: exit()
+    Zombie --&gt; [*]: parent wait()s</pre></div>
+<p><strong>Blocked ≠ Ready</strong> is the distinction interviewers fish for: a blocked process costs nearly nothing — it isn&#39;t schedulable until its event fires.</p>
+<h3 id="the-unix-trio">The Unix trio</h3>
+<ul>
+<li><strong>fork()</strong> — clone me. Returns <em>twice</em>: child&#39;s PID in the parent, 0 in the child. Cheap thanks to copy-on-write (see <a href="csapp-ch9.html">CS:APP ch 9</a>).</li>
+<li><strong>exec()</strong> — replace my program, keep my PID and open FDs (that FD survival is how shells wire up redirection before exec&#39;ing).</li>
+<li><strong>wait()/waitpid()</strong> — reap a finished child and collect its exit status.</li>
+</ul>
+<p>Shell in one line: <code>fork()</code> → child does <code>exec(cmd)</code> → parent <code>wait()</code>s.</p>
+<h3 id="zombies-and-orphans">Zombies and orphans</h3>
+<ul>
+<li><strong>Zombie</strong>: exited child whose parent hasn&#39;t <code>wait()</code>ed. Only the PCB entry survives — holding the exit status. A few are normal; thousands = parent bug (fd/PID leak).</li>
+<li><strong>Orphan</strong>: parent died first; child is adopted by <code>init</code>/<code>systemd</code> (PID 1), which dutifully reaps it.</li>
+</ul>
+<p><strong>Analogy:</strong> a zombie is a finished exam waiting to be collected; an orphan is a student whose teacher left — the principal takes over collection.</p>
+<h3 id="context-switch">Context switch</h3>
+<p>Timer interrupt → kernel saves registers into PCB A → picks next via scheduler → restores PCB B → returns to userspace as B. Costs: microseconds of register work, plus the <em>real</em> cost — cold TLB and caches. Thread switches within a process skip the page-table swap; that&#39;s why they&#39;re cheaper.</p>
+<p>Reference: <a href="https://pages.cs.wisc.edu/~remzi/OSTEP/cpu-intro.pdf" target="_blank" rel="noopener">OSTEP ch 4–5 (free)</a> — the cleanest 30 pages on this topic anywhere.</p>
+<h3 id="drill">Drill</h3>
+<ol>
+<li><code>fork()</code> is called once — why does it return twice? What&#39;s in each return?</li>
+<li>Why must exit status live in the kernel after death? <em>(Parent may ask later; the address space is gone.)</em></li>
+<li><code>for(int i=0;i&lt;3;i++) fork();</code> — how many processes? <em>(8.)</em></li>
+</ol>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="csapp-ch9.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">Virtual Memory — CS:APP Ch. 9</span></a><a class="pn-card pn-next" href="scheduling.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">CPU Scheduling — FIFO to MLFQ</span></a></nav>
+</main>
+<aside class="toc"><div class="toc-title">On this page</div><ul><li class="toc-d2"><a href="#program-vs-process">Program vs process</a></li><li class="toc-d2"><a href="#the-state-machine">The state machine</a></li><li class="toc-d2"><a href="#the-unix-trio">The Unix trio</a></li><li class="toc-d2"><a href="#zombies-and-orphans">Zombies and orphans</a></li><li class="toc-d2"><a href="#context-switch">Context switch</a></li><li class="toc-d2"><a href="#drill">Drill</a></li></ul></aside>
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

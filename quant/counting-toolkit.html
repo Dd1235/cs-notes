@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Counting — Stars, Bars &amp; Derangements · Probability &amp; Puzzles</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#4A648C">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link is-active" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">Probability & Puzzles</a><div class="side-group"><div class="side-label">Probability</div><ul><li><a class="side-link" href="probability-toolkit.html">Conditional Probability &amp; Bayes</a></li><li><a class="side-link" href="expectation-and-indicators.html">Expectation, Linearity &amp; Indicators</a></li><li><a class="side-link" href="coins-dice-waiting-times.html">Coins, Dice &amp; Waiting Times</a></li><li><a class="side-link" href="classic-paradoxes.html">Birthday, Monty Hall &amp; Friends</a></li><li><a class="side-link" href="random-walks-gamblers-ruin.html">Random Walks &amp; Gambler's Ruin</a></li><li><a class="side-link is-active" href="counting-toolkit.html">Counting — Stars, Bars &amp; Derangements</a></li><li><a class="side-link" href="markov-chains-mini.html">Markov Chains, Minimally</a></li></ul></div><div class="side-group"><div class="side-label">Puzzles</div><ul><li><a class="side-link" href="logic-puzzles.html">Logic Puzzles — Ropes, Bridges, Prisoners</a></li><li><a class="side-link" href="brainteaser-bank.html">Brainteaser Bank</a></li><li><a class="side-link" href="resources.html">Books &amp; Resources</a></li></ul></div><div class="side-group"><div class="side-label">Revision</div><ul><li><a class="side-link" href="refresher.html">Rapid Refresher<span class="badge">&#9733;</span></a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">Probability & Puzzles</a></div>
+  <div class="page-head">
+    <div class="page-kicker">Probability & Puzzles</div>
+    <h1 class="page-title">Counting — Stars, Bars &amp; Derangements</h1>
+    <div class="page-meta">2 min read &middot; source: <code>quant/combinatorics.md</code></div>
+  </div>
+  <article class="prose"><blockquote>
+<p>Most counting questions are one of five shapes. Identify the shape, apply the formula, sanity-check with a tiny case.</p>
+</blockquote>
+<h3 id="the-five-shapes">The five shapes</h3>
+<table>
+<thead>
+<tr>
+<th>Shape</th>
+<th>Formula</th>
+<th>Recognize it by</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Ordered pick k of n</td>
+<td>n!/(n−k)!</td>
+<td>&quot;arrange&quot;, &quot;sequence&quot;, &quot;podium&quot;</td>
+</tr>
+<tr>
+<td>Unordered pick</td>
+<td>C(n,k)</td>
+<td>&quot;choose a committee&quot;</td>
+</tr>
+<tr>
+<td>Multiset / identical balls into boxes</td>
+<td>C(n+k−1, k−1)</td>
+<td><strong>stars &amp; bars</strong> — &quot;distribute n identical&quot;</td>
+</tr>
+<tr>
+<td>Arrangements with repeats</td>
+<td>n!/(a!b!…)</td>
+<td>&quot;letters of MISSISSIPPI&quot;</td>
+</tr>
+<tr>
+<td>At-least/at-most constraints</td>
+<td>inclusion–exclusion</td>
+<td>&quot;none of…&quot;, &quot;at least one of…&quot;</td>
+</tr>
+</tbody></table>
+<h3 id="stars-bars-in-one-picture">Stars &amp; bars in one picture</h3>
+<p>Distribute 7 identical coins to 3 people: <code>★★|★★★★|★</code> — arrange 7 stars and 2 bars → C(9,2) = 36. Requiring everyone ≥1: give each a coin first, then distribute 4 → C(6,2) = 15.</p>
+<h3 id="inclusionexclusion-derangements">Inclusion–exclusion &amp; derangements</h3>
+<p>|A ∪ B ∪ C| = Σ|single| − Σ|pairs| + |triple| — add, over-counted, subtract, over-subtracted, add back.</p>
+<p><strong>Derangements</strong> (no one gets their own hat): Dₙ = n!·(1 − 1/1! + 1/2! − … ± 1/n!) → <strong>Dₙ ≈ n!/e</strong>.<br>So P(no fixed point) → 1/e ≈ 37%. Pair this with the expectation result (expected fixed points = 1, see <a href="expectation-and-indicators.html">expectation</a>) for a complete interview answer.</p>
+<p><strong>1/e shows up everywhere:</strong> derangements, the secretary problem (reject the first 37%, then take the next best — wins with probability 1/e), P(a particular coupon missed in n draws of n).</p>
+<h3 id="ballot-problem-catalan">Ballot problem &amp; Catalan</h3>
+<p>Candidate A gets a votes, B gets b (a &gt; b). P(A leads <em>throughout</em> the count) = <strong>(a−b)/(a+b)</strong> — proved with the reflection principle.</p>
+<p>Catalan numbers Cₙ = C(2n,n)/(n+1) count: balanced bracket sequences, monotone lattice paths that never cross the diagonal, binary tree shapes. If a problem says &quot;never goes negative&quot;, think Catalan/reflection.</p>
+<h3 id="drill">Drill</h3>
+<ol>
+<li>How many non-negative integer solutions to x+y+z = 10 with x ≤ 4? <em>(All: C(12,2)=66; subtract x ≥ 5 via substitution: C(7,2)=21 → 45.)</em></li>
+<li>8 people, round table, two specific people must not be adjacent — arrangements? <em>(Circular total 7! minus glued 2·6!.)</em></li>
+<li>Random permutation of 52 cards — P(no card is in its original position)? <em>(≈ 1/e.)</em></li>
+</ol>
+<p><em>Seen at: <a href="../companies/de-shaw.html">D. E. Shaw</a> OA aptitude sections lean heavily on shapes 3 and 5.</em></p>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="random-walks-gamblers-ruin.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">Random Walks &amp; Gambler's Ruin</span></a><a class="pn-card pn-next" href="markov-chains-mini.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">Markov Chains, Minimally</span></a></nav>
+</main>
+<aside class="toc"><div class="toc-title">On this page</div><ul><li class="toc-d2"><a href="#the-five-shapes">The five shapes</a></li><li class="toc-d2"><a href="#stars-bars-in-one-picture">Stars &amp; bars in one picture</a></li><li class="toc-d2"><a href="#inclusionexclusion-derangements">Inclusion–exclusion &amp; derangements</a></li><li class="toc-d2"><a href="#ballot-problem-catalan">Ballot problem &amp; Catalan</a></li><li class="toc-d2"><a href="#drill">Drill</a></li></ul></aside>
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

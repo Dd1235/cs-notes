@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Arista Networks · Company Prep</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#6F5680">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link is-active" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">Company Prep</a><div class="side-group"><div class="side-label">Overview</div><ul><li><a class="side-link" href="overview.html">The Map — Who Tests What</a></li></ul></div><div class="side-group"><div class="side-label">Companies</div><ul><li><a class="side-link is-active" href="arista.html">Arista Networks</a></li><li><a class="side-link" href="intuit.html">Intuit</a></li><li><a class="side-link" href="stripe.html">Stripe</a></li><li><a class="side-link" href="de-shaw.html">D. E. Shaw</a></li><li><a class="side-link" href="rubrik.html">Rubrik</a></li><li><a class="side-link" href="citadel.html">Citadel</a></li></ul></div><div class="side-group"><div class="side-label">PYQ Bank</div><ul><li><a class="side-link" href="pyq-os-memory.html">PYQ — OS: Memory, Paging &amp; Processes</a></li><li><a class="side-link" href="pyq-os-concurrency.html">PYQ — OS: Concurrency &amp; Sync</a></li><li><a class="side-link" href="pyq-networks.html">PYQ — Networks</a></li><li><a class="side-link" href="pyq-oop-design.html">PYQ — OOP &amp; Design</a></li><li><a class="side-link" href="pyq-dbms-sql.html">PYQ — DBMS &amp; SQL</a></li><li><a class="side-link" href="pyq-c-lowlevel.html">PYQ — C &amp; Low-Level</a></li><li><a class="side-link" href="pyq-cloud-ml.html">PYQ — Cloud, Containers &amp; ML</a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">Company Prep</a></div>
+  <div class="page-head">
+    <div class="page-kicker">Company Prep</div>
+    <h1 class="page-title">Arista Networks</h1>
+    <div class="page-meta">2 min read &middot; source: <code>company_prep/arista.md</code></div>
+  </div>
+  <article class="prose"><blockquote>
+<p>They build switch/router OSes (EOS) in C/C++ and Go. The interview is a systems-programmer filter: networking fluency + raw C/C++ under primitive tooling.</p>
+</blockquote>
+<h3 id="pipeline">Pipeline</h3>
+<ol>
+<li><strong>OA (HackerRank, 60–120 min)</strong> — coding (lists, trees, DP reported through 2025) <em>plus MCQs on CN, OS, DBMS, C/C++</em> — the core-subject MCQs are where unprepared candidates die.</li>
+<li><strong>Technical rounds (2–3)</strong> — coding in deliberately barebones environments: CoderPad, sometimes ssh + a bare editor. Expect to write, compile, and debug without an IDE.</li>
+<li><strong>Final/HM round</strong> — deeper systems + networking discussion, project walk-through.</li>
+</ol>
+<h3 id="what-they-actually-test">What they actually test</h3>
+<ul>
+<li><strong>Networking as a first-class subject</strong>: TCP internals (handshake, retransmission, flow vs congestion), sockets, what happens at L2/L3 per hop, subnetting.</li>
+<li><strong>C/C++ under the hood</strong>: pointers, memory layout, object lifetime, virtual dispatch, &quot;what does this print&quot; traps.</li>
+<li><strong>Debugging as a skill of its own</strong> — walking through broken code calmly matters as much as solving fresh problems.</li>
+<li>Linked-list and tree problems with constraints (in-place, O(1) space) fit the embedded/systems flavour.</li>
+</ul>
+<h3 id="revise-on-this-site">Revise on this site</h3>
+<p><a href="../cn/tcp-vs-udp.html">TCP vs UDP deep dive</a> · <a href="../cn/sockets-and-zero-copy.html">Sockets &amp; zero-copy</a> · <a href="../cn/ip-subnetting.html">IP &amp; subnetting</a> · <a href="../cn/l2-switching.html">L2 switching</a> · <a href="../cn/io-multiplexing.html">I/O multiplexing</a> · <a href="../oops/memory-layout.html">Memory layout &amp; padding</a> · <a href="../oops/vtables-and-const-cast.html">vtables</a> · <a href="../oops/references-and-const.html">References &amp; const</a></p>
+<h3 id="practice-prompts-representative-paraphrased">Practice prompts (representative, paraphrased)</h3>
+<ol>
+<li>Reverse a linked list in groups of k, then explain where every pointer lives in memory.</li>
+<li>Given <code>struct { char a; int b; char c; }</code> — sizeof? Reorder to shrink it.</li>
+<li>Walk a TCP segment from <code>write()</code> on host A to <code>read()</code> on host B — every queue and copy.</li>
+<li>An interface reports growing retransmissions — list your hypotheses in order and how you&#39;d confirm each.</li>
+</ol>
+<h3 id="sources">Sources</h3>
+<p><a href="https://www.interviewquery.com/interview-guides/arista-networks-software-engineer" target="_blank" rel="noopener">Interview Query guide</a> · <a href="https://www.geeksforgeeks.org/interview-experiences/arista-networks-recruitment-process/" target="_blank" rel="noopener">GfG recruitment process</a> · <a href="https://www.geeksforgeeks.org/interview-experiences/arista-networks-interview-experience-for-software-engineer-on-campus/" target="_blank" rel="noopener">GfG on-campus experience</a> · <a href="https://prepfully.com/interview-questions/arista-networks/software-engineer" target="_blank" rel="noopener">Prepfully question bank</a></p>
+<p><em>Last reviewed: July 2026.</em></p>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="overview.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">The Map — Who Tests What</span></a><a class="pn-card pn-next" href="intuit.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">Intuit</span></a></nav>
+</main>
+<aside class="toc"><div class="toc-title">On this page</div><ul><li class="toc-d2"><a href="#pipeline">Pipeline</a></li><li class="toc-d2"><a href="#what-they-actually-test">What they actually test</a></li><li class="toc-d2"><a href="#revise-on-this-site">Revise on this site</a></li><li class="toc-d2"><a href="#practice-prompts-representative-paraphrased">Practice prompts (representative, paraphrased)</a></li><li class="toc-d2"><a href="#sources">Sources</a></li></ul></aside>
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

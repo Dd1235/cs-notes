@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Interview &amp; Code-Reading Drills · OOP &amp; C++</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#8A4E5E">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link is-active" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">OOP & C++</a><div class="side-group"><div class="side-label">Lecture Notes</div><ul><li><a class="side-link" href="volatile-macros-inline.html">volatile, Macros &amp; inline</a></li><li><a class="side-link" href="references-and-const.html">References &amp; const</a></li><li><a class="side-link" href="function-overloading.html">Function Overloading</a></li><li><a class="side-link" href="dynamic-memory.html">Dynamic Memory Management</a></li><li><a class="side-link" href="classes-and-objects.html">Classes &amp; Objects</a></li><li><a class="side-link" href="constructors.html">Constructors &amp; Information Hiding</a></li><li><a class="side-link" href="copy-semantics.html">Copy Constructor &amp; Copy Assignment</a></li><li><a class="side-link" href="constness-and-static.html">Const-ness &amp; Static Members</a></li><li><a class="side-link" href="friend-functions.html">Friend Functions &amp; Friend Classes</a></li><li><a class="side-link" href="operator-overloading.html">Operator Overloading</a></li><li><a class="side-link" href="inheritance.html">Inheritance &amp; Overriding</a></li><li><a class="side-link" href="multiple-private-inheritance.html">Multiple &amp; Private Inheritance</a></li><li><a class="side-link" href="virtual-functions.html">Virtual Functions &amp; Dynamic Binding</a></li><li><a class="side-link" href="vtables-and-const-cast.html">Virtual Pointer Tables &amp; const_cast</a></li><li><a class="side-link" href="cpp-casts.html">C++ Casts</a></li><li><a class="side-link" href="exceptions.html">Exceptions &amp; Error Handling</a></li><li><a class="side-link" href="try-catch-and-templates.html">try/catch &amp; Function Templates</a></li><li><a class="side-link" href="class-templates-functors.html">Class Templates &amp; Functors</a></li></ul></div><div class="side-group"><div class="side-label">Extras</div><ul><li><a class="side-link" href="compilation-model.html">The C++ Compilation Model</a></li><li><a class="side-link" href="template-metaprogramming.html">Template Metaprogramming</a></li><li><a class="side-link" href="build-your-own-vector.html">Exercise — Build Your Own Vector</a></li><li><a class="side-link" href="miscellany.html">Miscellany</a></li><li><a class="side-link" href="resources.html">Resources</a></li></ul></div><div class="side-group"><div class="side-label">Topic Notes</div><ul><li><a class="side-link" href="notes-cpp-core.html">C++ Core</a></li><li><a class="side-link" href="notes-cpp-oop.html">C++ OOP</a></li><li><a class="side-link" href="notes-cpp-advanced.html">C++ Advanced</a></li><li><a class="side-link" href="notes-ooad-uml.html">OOAD &amp; UML</a></li><li><a class="side-link" href="notes-design-patterns.html">Design Patterns</a></li><li><a class="side-link" href="notes-testing-sdlc.html">Testing, SDLC &amp; SE</a></li><li><a class="side-link" href="notes-interview-questions.html">Interview Questions</a></li></ul></div><div class="side-group"><div class="side-label">Flashcards</div><ul><li><a class="side-link" href="cards-cpp-core.html">C++ Core Flashcards</a></li><li><a class="side-link" href="cards-oop-lifetime.html">OOP, Lifetime &amp; Memory Flashcards</a></li><li><a class="side-link" href="cards-polymorphism-stl.html">Polymorphism, Casts, Templates &amp; STL Flashcards</a></li><li><a class="side-link" href="cards-ooad-uml.html">OOAD &amp; UML Flashcards</a></li><li><a class="side-link" href="cards-design-patterns.html">Design Patterns Flashcards</a></li><li><a class="side-link" href="cards-testing-sdlc.html">Testing, SDLC &amp; SE Flashcards</a></li><li><a class="side-link is-active" href="cards-interview-drills.html">Interview &amp; Code-Reading Drills</a></li></ul></div><div class="side-group"><div class="side-label">Under the Hood</div><ul><li><a class="side-link" href="memory-layout.html">Memory Layout, Alignment &amp; Padding</a></li></ul></div><div class="side-group"><div class="side-label">Revision</div><ul><li><a class="side-link" href="refresher.html">Rapid Refresher<span class="badge">&#9733;</span></a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">OOP & C++</a></div>
+  <div class="page-head">
+    <div class="page-kicker">OOP & C++</div>
+    <h1 class="page-title">Interview &amp; Code-Reading Drills</h1>
+    <div class="page-meta">12 min read &middot; source: <code>oops_cpp/flashcards/07_interview_drills.md</code></div>
+  </div>
+  <article class="prose"><h3 id="i001">I001</h3>
+<p>Tags: trap, lifetime</p>
+<p>Prompt: What is wrong?</p>
+<pre class="hljs"><code><span class="hljs-function"><span class="hljs-type">int</span>&amp; <span class="hljs-title">bad</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-type">int</span> x = <span class="hljs-number">42</span>;
+    <span class="hljs-keyword">return</span> x;
+}</code></pre>
+<p>Answer: It returns a reference to a local variable whose lifetime ends when the function returns. The reference dangles; using it is undefined behavior.</p>
+<h3 id="i002">I002</h3>
+<p>Tags: trap, virtual-destructor</p>
+<p>Prompt: What is wrong?</p>
+<pre class="hljs"><code><span class="hljs-keyword">struct</span> <span class="hljs-title class_">Base</span> { ~<span class="hljs-built_in">Base</span>() {} };
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">Derived</span> : Base { std::vector&lt;<span class="hljs-type">int</span>&gt; v; };
+Base* p = <span class="hljs-keyword">new</span> Derived;
+<span class="hljs-keyword">delete</span> p;</code></pre>
+<p>Answer: <code>Base</code> lacks a virtual destructor. Deleting a derived object through a base pointer is undefined behavior.</p>
+<h3 id="i003">I003</h3>
+<p>Tags: trap, macros</p>
+<p>Prompt: What is printed or why is this bad?</p>
+<pre class="hljs"><code><span class="hljs-meta">#<span class="hljs-keyword">define</span> SQR(x) ((x) * (x))</span>
+<span class="hljs-type">int</span> i = <span class="hljs-number">2</span>;
+<span class="hljs-type">int</span> y = <span class="hljs-built_in">SQR</span>(i++);</code></pre>
+<p>Answer: It expands to <code>((i++) * (i++))</code>; <code>i</code> is incremented twice and behavior/result is not what a function-like square should mean. Prefer an inline/template function.</p>
+<h3 id="i004">I004</h3>
+<p>Tags: trap, slicing</p>
+<p>Prompt: What happens?</p>
+<pre class="hljs"><code><span class="hljs-keyword">struct</span> <span class="hljs-title class_">B</span> { <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-type">void</span> <span class="hljs-title">f</span><span class="hljs-params">()</span></span>; };
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">D</span> : B { <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">f</span><span class="hljs-params">()</span> <span class="hljs-keyword">override</span></span>; };
+<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">g</span><span class="hljs-params">(B b)</span> </span>{ b.<span class="hljs-built_in">f</span>(); }
+D d;
+<span class="hljs-built_in">g</span>(d);</code></pre>
+<p>Answer: <code>d</code> is sliced into a <code>B</code> object when passed by value. The call is on the sliced base object, so it cannot dispatch to <code>D::f</code>.</p>
+<h3 id="i005">I005</h3>
+<p>Tags: trap, move</p>
+<p>Prompt: Does <code>std::move(a)</code> move data by itself?</p>
+<p>Answer: No. It casts <code>a</code> to an rvalue reference. A move happens only if a move constructor/assignment or overload is selected.</p>
+<h3 id="i006">I006</h3>
+<p>Tags: trap, static-type</p>
+<p>Prompt: What does this show?</p>
+<pre class="hljs"><code><span class="hljs-keyword">struct</span> <span class="hljs-title class_">Base</span> { <span class="hljs-type">int</span> x = <span class="hljs-number">5</span>; <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-type">void</span> <span class="hljs-title">f</span><span class="hljs-params">()</span></span>; };
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">Child</span> : Base { <span class="hljs-type">int</span> x = <span class="hljs-number">10</span>; <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">f</span><span class="hljs-params">()</span> <span class="hljs-keyword">override</span></span>; };
+Base* b = <span class="hljs-keyword">new</span> Child;
+std::cout &lt;&lt; b-&gt;x;
+b-&gt;<span class="hljs-built_in">f</span>();</code></pre>
+<p>Answer: <code>b-&gt;x</code> uses <code>Base::x</code> because data members bind by static type. <code>b-&gt;f()</code> dispatches to <code>Child::f</code> because <code>f</code> is virtual.</p>
+<h3 id="i007">I007</h3>
+<p>Tags: trap, casts</p>
+<p>Prompt: Why is this wrong when calling base logic from an override?</p>
+<pre class="hljs"><code><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">SpecialWindow::onResize</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-built_in">static_cast</span>&lt;Window&gt;(*<span class="hljs-keyword">this</span>).<span class="hljs-built_in">onResize</span>();
+}</code></pre>
+<p>Answer: It casts by value, creating a sliced <code>Window</code> temporary, then calls on that temporary. Use <code>Window::onResize();</code>.</p>
+<h3 id="i008">I008</h3>
+<p>Tags: trap, casts</p>
+<p>Prompt: Multiple choice: Which cast should be used for a runtime-checked downcast in a polymorphic hierarchy?</p>
+<p>Options: A. <code>static_cast</code> B. <code>dynamic_cast</code> C. <code>const_cast</code> D. <code>reinterpret_cast</code></p>
+<p>Answer: B. <code>dynamic_cast</code>.</p>
+<h3 id="i009">I009</h3>
+<p>Tags: trap, dynamic-cast</p>
+<p>Prompt: What is the failure behavior?</p>
+<pre class="hljs"><code>Base* b = <span class="hljs-keyword">new</span> Dog;
+Cat* c = <span class="hljs-built_in">dynamic_cast</span>&lt;Cat*&gt;(b);
+Cat&amp; r = <span class="hljs-built_in">dynamic_cast</span>&lt;Cat&amp;&gt;(*b);</code></pre>
+<p>Answer: Pointer cast failure returns <code>nullptr</code>. Reference cast failure throws <code>std::bad_cast</code>.</p>
+<h3 id="i010">I010</h3>
+<p>Tags: trap, const-cast</p>
+<p>Prompt: Is this safe?</p>
+<pre class="hljs"><code><span class="hljs-type">const</span> <span class="hljs-type">int</span> x = <span class="hljs-number">5</span>;
+<span class="hljs-type">int</span>* p = <span class="hljs-built_in">const_cast</span>&lt;<span class="hljs-type">int</span>*&gt;(&amp;x);
+*p = <span class="hljs-number">6</span>;</code></pre>
+<p>Answer: No. The original object is truly const, so modifying it through <code>p</code> is undefined behavior.</p>
+<h3 id="i011">I011</h3>
+<p>Tags: trap, typeid</p>
+<p>Prompt: With a polymorphic base pointer <code>Base* p = new Derived;</code>, what is the conceptual difference between <code>typeid(p)</code> and <code>typeid(*p)</code>?</p>
+<p>Answer: <code>typeid(p)</code> reports the static pointer type <code>Base*</code>. <code>typeid(*p)</code> reports the dynamic object type <code>Derived</code> because the expression is a polymorphic glvalue.</p>
+<h3 id="i012">I012</h3>
+<p>Tags: trap, pure-virtual</p>
+<p>Prompt: Can this be useful?</p>
+<pre class="hljs"><code><span class="hljs-keyword">struct</span> <span class="hljs-title class_">Shape</span> {
+    <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-type">void</span> <span class="hljs-title">draw</span><span class="hljs-params">()</span> </span>= <span class="hljs-number">0</span>;
+};
+<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">Shape::draw</span><span class="hljs-params">()</span> </span>{ <span class="hljs-comment">/* common setup */</span> }</code></pre>
+<p>Answer: Yes. <code>Shape</code> remains abstract, but derived overrides can call <code>Shape::draw()</code> for shared setup.</p>
+<h3 id="i013">I013</h3>
+<p>Tags: trap, copy</p>
+<p>Prompt: Why is this dangerous?</p>
+<pre class="hljs"><code><span class="hljs-keyword">struct</span> <span class="hljs-title class_">S</span> {
+    <span class="hljs-type">char</span>* p;
+    ~<span class="hljs-built_in">S</span>() { <span class="hljs-keyword">delete</span>[] p; }
+};
+S a;
+S b = a;</code></pre>
+<p>Answer: The compiler-generated copy constructor shallow-copies the pointer. Both objects own the same allocation and will double-delete.</p>
+<h3 id="i014">I014</h3>
+<p>Tags: trap, copy-assignment</p>
+<p>Prompt: What property should copy assignment support for <code>a = b = c</code>?</p>
+<p>Answer: It should return <code>*this</code> by reference so assignment chaining works naturally.</p>
+<h3 id="i015">I015</h3>
+<p>Tags: trap, self-assignment</p>
+<p>Prompt: What breaks in naive assignment?</p>
+<pre class="hljs"><code>String&amp; <span class="hljs-keyword">operator</span>=(<span class="hljs-type">const</span> String&amp; s) {
+    <span class="hljs-keyword">delete</span>[] data;
+    data = <span class="hljs-built_in">clone</span>(s.data);
+    <span class="hljs-keyword">return</span> *<span class="hljs-keyword">this</span>;
+}</code></pre>
+<p>Answer: On <code>s = s</code>, it deletes its own data and then tries to clone from freed memory. Check self-assignment or use copy-and-swap.</p>
+<h3 id="i016">I016</h3>
+<p>Tags: trap, initializer-order</p>
+<p>Prompt: What is the bug?</p>
+<pre class="hljs"><code><span class="hljs-keyword">struct</span> <span class="hljs-title class_">S</span> {
+    <span class="hljs-type">size_t</span> len_;
+    <span class="hljs-type">char</span>* str_;
+    <span class="hljs-built_in">S</span>(<span class="hljs-type">const</span> <span class="hljs-type">char</span>* s) : <span class="hljs-built_in">str_</span>(<span class="hljs-built_in">strdup</span>(s)), <span class="hljs-built_in">len_</span>(<span class="hljs-built_in">strlen</span>(str_)) {}
+};</code></pre>
+<p>Answer: Members initialize in declaration order, so <code>len_</code> initializes before <code>str_</code>; <code>strlen(str_)</code> reads an uninitialized pointer. Declare <code>str_</code> before <code>len_</code> or compute from <code>s</code>.</p>
+<h3 id="i017">I017</h3>
+<p>Tags: trap, placement-new</p>
+<p>Prompt: What is wrong?</p>
+<pre class="hljs"><code><span class="hljs-built_in">alignas</span>(T) <span class="hljs-type">unsigned</span> <span class="hljs-type">char</span> buf[<span class="hljs-built_in">sizeof</span>(T)];
+T* p = <span class="hljs-built_in">new</span> (buf) <span class="hljs-built_in">T</span>();
+<span class="hljs-keyword">delete</span> p;</code></pre>
+<p>Answer: Placement new used stack-provided storage. <code>delete p</code> incorrectly tries to deallocate it. Call <code>p-&gt;~T();</code> only.</p>
+<h3 id="i018">I018</h3>
+<p>Tags: trap, new</p>
+<p>Prompt: Fill in: <code>new T(args)</code> roughly means __ then __.</p>
+<p>Answer: Call allocation function <code>operator new(sizeof(T))</code>, then construct <code>T</code> in that storage, conceptually with placement new.</p>
+<h3 id="i019">I019</h3>
+<p>Tags: trap, delete</p>
+<p>Prompt: Fill in: <code>delete p</code> roughly means __ then __.</p>
+<p>Answer: Call <code>p-&gt;~T()</code> if non-null, then call the matching deallocation function <code>operator delete(p)</code>.</p>
+<h3 id="i020">I020</h3>
+<p>Tags: trap, dynamic-memory</p>
+<p>Prompt: Which are mismatched and undefined: <code>malloc/free</code>, <code>new/delete</code>, <code>new[]/delete</code>, <code>new/free</code>?</p>
+<p>Answer: <code>malloc/free</code> and <code>new/delete</code> are matched. <code>new[]/delete</code> and <code>new/free</code> are mismatched and undefined.</p>
+<h3 id="i021">I021</h3>
+<p>Tags: trap, operator-overloading</p>
+<p>Prompt: Why can <code>a + 2</code> work with a member operator but <code>2 + a</code> may not?</p>
+<p>Answer: Member operators require the left operand to be the invoking class object. <code>2</code> is not that class. Use a non-member/friend overload for symmetry.</p>
+<h3 id="i022">I022</h3>
+<p>Tags: trap, operator-overloading</p>
+<p>Prompt: Why can&#39;t <code>operator&lt;&lt;</code> for <code>Complex</code> be a <code>Complex</code> member if you want <code>cout &lt;&lt; c</code>?</p>
+<p>Answer: The left operand is <code>cout</code>, so the operator would need to be a member of <code>ostream</code>, which you cannot add. Use a non-member overload.</p>
+<h3 id="i023">I023</h3>
+<p>Tags: trap, operator-overloading</p>
+<p>Prompt: Which postfix increment signature is correct?</p>
+<p>Options: A. <code>T&amp; operator++()</code> B. <code>T operator++(int)</code> C. <code>T operator++(T)</code> D. <code>T&amp; operator++(int&amp;)</code></p>
+<p>Answer: B. The dummy <code>int</code> distinguishes postfix.</p>
+<h3 id="i024">I024</h3>
+<p>Tags: trap, namespaces</p>
+<p>Prompt: What does <code>::data</code> mean?</p>
+<p>Answer: It qualifies <code>data</code> in the global namespace.</p>
+<h3 id="i025">I025</h3>
+<p>Tags: trap, namespaces</p>
+<p>Prompt: What is the difference between <code>using namespace ns;</code> and <code>using ns::x;</code>?</p>
+<p>Answer: <code>using namespace ns;</code> makes all names in <code>ns</code> available for lookup. <code>using ns::x;</code> brings only <code>x</code> into the current scope.</p>
+<h3 id="i026">I026</h3>
+<p>Tags: trap, friends</p>
+<p>Prompt: If <code>A</code> is a friend of <code>B</code>, can <code>B</code> access <code>A</code>&#39;s private members?</p>
+<p>Answer: Not unless <code>A</code> also declares <code>B</code> as a friend. Friendship is not symmetric.</p>
+<h3 id="i027">I027</h3>
+<p>Tags: trap, friends</p>
+<p>Prompt: If <code>A</code> friends <code>B</code>, are derived classes of <code>B</code> automatically friends?</p>
+<p>Answer: No. Friendship is not inherited.</p>
+<h3 id="i028">I028</h3>
+<p>Tags: trap, exceptions</p>
+<p>Prompt: What is printed?</p>
+<pre class="hljs"><code><span class="hljs-keyword">struct</span> <span class="hljs-title class_">B</span> {};
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">D</span> : B {};
+<span class="hljs-keyword">try</span> { <span class="hljs-keyword">throw</span> D{}; }
+<span class="hljs-built_in">catch</span> (B) { cout &lt;&lt; <span class="hljs-string">&quot;B&quot;</span>; }
+<span class="hljs-built_in">catch</span> (D) { cout &lt;&lt; <span class="hljs-string">&quot;D&quot;</span>; }</code></pre>
+<p>Answer: <code>B</code>. The base catch appears first and catches the derived exception by value; the <code>D</code> catch is unreachable.</p>
+<h3 id="i029">I029</h3>
+<p>Tags: trap, exceptions</p>
+<p>Prompt: Why is <code>catch (std::exception e)</code> weaker than <code>catch (const std::exception&amp; e)</code>?</p>
+<p>Answer: Catching by value copies and slices derived exception objects. Catching by const reference preserves polymorphic behavior and avoids copying.</p>
+<h3 id="i030">I030</h3>
+<p>Tags: trap, templates</p>
+<p>Prompt: Why does a macro <code>Max(a++, b++)</code> have a side-effect problem but a function template does not?</p>
+<p>Answer: A macro may substitute each argument multiple times. A function template evaluates each argument once before the call.</p>
+<h3 id="i031">I031</h3>
+<p>Tags: trap, templates</p>
+<p>Prompt: How do you write a template that knows the size of a raw array argument?</p>
+<p>Answer:</p>
+<pre class="hljs"><code><span class="hljs-function"><span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">class</span> T, <span class="hljs-type">size_t</span> N&gt;
+T <span class="hljs-title">max_array</span><span class="hljs-params">(<span class="hljs-type">const</span> T (&amp;arr)[N])</span></span>;</code></pre>
+<p>Taking the array by reference prevents decay.</p>
+<h3 id="i032">I032</h3>
+<p>Tags: trap, templates</p>
+<p>Prompt: Why might <code>typename T::name* p;</code> be required?</p>
+<p>Answer: Because <code>T::name</code> is a dependent nested type. Without <code>typename</code>, the parser can treat it as a value expression.</p>
+<h3 id="i033">I033</h3>
+<p>Tags: trap, stl</p>
+<p>Prompt: Why does <code>remove_if(v.begin(), v.end(), pred);</code> alone not shrink <code>v</code>?</p>
+<p>Answer: It only partitions/moves elements and returns the new logical end. You must call <code>erase</code> to remove the trailing elements physically.</p>
+<h3 id="i034">I034</h3>
+<p>Tags: trap, stl</p>
+<p>Prompt: Why might <code>list</code> be slower than <code>vector</code> despite O(1) insert/erase with iterator?</p>
+<p>Answer: Poor cache locality and allocation overhead can dominate. <code>vector</code>&#39;s contiguous storage is often much faster in practice.</p>
+<h3 id="i035">I035</h3>
+<p>Tags: trap, functors</p>
+<p>Prompt: Why can <code>sort(v.begin(), v.end(), IsGreaterThan{5});</code> use state while a raw function pointer cannot?</p>
+<p>Answer: The functor object stores <code>limit = 5</code> as member state. A plain function pointer is only an address and has no per-call state.</p>
+<h3 id="i036">I036</h3>
+<p>Tags: trap, uml</p>
+<p>Prompt: In a class diagram, which relation means the part cannot normally outlive the whole?</p>
+<p>Answer: Composition.</p>
+<h3 id="i037">I037</h3>
+<p>Tags: trap, uml</p>
+<p>Prompt: Which UML diagram answers &quot;what messages happen over time between objects&quot;?</p>
+<p>Answer: Sequence diagram.</p>
+<h3 id="i038">I038</h3>
+<p>Tags: trap, uml</p>
+<p>Prompt: Which UML diagram answers &quot;which operations are valid in each lifecycle state&quot;?</p>
+<p>Answer: State machine diagram, or protocol state machine for interface method-call validity.</p>
+<h3 id="i039">I039</h3>
+<p>Tags: trap, patterns</p>
+<p>Prompt: You need undo/redo for editor actions. Which pattern and why?</p>
+<p>Answer: Command, because each action can be represented as an object with enough state to execute and undo.</p>
+<h3 id="i040">I040</h3>
+<p>Tags: trap, patterns</p>
+<p>Prompt: You need light/dark/platform-specific <code>Button</code>, <code>Checkbox</code>, and <code>Menu</code> families. Which pattern?</p>
+<p>Answer: Abstract Factory, because it creates families of compatible related products.</p>
+<h3 id="i041">I041</h3>
+<p>Tags: trap, patterns</p>
+<p>Prompt: You have an AST and frequently add new passes like print, optimize, and type-check, but rarely add node kinds. Which pattern?</p>
+<p>Answer: Visitor.</p>
+<h3 id="i042">I042</h3>
+<p>Tags: trap, patterns</p>
+<p>Prompt: You have a global logger. Should it always be Singleton?</p>
+<p>Answer: Not always. Singleton may be acceptable for a truly unique resource, but dependency injection usually improves testability and makes dependencies explicit.</p>
+<h3 id="i043">I043</h3>
+<p>Tags: trap, testing</p>
+<p>Prompt: A test executes every statement but asserts almost nothing. What is the risk?</p>
+<p>Answer: High statement coverage but weak fault detection. Coverage alone does not prove meaningful behavior is checked.</p>
+<h3 id="i044">I044</h3>
+<p>Tags: trap, testing</p>
+<p>Prompt: For input range <code>1..100</code>, why test <code>0</code>, <code>1</code>, <code>100</code>, <code>101</code>, and a middle value?</p>
+<p>Answer: Boundary value analysis: defects cluster at edges and just outside valid ranges.</p>
+<h3 id="i045">I045</h3>
+<p>Tags: trap, se</p>
+<p>Prompt: Scope increases, time and cost are fixed. What usually happens?</p>
+<p>Answer: Quality suffers unless scope is renegotiated, resources change, or delivery is split.</p>
+<h3 id="i046">I046</h3>
+<p>Tags: combined, design</p>
+<p>Prompt: A leave-management system has many leave types and approval rules. What design avoids a giant <code>switch</code> and stays testable?</p>
+<p>Answer: Model leave rules as <code>LeavePolicy</code> strategy/policy objects, route approvals with a separate <code>ApprovalWorkflow</code>, and use a factory to select policies if creation varies.</p>
+<h3 id="i047">I047</h3>
+<p>Tags: combined, cplusplus-design</p>
+<p>Prompt: You write a base interface for polymorphic deletion and copy should be forbidden. What special members do you declare?</p>
+<p>Answer: <code>virtual ~Base() = default;</code>, delete copy constructor/assignment if copying through the interface is invalid, and consider protected/defaulted constructors as appropriate.</p>
+<h3 id="i048">I048</h3>
+<p>Tags: combined, exception-safety</p>
+<p>Prompt: For a custom string assignment, how do copy-and-swap and RAII provide the strong guarantee?</p>
+<p>Answer: Copy the new value first. If copying throws, the original object is unchanged. Then swap resources; the temporary destroys the old resource.</p>
+<h3 id="i049">I049</h3>
+<p>Tags: combined, casts-design</p>
+<p>Prompt: An interview asks &quot;which cast should I use for downcasting?&quot; What is the best complete answer?</p>
+<p>Answer: Prefer redesigning the interface to avoid downcasting. If a checked downcast is genuinely needed in a polymorphic hierarchy, use <code>dynamic_cast</code>. <code>static_cast</code> downcast is unchecked and risky.</p>
+<h3 id="i050">I050</h3>
+<p>Tags: combined, lifetime</p>
+<p>Prompt: Why does <code>vector&lt;T&gt;</code> need placement new internally?</p>
+<p>Answer: It separates capacity from size: allocate raw storage for many <code>T</code>s, construct only live elements as needed, destroy live elements manually, then deallocate raw storage.</p>
+<h3 id="i051">I051</h3>
+<p>Tags: combined, const</p>
+<p>Prompt: A <code>const MyString</code> has both <code>char&amp; operator[](size_t)</code> and <code>const char&amp; operator[](size_t) const</code>. Which is chosen?</p>
+<p>Answer: The const overload, because a const object can call only const member functions. It returns <code>const char&amp;</code>, preventing modification through the result.</p>
+<h3 id="i052">I052</h3>
+<p>Tags: combined, overloads</p>
+<p>Prompt: What is the natural return type for <code>operator=</code> and why?</p>
+<p>Answer: <code>T&amp;</code>, returning <code>*this</code>, because assignment changes an existing object and supports chaining like <code>a = b = c</code>.</p>
+<h3 id="i053">I053</h3>
+<p>Tags: trap, inheritance, static-type</p>
+<p>Prompt: Why does this not compile?</p>
+<pre class="hljs"><code><span class="hljs-keyword">class</span> <span class="hljs-title class_">Person</span> {};
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">Student</span> : <span class="hljs-keyword">public</span> Person {
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">cry</span><span class="hljs-params">()</span></span>;
+};
+
+Person* p = <span class="hljs-keyword">new</span> Student;
+p-&gt;<span class="hljs-built_in">cry</span>();</code></pre>
+<p>Answer: The static type of <code>p</code> is <code>Person*</code>, and <code>Person</code> has no <code>cry</code> member. C++ member lookup is based on static type first. Virtual dispatch only chooses among functions declared in the base interface.</p>
+<h3 id="i054">I054</h3>
+<p>Tags: trap, slicing</p>
+<p>Prompt: Why does this not let you call <code>Student::cry()</code>?</p>
+<pre class="hljs"><code>Person* p = <span class="hljs-keyword">new</span> Student;
+Person q = *p;
+q.<span class="hljs-built_in">cry</span>();</code></pre>
+<p>Answer: <code>q</code> is a separate <code>Person</code> object created by slicing the <code>Student</code>. It has no derived part and no <code>cry</code> member.</p>
+<h3 id="i055">I055</h3>
+<p>Tags: trap, vector, unsigned</p>
+<p>Prompt: What is wrong with this reverse loop?</p>
+<pre class="hljs"><code><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = v.<span class="hljs-built_in">size</span>() - <span class="hljs-number">1</span>; i &gt;= <span class="hljs-number">0</span>; --i) {
+    <span class="hljs-built_in">use</span>(v[i]);
+}</code></pre>
+<p>Answer: <code>v.size()</code> is <code>size_t</code> (unsigned). If the vector is empty, <code>v.size() - 1</code> wraps to a huge value before conversion. Signed/unsigned comparisons can also surprise. Use a safer idiom such as <code>for (size_t i = v.size(); i-- &gt; 0;)</code>.</p>
+<h3 id="i056">I056</h3>
+<p>Tags: trap, vector, unsigned</p>
+<p>Prompt: Why can <code>if (i &lt; v.size())</code> be risky when <code>i</code> is signed?</p>
+<p>Answer: Usual arithmetic conversions may convert <code>i</code> to unsigned. A negative <code>i</code> can become a very large value, producing surprising comparisons.</p>
+<h3 id="i057">I057</h3>
+<p>Tags: trap, custom-vector</p>
+<p>Prompt: In a hand-written <code>MyVector&lt;T&gt;</code>, why track both <code>_size</code> and <code>_capacity</code>?</p>
+<p>Answer: <code>_size</code> is the number of constructed/live elements. <code>_capacity</code> is allocated storage available before reallocation. This allows amortized <code>O(1)</code> <code>push_back</code>.</p>
+<h3 id="i058">I058</h3>
+<p>Tags: trap, custom-vector</p>
+<p>Prompt: What are the missing production concerns in a simple <code>MyVector</code> implemented with <code>new T[new_capacity]</code> and copy assignment?</p>
+<p>Answer: It default-constructs all capacity slots, needs correct copy/move constructors and assignment, must handle exceptions during resize, should destroy only live elements, and should use allocators/raw storage plus placement new for full STL-like behavior.</p>
+<h3 id="i059">I059</h3>
+<p>Tags: trap, custom-vector</p>
+<p>Prompt: In custom vector <code>operator[]</code>, what is wrong with <code>if (index &gt;= size)</code>?</p>
+<p>Answer: <code>size</code> is likely a member function, not the current element count. The condition should compare with <code>_size</code> or <code>size()</code>.</p>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="cards-testing-sdlc.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">Testing, SDLC &amp; SE Flashcards</span></a><a class="pn-card pn-next" href="memory-layout.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">Memory Layout, Alignment &amp; Padding</span></a></nav>
+</main>
+<aside class="toc"><div class="toc-title">On this page</div><ul><li class="toc-d2"><a href="#i001">I001</a></li><li class="toc-d2"><a href="#i002">I002</a></li><li class="toc-d2"><a href="#i003">I003</a></li><li class="toc-d2"><a href="#i004">I004</a></li><li class="toc-d2"><a href="#i005">I005</a></li><li class="toc-d2"><a href="#i006">I006</a></li><li class="toc-d2"><a href="#i007">I007</a></li><li class="toc-d2"><a href="#i008">I008</a></li><li class="toc-d2"><a href="#i009">I009</a></li><li class="toc-d2"><a href="#i010">I010</a></li><li class="toc-d2"><a href="#i011">I011</a></li><li class="toc-d2"><a href="#i012">I012</a></li><li class="toc-d2"><a href="#i013">I013</a></li><li class="toc-d2"><a href="#i014">I014</a></li><li class="toc-d2"><a href="#i015">I015</a></li><li class="toc-d2"><a href="#i016">I016</a></li><li class="toc-d2"><a href="#i017">I017</a></li><li class="toc-d2"><a href="#i018">I018</a></li><li class="toc-d2"><a href="#i019">I019</a></li><li class="toc-d2"><a href="#i020">I020</a></li><li class="toc-d2"><a href="#i021">I021</a></li><li class="toc-d2"><a href="#i022">I022</a></li><li class="toc-d2"><a href="#i023">I023</a></li><li class="toc-d2"><a href="#i024">I024</a></li><li class="toc-d2"><a href="#i025">I025</a></li><li class="toc-d2"><a href="#i026">I026</a></li><li class="toc-d2"><a href="#i027">I027</a></li><li class="toc-d2"><a href="#i028">I028</a></li><li class="toc-d2"><a href="#i029">I029</a></li><li class="toc-d2"><a href="#i030">I030</a></li><li class="toc-d2"><a href="#i031">I031</a></li><li class="toc-d2"><a href="#i032">I032</a></li><li class="toc-d2"><a href="#i033">I033</a></li><li class="toc-d2"><a href="#i034">I034</a></li><li class="toc-d2"><a href="#i035">I035</a></li><li class="toc-d2"><a href="#i036">I036</a></li><li class="toc-d2"><a href="#i037">I037</a></li><li class="toc-d2"><a href="#i038">I038</a></li><li class="toc-d2"><a href="#i039">I039</a></li><li class="toc-d2"><a href="#i040">I040</a></li><li class="toc-d2"><a href="#i041">I041</a></li><li class="toc-d2"><a href="#i042">I042</a></li><li class="toc-d2"><a href="#i043">I043</a></li><li class="toc-d2"><a href="#i044">I044</a></li><li class="toc-d2"><a href="#i045">I045</a></li><li class="toc-d2"><a href="#i046">I046</a></li><li class="toc-d2"><a href="#i047">I047</a></li><li class="toc-d2"><a href="#i048">I048</a></li><li class="toc-d2"><a href="#i049">I049</a></li><li class="toc-d2"><a href="#i050">I050</a></li><li class="toc-d2"><a href="#i051">I051</a></li><li class="toc-d2"><a href="#i052">I052</a></li><li class="toc-d2"><a href="#i053">I053</a></li><li class="toc-d2"><a href="#i054">I054</a></li><li class="toc-d2"><a href="#i055">I055</a></li><li class="toc-d2"><a href="#i056">I056</a></li><li class="toc-d2"><a href="#i057">I057</a></li><li class="toc-d2"><a href="#i058">I058</a></li><li class="toc-d2"><a href="#i059">I059</a></li></ul></aside>
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>

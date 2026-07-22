@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OOP, Lifetime &amp; Memory Flashcards · OOP &amp; C++</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#128214;</text></svg>">
+</head>
+<body style="--accent:#8A4E5E">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">&#10022;</span> Placement Notes</a>
+    <nav class="topnav"><a href="../cn/index.html" class="topnav-link" style="--acc:#3E6B63">CN</a><a href="../dbms/index.html" class="topnav-link" style="--acc:#B05730">DBMS</a><a href="../oops/index.html" class="topnav-link is-active" style="--acc:#8A4E5E">OOP/C++</a><a href="../os/index.html" class="topnav-link" style="--acc:#77682E">OS</a><a href="../quant/index.html" class="topnav-link" style="--acc:#4A648C">Quant</a><a href="../companies/index.html" class="topnav-link" style="--acc:#6F5680">Companies</a></nav>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="sidebar"><a class="side-subject" href="index.html">OOP & C++</a><div class="side-group"><div class="side-label">Lecture Notes</div><ul><li><a class="side-link" href="volatile-macros-inline.html">volatile, Macros &amp; inline</a></li><li><a class="side-link" href="references-and-const.html">References &amp; const</a></li><li><a class="side-link" href="function-overloading.html">Function Overloading</a></li><li><a class="side-link" href="dynamic-memory.html">Dynamic Memory Management</a></li><li><a class="side-link" href="classes-and-objects.html">Classes &amp; Objects</a></li><li><a class="side-link" href="constructors.html">Constructors &amp; Information Hiding</a></li><li><a class="side-link" href="copy-semantics.html">Copy Constructor &amp; Copy Assignment</a></li><li><a class="side-link" href="constness-and-static.html">Const-ness &amp; Static Members</a></li><li><a class="side-link" href="friend-functions.html">Friend Functions &amp; Friend Classes</a></li><li><a class="side-link" href="operator-overloading.html">Operator Overloading</a></li><li><a class="side-link" href="inheritance.html">Inheritance &amp; Overriding</a></li><li><a class="side-link" href="multiple-private-inheritance.html">Multiple &amp; Private Inheritance</a></li><li><a class="side-link" href="virtual-functions.html">Virtual Functions &amp; Dynamic Binding</a></li><li><a class="side-link" href="vtables-and-const-cast.html">Virtual Pointer Tables &amp; const_cast</a></li><li><a class="side-link" href="cpp-casts.html">C++ Casts</a></li><li><a class="side-link" href="exceptions.html">Exceptions &amp; Error Handling</a></li><li><a class="side-link" href="try-catch-and-templates.html">try/catch &amp; Function Templates</a></li><li><a class="side-link" href="class-templates-functors.html">Class Templates &amp; Functors</a></li></ul></div><div class="side-group"><div class="side-label">Extras</div><ul><li><a class="side-link" href="compilation-model.html">The C++ Compilation Model</a></li><li><a class="side-link" href="template-metaprogramming.html">Template Metaprogramming</a></li><li><a class="side-link" href="build-your-own-vector.html">Exercise — Build Your Own Vector</a></li><li><a class="side-link" href="miscellany.html">Miscellany</a></li><li><a class="side-link" href="resources.html">Resources</a></li></ul></div><div class="side-group"><div class="side-label">Topic Notes</div><ul><li><a class="side-link" href="notes-cpp-core.html">C++ Core</a></li><li><a class="side-link" href="notes-cpp-oop.html">C++ OOP</a></li><li><a class="side-link" href="notes-cpp-advanced.html">C++ Advanced</a></li><li><a class="side-link" href="notes-ooad-uml.html">OOAD &amp; UML</a></li><li><a class="side-link" href="notes-design-patterns.html">Design Patterns</a></li><li><a class="side-link" href="notes-testing-sdlc.html">Testing, SDLC &amp; SE</a></li><li><a class="side-link" href="notes-interview-questions.html">Interview Questions</a></li></ul></div><div class="side-group"><div class="side-label">Flashcards</div><ul><li><a class="side-link" href="cards-cpp-core.html">C++ Core Flashcards</a></li><li><a class="side-link is-active" href="cards-oop-lifetime.html">OOP, Lifetime &amp; Memory Flashcards</a></li><li><a class="side-link" href="cards-polymorphism-stl.html">Polymorphism, Casts, Templates &amp; STL Flashcards</a></li><li><a class="side-link" href="cards-ooad-uml.html">OOAD &amp; UML Flashcards</a></li><li><a class="side-link" href="cards-design-patterns.html">Design Patterns Flashcards</a></li><li><a class="side-link" href="cards-testing-sdlc.html">Testing, SDLC &amp; SE Flashcards</a></li><li><a class="side-link" href="cards-interview-drills.html">Interview &amp; Code-Reading Drills</a></li></ul></div><div class="side-group"><div class="side-label">Under the Hood</div><ul><li><a class="side-link" href="memory-layout.html">Memory Layout, Alignment &amp; Padding</a></li></ul></div><div class="side-group"><div class="side-label">Revision</div><ul><li><a class="side-link" href="refresher.html">Rapid Refresher<span class="badge">&#9733;</span></a></li></ul></div></aside>
+<main class="content">
+  <div class="crumbs"><a href="../index.html">Home</a> <span>/</span> <a href="index.html">OOP & C++</a></div>
+  <div class="page-head">
+    <div class="page-kicker">OOP & C++</div>
+    <h1 class="page-title">OOP, Lifetime &amp; Memory Flashcards</h1>
+    <div class="page-meta">9 min read &middot; source: <code>oops_cpp/flashcards/02_oop_lifetime.md</code></div>
+  </div>
+  <article class="prose"><h3 id="o001">O001</h3>
+<p>Tags: oop</p>
+<p>Prompt: Define class, object, state, behavior, and identity.</p>
+<p>Answer: A class defines a type. An object is a runtime instance. State is stored data. Behavior is member functions/operations. Identity means two objects can have equal state but still be distinct objects.</p>
+<h3 id="o002">O002</h3>
+<p>Tags: oop, design</p>
+<p>Prompt: Encapsulation vs information hiding?</p>
+<p>Answer: Encapsulation groups data with operations. Information hiding prevents users from depending on representation, preserving invariants behind a minimal interface.</p>
+<h3 id="o003">O003</h3>
+<p>Tags: oop, access</p>
+<p>Prompt: Default access for <code>class</code> and <code>struct</code>?</p>
+<p>Answer: <code>class</code> defaults to private. <code>struct</code> defaults to public. Conventionally, use <code>struct</code> for passive aggregates and <code>class</code> for invariant-owning abstractions.</p>
+<h3 id="o004">O004</h3>
+<p>Tags: oop, access</p>
+<p>Prompt: What can access <code>public</code>, <code>protected</code>, and <code>private</code> members?</p>
+<p>Answer: <code>public</code>: everyone. <code>protected</code>: the class, derived classes, and friends. <code>private</code>: the class and friends.</p>
+<h3 id="o005">O005</h3>
+<p>Tags: oop, this</p>
+<p>Prompt: What is the hidden <code>this</code> pointer, and why do static member functions lack it?</p>
+<p>Answer: Every non-static member function receives a hidden pointer to the invoking object. Static member functions belong to the class, not an object, so there is no <code>this</code>.</p>
+<h3 id="o006">O006</h3>
+<p>Tags: constructors</p>
+<p>Prompt: Why prefer member initializer lists?</p>
+<p>Answer: They directly initialize members, are required for references and const data members, avoid default-construction then assignment, and express dependencies more clearly.</p>
+<h3 id="o007">O007</h3>
+<p>Tags: constructors, edge-case</p>
+<p>Prompt: In what order are data members initialized: declaration order or initializer-list order?</p>
+<p>Answer: Declaration order in the class, regardless of initializer-list order. If one member depends on another, declare them in dependency order.</p>
+<h3 id="o008">O008</h3>
+<p>Tags: constructors, explicit</p>
+<p>Prompt: What does <code>explicit</code> prevent on a single-argument constructor?</p>
+<p>Answer: It prevents implicit user-defined conversions such as converting an <code>int</code> into <code>Meter</code> accidentally during function calls or operator expressions.</p>
+<h3 id="o009">O009</h3>
+<p>Tags: lifetime, destructors</p>
+<p>Prompt: What does a destructor do, and when is it called?</p>
+<p>Answer: It releases resources/finishes object lifetime. It runs at scope exit for automatic objects, during <code>delete</code>, for members/bases during enclosing object destruction, and during stack unwinding.</p>
+<h3 id="o010">O010</h3>
+<p>Tags: raii</p>
+<p>Prompt: What is RAII?</p>
+<p>Answer: Resource Acquisition Is Initialization: acquire a resource in an object&#39;s constructor and release it in the destructor, so cleanup is automatic even on exceptions.</p>
+<h3 id="o011">O011</h3>
+<p>Tags: lifetime</p>
+<p>Prompt: Destruction order for local objects, members, and bases?</p>
+<p>Answer: Locals are destroyed in reverse construction order. After a destructor body runs, members are destroyed in reverse declaration order, then base classes in reverse construction order.</p>
+<h3 id="o012">O012</h3>
+<p>Tags: destructors, exceptions</p>
+<p>Prompt: Why should destructors generally not throw?</p>
+<p>Answer: If a destructor throws during stack unwinding from another exception, the program may call <code>std::terminate</code>. Destructors should preserve cleanup guarantees.</p>
+<h3 id="o013">O013</h3>
+<p>Tags: copy-control</p>
+<p>Prompt: State Rule of 3, Rule of 5, and Rule of 0.</p>
+<p>Answer: Rule of 3: if a class manually manages a resource and defines destructor, copy constructor, or copy assignment, it likely needs all three. Rule of 5 adds move constructor and move assignment. Rule of 0 prefers RAII members so compiler-generated special members are correct.</p>
+<h3 id="o014">O014</h3>
+<p>Tags: copy-control</p>
+<p>Prompt: Copy constructor vs copy assignment?</p>
+<p>Answer: Copy constructor creates a new object from an existing one. Copy assignment replaces the state of an already-existing object and should return <code>*this</code>.</p>
+<h3 id="o015">O015</h3>
+<p>Tags: copy-control, edge-case</p>
+<p>Prompt: Why is <code>Point(Point other)</code> not a valid copy-constructor style?</p>
+<p>Answer: Passing by value would require copying <code>other</code>, which calls the copy constructor again, causing infinite recursion.</p>
+<h3 id="o016">O016</h3>
+<p>Tags: copy-control</p>
+<p>Prompt: Which are copy constructors: <code>X(const X&amp;)</code>, <code>X(X&amp;)</code>, <code>X(const volatile X&amp;)</code>, <code>X(X*)</code>?</p>
+<p>Answer: Reference forms to <code>X</code> with possible cv-qualification are copy constructors. Pointer forms such as <code>X(X*)</code> are not copy constructors.</p>
+<h3 id="o017">O017</h3>
+<p>Tags: copy-control, edge-case</p>
+<p>Prompt: What is the shallow-copy trap for a class owning <code>char*</code>?</p>
+<p>Answer: The compiler-generated copy copies the pointer value, not the pointed buffer. Two objects then share one allocation, causing double free, aliasing, or dangling pointers.</p>
+<h3 id="o018">O018</h3>
+<p>Tags: copy-control, edge-case</p>
+<p>Prompt: Why can naive copy assignment break on <code>s = s</code>?</p>
+<p>Answer: If it first frees <code>s.str_</code> and then copies from <code>s.str_</code>, it reads from freed memory. Handle self-assignment or use copy-and-swap.</p>
+<h3 id="o019">O019</h3>
+<p>Tags: copy-control, exception-safety</p>
+<p>Prompt: What does copy-and-swap assignment look like conceptually?</p>
+<p>Answer: Take the right-hand side by value, swap its resources with <code>*this</code>, and return <code>*this</code>. The temporary cleans old state on exit and self-assignment is naturally safe.</p>
+<h3 id="o020">O020</h3>
+<p>Tags: move-semantics</p>
+<p>Prompt: What does <code>std::move</code> actually do?</p>
+<p>Answer: It casts an expression to an rvalue reference. It does not move by itself; a move constructor or move assignment must be selected.</p>
+<h3 id="o021">O021</h3>
+<p>Tags: move-semantics</p>
+<p>Prompt: Why should move operations often be <code>noexcept</code>?</p>
+<p>Answer: Containers such as <code>std::vector</code> can use noexcept moves during reallocation while preserving exception guarantees. If move may throw, they may fall back to copying.</p>
+<h3 id="o022">O022</h3>
+<p>Tags: move-semantics</p>
+<p>Prompt: In a move constructor for a raw pointer owner, why set the source pointer to <code>nullptr</code>?</p>
+<p>Answer: Ownership has been transferred. Nulling the source prevents its destructor from deleting the same allocation.</p>
+<h3 id="o023">O023</h3>
+<p>Tags: const</p>
+<p>Prompt: What does <code>double length() const</code> mean for <code>this</code>?</p>
+<p>Answer: Inside the function, <code>this</code> behaves like a pointer to const object, so non-mutable data members cannot be modified and only const member functions can be called.</p>
+<h3 id="o024">O024</h3>
+<p>Tags: const, mutable</p>
+<p>Prompt: When is <code>mutable</code> appropriate?</p>
+<p>Answer: For data that may change without changing the logical value of the object, such as caches, memoization flags, or synchronization fields.</p>
+<h3 id="o025">O025</h3>
+<p>Tags: const, mutable, edge-case</p>
+<p>Prompt: Can <code>mutable</code> apply to static, reference, or const data members?</p>
+<p>Answer: No. <code>mutable</code> applies to non-static data members affected by object constness; static members do not belong to an object.</p>
+<h3 id="o026">O026</h3>
+<p>Tags: static</p>
+<p>Prompt: What are static data members and static member functions?</p>
+<p>Answer: Static data members are one class-wide object, not per-instance. Static member functions have no <code>this</code> and can directly access only static members.</p>
+<h3 id="o027">O027</h3>
+<p>Tags: singleton</p>
+<p>Prompt: Give the modern local-static Singleton skeleton.</p>
+<p>Answer:</p>
+<pre class="hljs"><code><span class="hljs-keyword">class</span> <span class="hljs-title class_">Config</span> {
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-function"><span class="hljs-type">static</span> Config&amp; <span class="hljs-title">instance</span><span class="hljs-params">()</span> </span>{
+        <span class="hljs-type">static</span> Config c;
+        <span class="hljs-keyword">return</span> c;
+    }
+    <span class="hljs-built_in">Config</span>(<span class="hljs-type">const</span> Config&amp;) = <span class="hljs-keyword">delete</span>;
+    Config&amp; <span class="hljs-keyword">operator</span>=(<span class="hljs-type">const</span> Config&amp;) = <span class="hljs-keyword">delete</span>;
+<span class="hljs-keyword">private</span>:
+    <span class="hljs-built_in">Config</span>() = <span class="hljs-keyword">default</span>;
+};</code></pre>
+<h3 id="o028">O028</h3>
+<p>Tags: singleton, design</p>
+<p>Prompt: Why can Singleton be harmful?</p>
+<p>Answer: It introduces hidden global state, complicates testing, creates lifetime-order risks, and may become a dumping ground. Dependency injection is often cleaner.</p>
+<h3 id="o029">O029</h3>
+<p>Tags: friend</p>
+<p>Prompt: What does <code>friend</code> grant, and is the friend a member?</p>
+<p>Answer: <code>friend</code> grants access to private/protected members. The friend function/class is not a member, so access labels around the friend declaration do not matter.</p>
+<h3 id="o030">O030</h3>
+<p>Tags: friend, edge-case</p>
+<p>Prompt: Is friendship inherited, symmetric, or transitive?</p>
+<p>Answer: No. If <code>A</code> friends <code>B</code>, that does not friend derived classes of <code>B</code>, does not friend <code>A</code> back, and does not friend <code>B</code>&#39;s friends.</p>
+<h3 id="o031">O031</h3>
+<p>Tags: friend, design</p>
+<p>Prompt: When is friendship reasonable?</p>
+<p>Answer: For tightly coupled operations that are logically part of the abstraction but should be non-members, such as symmetric arithmetic operators, stream insertion, or iterator/list internals.</p>
+<h3 id="o032">O032</h3>
+<p>Tags: operators</p>
+<p>Prompt: What can and cannot be changed by operator overloading?</p>
+<p>Answer: You can define function behavior for existing operators involving user-defined types. You cannot create new operators or change arity, precedence, associativity, or built-in operator behavior for only built-in operands.</p>
+<h3 id="o033">O033</h3>
+<p>Tags: operators</p>
+<p>Prompt: Which operators must generally be members?</p>
+<p>Answer: <code>operator=</code>, <code>operator[]</code>, <code>operator()</code>, and <code>operator-&gt;</code> must be non-static member functions.</p>
+<h3 id="o034">O034</h3>
+<p>Tags: operators</p>
+<p>Prompt: Why are stream operators usually non-member functions?</p>
+<p>Answer: The left operand is <code>std::ostream</code> or <code>std::istream</code>, which you cannot modify. A non-member <code>operator&lt;&lt;</code> can take the stream first and return it by reference for chaining.</p>
+<h3 id="o035">O035</h3>
+<p>Tags: operators</p>
+<p>Prompt: Why should <code>operator&lt;&lt;</code> return <code>std::ostream&amp;</code>?</p>
+<p>Answer: Returning the stream by reference enables chaining: <code>cout &lt;&lt; a &lt;&lt; b</code>.</p>
+<h3 id="o036">O036</h3>
+<p>Tags: operators</p>
+<p>Prompt: Why does <code>2 + complex</code> often require a non-member/friend overload?</p>
+<p>Answer: In a member operator, the left operand must be the invoking object. <code>2</code> is not a <code>Complex</code>, so a non-member overload can accept <code>(double, const Complex&amp;)</code>.</p>
+<h3 id="o037">O037</h3>
+<p>Tags: operators</p>
+<p>Prompt: Prefix vs postfix increment overload signatures and return style?</p>
+<p>Answer: Prefix: <code>T&amp; operator++()</code> and usually returns <code>*this</code> by reference. Postfix: <code>T operator++(int)</code> with dummy <code>int</code>, returns the old value by value.</p>
+<h3 id="o038">O038</h3>
+<p>Tags: operators, edge-case</p>
+<p>Prompt: What happens if <code>&amp;&amp;</code>, <code>||</code>, or comma are overloaded?</p>
+<p>Answer: They lose some built-in special properties such as short-circuit evaluation/order behavior expected from built-in logical operators, so overload with extreme care.</p>
+<h3 id="o039">O039</h3>
+<p>Tags: namespace</p>
+<p>Prompt: What is a namespace for?</p>
+<p>Answer: A lexical scope for grouping names and avoiding collisions. Namespaces can contain functions, classes, variables, templates, and nested namespaces.</p>
+<h3 id="o040">O040</h3>
+<p>Tags: namespace</p>
+<p>Prompt: Are namespaces open? Are classes namespaces?</p>
+<p>Answer: Namespaces are open and can be reopened for more declarations. A class also defines a scope for its members, but every namespace is not a class and cannot be instantiated.</p>
+<h3 id="o041">O041</h3>
+<p>Tags: namespace, linkage</p>
+<p>Prompt: What does an unnamed namespace do?</p>
+<p>Answer: It gives internal linkage to its contents, making them visible only within that translation unit. It is broader and cleaner than C-style file-scope <code>static</code>.</p>
+<h3 id="o042">O042</h3>
+<p>Tags: dynamic-memory, new</p>
+<p>Prompt: Distinguish the <code>new</code> expression/new operator, <code>operator new</code>, and placement new.</p>
+<p>Answer: A <code>new</code> expression allocates storage and constructs an object. <code>operator new(size_t)</code> is the allocation function, like <code>malloc</code> for raw storage. Placement new <code>new (buffer) T(args)</code> constructs an object at a supplied address and does not allocate.</p>
+<h3 id="o043">O043</h3>
+<p>Tags: dynamic-memory, delete</p>
+<p>Prompt: Distinguish <code>delete</code> expression and <code>operator delete</code>.</p>
+<p>Answer: A <code>delete</code> expression calls the destructor and then deallocates storage. <code>operator delete(void*)</code> is only the deallocation function for raw storage.</p>
+<h3 id="o044">O044</h3>
+<p>Tags: dynamic-memory, placement-new, edge-case</p>
+<p>Prompt: How do you clean up an object created with placement new?</p>
+<p>Answer: Manually call the destructor, e.g. <code>p-&gt;~T();</code>. Do not call <code>delete p</code> unless the storage itself came from the matching ordinary <code>new</code> path and you are deliberately managing that full protocol.</p>
+<h3 id="o045">O045</h3>
+<p>Tags: dynamic-memory, placement-new</p>
+<p>Prompt: Why do containers allocate raw storage before constructing elements?</p>
+<p>Answer: Capacity may exceed size. Constructing every reserved slot would waste work/resources. Containers allocate raw storage, then placement-construct only live elements.</p>
+<h3 id="o046">O046</h3>
+<p>Tags: dynamic-memory, arrays</p>
+<p>Prompt: Why must <code>new[]</code> match <code>delete[]</code>?</p>
+<p>Answer: Array new has separate allocation/destruction semantics and must destroy every element. Using scalar <code>delete</code> on an array is undefined behavior.</p>
+<h3 id="o047">O047</h3>
+<p>Tags: dynamic-memory, edge-case</p>
+<p>Prompt: Is <code>delete nullptr;</code> safe?</p>
+<p>Answer: Yes. Deleting a null pointer has no effect.</p>
+<h3 id="o048">O048</h3>
+<p>Tags: class, namespace</p>
+<p>Prompt: Why can two classes both have a member called <code>data</code> without conflict?</p>
+<p>Answer: Each class defines its own class scope, so names are qualified as <code>A::data</code> and <code>B::data</code>.</p>
+</article>
+  <nav class="prevnext"><a class="pn-card pn-prev" href="cards-cpp-core.html"><span class="pn-label">&larr; Previous</span><span class="pn-title">C++ Core Flashcards</span></a><a class="pn-card pn-next" href="cards-polymorphism-stl.html"><span class="pn-label">Next &rarr;</span><span class="pn-title">Polymorphism, Casts, Templates &amp; STL Flashcards</span></a></nav>
+</main>
+<aside class="toc"><div class="toc-title">On this page</div><ul><li class="toc-d2"><a href="#o001">O001</a></li><li class="toc-d2"><a href="#o002">O002</a></li><li class="toc-d2"><a href="#o003">O003</a></li><li class="toc-d2"><a href="#o004">O004</a></li><li class="toc-d2"><a href="#o005">O005</a></li><li class="toc-d2"><a href="#o006">O006</a></li><li class="toc-d2"><a href="#o007">O007</a></li><li class="toc-d2"><a href="#o008">O008</a></li><li class="toc-d2"><a href="#o009">O009</a></li><li class="toc-d2"><a href="#o010">O010</a></li><li class="toc-d2"><a href="#o011">O011</a></li><li class="toc-d2"><a href="#o012">O012</a></li><li class="toc-d2"><a href="#o013">O013</a></li><li class="toc-d2"><a href="#o014">O014</a></li><li class="toc-d2"><a href="#o015">O015</a></li><li class="toc-d2"><a href="#o016">O016</a></li><li class="toc-d2"><a href="#o017">O017</a></li><li class="toc-d2"><a href="#o018">O018</a></li><li class="toc-d2"><a href="#o019">O019</a></li><li class="toc-d2"><a href="#o020">O020</a></li><li class="toc-d2"><a href="#o021">O021</a></li><li class="toc-d2"><a href="#o022">O022</a></li><li class="toc-d2"><a href="#o023">O023</a></li><li class="toc-d2"><a href="#o024">O024</a></li><li class="toc-d2"><a href="#o025">O025</a></li><li class="toc-d2"><a href="#o026">O026</a></li><li class="toc-d2"><a href="#o027">O027</a></li><li class="toc-d2"><a href="#o028">O028</a></li><li class="toc-d2"><a href="#o029">O029</a></li><li class="toc-d2"><a href="#o030">O030</a></li><li class="toc-d2"><a href="#o031">O031</a></li><li class="toc-d2"><a href="#o032">O032</a></li><li class="toc-d2"><a href="#o033">O033</a></li><li class="toc-d2"><a href="#o034">O034</a></li><li class="toc-d2"><a href="#o035">O035</a></li><li class="toc-d2"><a href="#o036">O036</a></li><li class="toc-d2"><a href="#o037">O037</a></li><li class="toc-d2"><a href="#o038">O038</a></li><li class="toc-d2"><a href="#o039">O039</a></li><li class="toc-d2"><a href="#o040">O040</a></li><li class="toc-d2"><a href="#o041">O041</a></li><li class="toc-d2"><a href="#o042">O042</a></li><li class="toc-d2"><a href="#o043">O043</a></li><li class="toc-d2"><a href="#o044">O044</a></li><li class="toc-d2"><a href="#o045">O045</a></li><li class="toc-d2"><a href="#o046">O046</a></li><li class="toc-d2"><a href="#o047">O047</a></li><li class="toc-d2"><a href="#o048">O048</a></li></ul></aside>
+</div>
+<footer class="footer"><div class="footer-inner">Personal revision notes &middot; built from the <code>placeprep26</code> repo &middot; July 2026</div></footer>
+</body>
+</html>
